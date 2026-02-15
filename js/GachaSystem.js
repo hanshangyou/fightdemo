@@ -69,10 +69,10 @@ export class GachaSystem {
     characterPool = [];
     
     RARITY_RATES = {
-        COMMON: 60,
-        RARE: 25,
-        EPIC: 12,
-        LEGENDARY: 3
+        COMMON: 68,
+        RARE: 22,
+        EPIC: 8,
+        LEGENDARY: 2
     };
 
     constructor() {
