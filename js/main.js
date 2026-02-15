@@ -3,7 +3,7 @@ import { StageSystem } from './StageSystem.js';
 import { BattleSystem } from './BattleSystem.js';
 import { GameUI } from './GameUI.js';
 import { PoolEditor } from './PoolEditor.js';
-import { StageEditor } from './StageEditor.js';
+import { StageEditor, getStages } from './StageEditor.js';
 
 class Game {
     ui;
@@ -116,6 +116,7 @@ class Game {
     }
 
     showGachaScreen() {
+        this.stageSystem.reloadStages();
         this.selectingFromPool = false;
         const maxTeamSize = this.getCurrentMaxTeamSize();
         if (this.gachaSystem.hasDrawn()) {
@@ -444,6 +445,7 @@ class Game {
     }
 
     showTeamSelectFromPool() {
+        this.stageSystem.reloadStages();
         this.selectingFromPool = true;
         this.currentTeam = [];
         const maxTeamSize = this.getCurrentMaxTeamSize();
@@ -461,8 +463,13 @@ class Game {
     }
 
     getCurrentMaxTeamSize() {
-        const stage = this.stageSystem.getCurrentStage();
-        return stage?.maxTeamSize ?? 3;
+        const stages = getStages();
+        const stage = stages[this.stageSystem.currentStage] || stages[0];
+        const max = parseInt(stage?.maxTeamSize, 10);
+        if (Number.isFinite(max)) {
+            return Math.max(1, max);
+        }
+        return 3;
     }
 
     handleBackFromGacha() {

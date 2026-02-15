@@ -18,10 +18,12 @@ export class StageSystem {
     }
 
     getCurrentStage() {
+        this.stages = getStages();
         return this.stages[this.currentStage];
     }
 
     getStage(index) {
+        this.stages = getStages();
         return this.stages[index];
     }
 
