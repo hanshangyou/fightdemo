@@ -2,6 +2,9 @@ export class Character {
     id;
     name;
     team;
+    _icon;
+    _rarity;
+    _templateId;
     _maxHp;
     _hp;
     _attack;
@@ -13,11 +16,26 @@ export class Character {
         this.id = config.id;
         this.name = config.name;
         this.team = config.team;
+        this._icon = config.icon ?? '👤';
+        this._rarity = config.rarity ?? 'COMMON';
+        this._templateId = config.templateId ?? config.template?.id ?? null;
         this._maxHp = config.maxHp;
         this._hp = config.maxHp;
         this._attack = config.attack;
         this._defense = config.defense;
         this._speed = config.speed;
+    }
+
+    get icon() {
+        return this._icon;
+    }
+
+    get rarity() {
+        return this._rarity;
+    }
+
+    get templateId() {
+        return this._templateId;
     }
 
     get maxHp() {

@@ -48,7 +48,9 @@ export class StageSystem {
                 defense: template.baseStats.defense,
                 speed: template.baseStats.speed,
                 team: 'B',
-                icon: template.icon
+                icon: template.icon,
+                rarity: template.rarity,
+                templateId: template.id
             });
         }).filter(c => c !== null);
     }

@@ -104,21 +104,20 @@ export class GachaSystem {
             attack: Math.round(template.baseStats.attack * multiplier),
             defense: Math.round(template.baseStats.defense * multiplier),
             speed: Math.round(template.baseStats.speed * multiplier),
-            team: 'A'
+            team: 'A',
+            icon: template.icon,
+            rarity: template.rarity,
+            templateId: template.id
         });
-        
-        character.template = template;
-        character.rarity = template.rarity;
-        character.icon = template.icon;
-        
+
         return character;
     }
 
-    pull10() {
+    pull(count) {
         this.currentDrawPool = [];
         this.characterPool = getPlayableCharacterPool();
         
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < count; i++) {
             const rarity = this.getRandomRarity();
             const pool = this.characterPool.filter(c => c.rarity === rarity);
             
@@ -134,6 +133,14 @@ export class GachaSystem {
         
         this.gachaCount++;
         return this.currentDrawPool;
+    }
+
+    pull10() {
+        return this.pull(10);
+    }
+
+    pull5() {
+        return this.pull(5);
     }
 
     getCurrentDrawPool() {

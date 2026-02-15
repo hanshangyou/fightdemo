@@ -229,6 +229,16 @@
             box-shadow: 0 0 15px rgba(241, 196, 15, 0.6);
             background: rgba(241, 196, 15, 0.2);
         }
+
+        .character-card.dead {
+            opacity: 0.4;
+            filter: grayscale(100%);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .draw-pool .character-card.dead {
+            pointer-events: none;
+        }
         
         .character-rarity {
             font-size: 0.7rem;
@@ -254,6 +264,13 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 4px;
+        }
+
+        .character-stats.two-line {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4px 6px;
+            justify-items: center;
         }
         
         .character-stats span {
@@ -290,7 +307,7 @@
         
         .battle-header {
             text-align: center;
-            padding: 8px 0;
+            padding: 10px 0;
             flex-shrink: 0;
         }
         
@@ -315,6 +332,7 @@
             min-height: 0;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
+            padding-bottom: 4px;
         }
         
         .team-label {
@@ -339,7 +357,7 @@
         .battle-character-card {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 6px;
-            padding: 6px;
+            padding: 8px;
             border: 2px solid transparent;
             transition: all 0.2s ease;
             flex-shrink: 0;
@@ -354,20 +372,36 @@
             opacity: 0.4;
             filter: grayscale(100%);
         }
+
+        .battle-character-card.hit {
+            transform: translateY(-1px);
+            box-shadow: 0 0 8px rgba(231, 76, 60, 0.5);
+        }
         
         .battle-char-icon {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             text-align: center;
         }
         
         .battle-char-name {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             text-align: center;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+
+        .battle-char-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            font-size: 0.65rem;
+            text-align: center;
+            color: #ecf0f1;
+            margin-bottom: 4px;
         }
         
         .hp-bar-container {
-            height: 8px;
+            height: 9px;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 4px;
             overflow: hidden;
@@ -389,16 +423,16 @@
         }
         
         .hp-text {
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             text-align: center;
-            margin-top: 1px;
+            margin-top: 3px;
         }
         
         .action-bar {
-            height: 3px;
+            height: 4px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 2px;
-            margin-top: 2px;
+            margin-top: 4px;
             overflow: hidden;
         }
         
@@ -409,15 +443,16 @@
         }
         
         .battle-log {
-            height: 80px;
+            height: 150px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 8px;
-            padding: 8px;
+            padding: 10px;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            font-size: 0.7rem;
-            margin-top: 8px;
+            font-size: 0.75rem;
+            margin-top: 10px;
             flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         
         .log-entry {
@@ -1036,6 +1071,176 @@
             flex: 1;
             padding: 12px;
         }
+
+        .camp-container {
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow: hidden;
+        }
+
+        .camp-header {
+            flex-shrink: 0;
+            text-align: center;
+        }
+
+        .camp-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .camp-subtitle {
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+
+        .camp-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 12px;
+            padding: 12px;
+            flex-shrink: 0;
+        }
+
+        .camp-panel-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .camp-team-grid {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 6px;
+            scroll-snap-type: x mandatory;
+        }
+
+        .camp-team-grid .character-card {
+            position: relative;
+            cursor: pointer;
+            min-width: 82px;
+            width: 82px;
+            padding: 6px 5px 7px;
+            scroll-snap-align: start;
+        }
+
+        .camp-team-grid .character-card::after {
+            content: attr(data-rarity-label);
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            font-size: 0.5rem;
+            padding: 2px 4px;
+            border-radius: 6px;
+            background: #95a5a6;
+            color: #fff;
+        }
+
+        .camp-team-grid .character-card[data-rarity="RARE"]::after {
+            background: #3498db;
+        }
+
+        .camp-team-grid .character-card[data-rarity="EPIC"]::after {
+            background: #9b59b6;
+        }
+
+        .camp-team-grid .character-card[data-rarity="LEGENDARY"]::after {
+            background: #f39c12;
+        }
+
+        .camp-team-grid .character-card[data-rarity="ENEMY"]::after {
+            background: #e74c3c;
+        }
+
+        .camp-team-grid .character-rarity {
+            display: none;
+        }
+
+        .camp-team-grid .character-icon {
+            font-size: 1.2rem;
+            margin: 4px 0 2px;
+        }
+
+        .camp-team-grid .character-name {
+            font-size: 0.7rem;
+            margin-bottom: 4px;
+        }
+
+        .camp-team-grid .character-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            font-size: 0.55rem;
+        }
+
+        .camp-team-grid .character-stats span {
+            padding: 2px 3px;
+        }
+
+        .camp-team-grid.select-mode .character-card {
+            border-color: #2ecc71;
+        }
+
+        .camp-team-grid::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .camp-team-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .camp-team-grid::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+
+        .camp-draw-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 0;
+        }
+
+        .camp-draw-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 2px;
+            align-content: start;
+        }
+
+        .camp-draw-grid .character-card {
+            cursor: pointer;
+        }
+
+        .camp-draw-grid .character-card.selected {
+            border-color: #2ecc71;
+            box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.35);
+        }
+
+        .camp-hint {
+            font-size: 0.85rem;
+            color: #bdc3c7;
+            text-align: center;
+        }
+
+        .camp-buttons {
+            flex-shrink: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -1052,6 +1257,7 @@
                 <div class="stage-number">关卡 <span id="main-stage">1</span>/3</div>
                 <div class="stage-name" id="stage-name">第1关：新手村</div>
                 <div class="stage-desc" id="stage-desc">击败弱小的哥布林团伙</div>
+                <div class="stage-desc">可上场人数上限: <span id="stage-team-max">3</span></div>
             </div>
             <div class="team-status" id="main-team-info" style="text-align:center; padding:10px; background:rgba(0,0,0,0.2); border-radius:8px; margin-bottom:10px;">
                 <span style="color:#e74c3c">未组建队伍</span>
@@ -1068,7 +1274,7 @@
             <div class="screen-title">🎰 抽卡组队</div>
             <div class="resources">
                 <div class="resource-item">🎫 抽卡券: <span id="gacha-tickets">0</span></div>
-                <div class="team-count">已选: <span id="team-count">0</span>/3</div>
+                <div class="team-count">已选: <span id="team-count">0</span> / 可上场: <span id="team-max">3</span></div>
             </div>
             
             <div class="draw-pool" id="draw-pool">
@@ -1102,6 +1308,35 @@
                 </div>
             </div>
             <div class="battle-log" id="battle-log"></div>
+        </div>
+
+        <div id="screen-camp" class="screen">
+            <div class="camp-container">
+                <div class="camp-header">
+                    <div class="camp-title" id="camp-title">🏕️ 营地</div>
+                    <div class="camp-subtitle" id="camp-subtitle">整备队伍，准备挑战下一关</div>
+                </div>
+
+                <div class="camp-panel">
+                    <div class="camp-panel-title">当前备选池（可用 <span id="camp-available-count">0</span> 人）</div>
+                    <div class="camp-team-grid" id="camp-team"></div>
+                </div>
+
+                <div class="camp-panel camp-draw-area">
+                    <div class="camp-panel-title">营地抽卡（5连抽，选1保留）</div>
+                    <div class="camp-hint" id="camp-hint">可选：消耗1张抽卡券抽5张，并选择1张替换队伍成员</div>
+                    <div class="camp-draw-grid" id="camp-draw"></div>
+                </div>
+
+                <div class="camp-buttons">
+                    <button class="btn btn-warning" id="btn-camp-draw">🎰 抽卡(5连/1券)</button>
+                    <button class="btn btn-success" id="btn-camp-next">➡️ 挑战下一关</button>
+                </div>
+
+                <div class="button-row">
+                    <button class="btn btn-secondary" id="btn-camp-home">🏠 返回首页</button>
+                </div>
+            </div>
         </div>
         
         <div id="screen-result" class="screen">

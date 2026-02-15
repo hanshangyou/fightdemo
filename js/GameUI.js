@@ -14,6 +14,7 @@ export class GameUI {
                 main: document.getElementById('screen-main'),
                 gacha: document.getElementById('screen-gacha'),
                 battle: document.getElementById('screen-battle'),
+                camp: document.getElementById('screen-camp'),
                 result: document.getElementById('screen-result'),
                 editor: document.getElementById('screen-editor'),
                 stageEditor: document.getElementById('screen-stage-editor')
@@ -24,6 +25,7 @@ export class GameUI {
                 stage: document.getElementById('main-stage'),
                 stageName: document.getElementById('stage-name'),
                 stageDesc: document.getElementById('stage-desc'),
+                stageTeamMax: document.getElementById('stage-team-max'),
                 btnGacha: document.getElementById('btn-gacha'),
                 btnBattle: document.getElementById('btn-battle'),
                 btnEditor: document.getElementById('btn-editor'),
@@ -32,6 +34,7 @@ export class GameUI {
             gacha: {
                 drawPool: document.getElementById('draw-pool'),
                 teamCount: document.getElementById('team-count'),
+                teamMax: document.getElementById('team-max'),
                 tickets: document.getElementById('gacha-tickets'),
                 btnPull: document.getElementById('btn-pull'),
                 btnReroll: document.getElementById('btn-reroll'),
@@ -43,6 +46,17 @@ export class GameUI {
                 teamB: document.getElementById('battle-team-b'),
                 log: document.getElementById('battle-log'),
                 stageInfo: document.getElementById('battle-stage-info')
+            },
+            camp: {
+                title: document.getElementById('camp-title'),
+                subtitle: document.getElementById('camp-subtitle'),
+                hint: document.getElementById('camp-hint'),
+                availableCount: document.getElementById('camp-available-count'),
+                team: document.getElementById('camp-team'),
+                draw: document.getElementById('camp-draw'),
+                btnDraw: document.getElementById('btn-camp-draw'),
+                btnNext: document.getElementById('btn-camp-next'),
+                btnHome: document.getElementById('btn-camp-home')
             },
             result: {
                 title: document.getElementById('result-title'),
@@ -83,6 +97,9 @@ export class GameUI {
             if (this.elements.main.stageDesc) {
                 this.elements.main.stageDesc.textContent = stage.description;
             }
+            if (this.elements.main.stageTeamMax) {
+                this.elements.main.stageTeamMax.textContent = stage.maxTeamSize ?? 3;
+            }
         }
         
         const teamInfo = document.getElementById('main-team-info');
@@ -104,20 +121,22 @@ export class GameUI {
         }
     }
 
-    renderDrawPool(characters, selectedIds = [], withAnimation = true) {
+    renderDrawPool(characters, selectedIds = [], withAnimation = true, emptyHint = '点击下方按钮抽取10个角色') {
         const container = this.elements.gacha.drawPool;
         if (!container) return;
         
         container.innerHTML = '';
         
         if (characters.length === 0) {
-            container.innerHTML = '<div class="empty-hint">点击下方按钮抽取10个角色</div>';
+            container.innerHTML = `<div class="empty-hint">${emptyHint}</div>`;
             return;
         }
         
         characters.forEach((char, index) => {
             const card = this.createCharacterCard(char);
-            card.classList.add('selectable');
+            if (!char.isDead) {
+                card.classList.add('selectable');
+            }
             
             if (withAnimation) {
                 card.classList.add('gacha-card');
@@ -135,15 +154,18 @@ export class GameUI {
         });
     }
 
-    clearDrawPool() {
+    clearDrawPool(emptyHint = '点击下方按钮抽取10个角色') {
         if (this.elements.gacha.drawPool) {
-            this.elements.gacha.drawPool.innerHTML = '<div class="empty-hint">点击下方按钮抽取10个角色</div>';
+            this.elements.gacha.drawPool.innerHTML = `<div class="empty-hint">${emptyHint}</div>`;
         }
     }
 
     updateTeamCount(current, max) {
         if (this.elements.gacha.teamCount) {
-            this.elements.gacha.teamCount.textContent = `${current}/${max}`;
+            this.elements.gacha.teamCount.textContent = current;
+        }
+        if (this.elements.gacha.teamMax) {
+            this.elements.gacha.teamMax.textContent = max;
         }
     }
 
@@ -159,6 +181,21 @@ export class GameUI {
         }
     }
 
+    setGachaControls({ showDrawButtons = true, confirmText = '⚔️ 开始战斗', backText = '返回' }) {
+        if (this.elements.gacha.btnPull) {
+            this.elements.gacha.btnPull.style.display = showDrawButtons ? 'inline-block' : 'none';
+        }
+        if (this.elements.gacha.btnReroll) {
+            this.elements.gacha.btnReroll.style.display = showDrawButtons ? 'inline-block' : 'none';
+        }
+        if (this.elements.gacha.btnConfirm) {
+            this.elements.gacha.btnConfirm.textContent = confirmText;
+        }
+        if (this.elements.gacha.btnBack) {
+            this.elements.gacha.btnBack.textContent = backText;
+        }
+    }
+
     updateGachaTickets(tickets) {
         if (this.elements.gacha.tickets) {
             this.elements.gacha.tickets.textContent = tickets;
@@ -168,18 +205,24 @@ export class GameUI {
     createCharacterCard(character) {
         const card = document.createElement('div');
         card.className = 'character-card';
+        if (character.isDead) {
+            card.classList.add('dead');
+        }
         
         const rarity = character.rarity || 'COMMON';
         const rarityInfo = {
             COMMON: { name: '普通', color: '#95a5a6' },
             RARE: { name: '稀有', color: '#3498db' },
             EPIC: { name: '史诗', color: '#9b59b6' },
-            LEGENDARY: { name: '传说', color: '#f39c12' }
+            LEGENDARY: { name: '传说', color: '#f39c12' },
+            ENEMY: { name: '敌对', color: '#e74c3c' }
         };
         
         const rarityData = rarityInfo[rarity] || rarityInfo.COMMON;
         
         card.style.borderColor = rarityData.color;
+        card.dataset.rarity = rarity;
+        card.dataset.rarityLabel = rarityData.name;
         card.innerHTML = `
             <div class="character-rarity" style="color: ${rarityData.color}">${rarityData.name}</div>
             <div class="character-icon">${character.icon || '👤'}</div>
@@ -193,6 +236,64 @@ export class GameUI {
         `;
         
         return card;
+    }
+
+    renderCampTeam(team, selectable = false) {
+        const container = this.elements.camp.team;
+        if (!container) return;
+        container.innerHTML = '';
+        container.classList.toggle('select-mode', selectable);
+
+        team.forEach(char => {
+            const card = this.createCharacterCard(char);
+            card.dataset.characterId = char.id;
+            container.appendChild(card);
+        });
+    }
+
+    renderCampDrawPool(characters, selectedId = null) {
+        const container = this.elements.camp.draw;
+        if (!container) return;
+        container.innerHTML = '';
+
+        if (!characters || characters.length === 0) {
+            container.innerHTML = '<div class="empty-hint">本次营地未抽卡</div>';
+            return;
+        }
+
+        characters.forEach(char => {
+            const card = this.createCharacterCard(char);
+            card.dataset.characterId = char.id;
+            if (selectedId && selectedId === char.id) {
+                card.classList.add('selected');
+            }
+            container.appendChild(card);
+        });
+    }
+
+    updateCampHeader(title, subtitle) {
+        if (this.elements.camp.title) this.elements.camp.title.textContent = title;
+        if (this.elements.camp.subtitle) this.elements.camp.subtitle.textContent = subtitle;
+    }
+
+    updateCampHint(text) {
+        if (this.elements.camp.hint) this.elements.camp.hint.textContent = text;
+    }
+
+    setCampButtons({ canDraw, nextText }) {
+        if (this.elements.camp.btnDraw) {
+            this.elements.camp.btnDraw.disabled = !canDraw;
+            this.elements.camp.btnDraw.style.opacity = canDraw ? '1' : '0.5';
+        }
+        if (this.elements.camp.btnNext && nextText) {
+            this.elements.camp.btnNext.textContent = nextText;
+        }
+    }
+
+    updateCampAvailableCount(count) {
+        if (this.elements.camp.availableCount) {
+            this.elements.camp.availableCount.textContent = count;
+        }
     }
 
     renderBattleTeam(characters, containerId) {
@@ -209,6 +310,11 @@ export class GameUI {
             card.innerHTML = `
                 <div class="battle-char-icon">${char.icon || '👤'}</div>
                 <div class="battle-char-name">${char.name}</div>
+                <div class="battle-char-stats">
+                    <span>⚔️${char.attack}</span>
+                    <span>🛡️${char.defense}</span>
+                    <span>💨${char.speed}</span>
+                </div>
                 <div class="hp-bar-container">
                     <div class="hp-bar" style="width: ${char.hpPercentage}%"></div>
                 </div>
@@ -251,6 +357,9 @@ export class GameUI {
         if (!character.isAlive) {
             card.classList.add('dead');
         }
+        card.classList.remove('hit');
+        card.classList.add('hit');
+        setTimeout(() => card.classList.remove('hit'), 200);
     }
 
     setActiveCharacter(character) {
@@ -336,23 +445,12 @@ export class GameUI {
             `;
             this.elements.result.rewards.style.display = 'block';
             
-            const stages = getStages();
-            const totalStages = stages.length;
-            if (stage.id >= totalStages) {
-                this.elements.result.btnNext.textContent = '🎊 重新开始';
-                this.elements.result.btnNext.disabled = false;
-                this.elements.result.btnNext.style.display = 'inline-block';
-                this.elements.result.btnRetry.style.display = 'none';
-                this.elements.result.btnRestart.style.display = 'none';
-                this.elements.result.btnHome.style.display = 'none';
-            } else {
-                this.elements.result.btnNext.textContent = '➡️ 下一关';
-                this.elements.result.btnNext.disabled = false;
-                this.elements.result.btnNext.style.display = 'inline-block';
-                this.elements.result.btnRetry.style.display = 'none';
-                this.elements.result.btnRestart.style.display = 'none';
-                this.elements.result.btnHome.style.display = 'none';
-            }
+            this.elements.result.btnNext.textContent = '🏕️ 进入营地';
+            this.elements.result.btnNext.disabled = false;
+            this.elements.result.btnNext.style.display = 'inline-block';
+            this.elements.result.btnRetry.style.display = 'none';
+            this.elements.result.btnRestart.style.display = 'none';
+            this.elements.result.btnHome.style.display = 'none';
         } else {
             this.elements.result.message.textContent = '战斗失败，再接再厉！';
             this.elements.result.rewards.innerHTML = statsHtml;
@@ -415,6 +513,32 @@ export class GameUI {
 
     onGoStageEditor(callback) {
         this.elements.main.btnStageEditor?.addEventListener('click', callback);
+    }
+
+    onCampDraw(callback) {
+        this.elements.camp.btnDraw?.addEventListener('click', callback);
+    }
+
+    onCampNext(callback) {
+        this.elements.camp.btnNext?.addEventListener('click', callback);
+    }
+
+    onCampHome(callback) {
+        this.elements.camp.btnHome?.addEventListener('click', callback);
+    }
+
+    onCampSelectDraw(callback) {
+        this.elements.camp.draw?.addEventListener('click', (e) => {
+            const card = e.target.closest('.character-card');
+            if (card) callback(card.dataset.characterId);
+        });
+    }
+
+    onCampSelectTeam(callback) {
+        this.elements.camp.team?.addEventListener('click', (e) => {
+            const card = e.target.closest('.character-card');
+            if (card) callback(card.dataset.characterId);
+        });
     }
 
     onCharacterSelect(callback) {

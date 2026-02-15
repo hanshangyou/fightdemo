@@ -16,8 +16,18 @@ class Game {
     gold = 0;
     gachaTickets = 10;
     currentTeam = [];
-    maxTeamSize = 3;
+    playerPool = [];
     hasDrawn = false;
+    initialDrawUsed = false;
+    selectingFromPool = false;
+    campDrawUsed = false;
+    campDrawPool = [];
+    campSelectedDrawId = null;
+    lastCampStage = null;
+    lastCampRewards = null;
+    lastResultSummary = null;
+    campRetryMode = false;
+    battleDeadIds = new Set();
 
     constructor() {
         this.ui = new GameUI();
@@ -49,21 +59,32 @@ class Game {
 
     setupEventListeners() {
         this.ui.onGoGacha(() => this.showGachaScreen());
-        this.ui.onGoBattle(() => this.startBattle());
+        this.ui.onGoBattle(() => {
+            if (this.playerPool.length > 0) {
+                this.showTeamSelectFromPool();
+            } else {
+                this.showGachaScreen();
+            }
+        });
         this.ui.onGoEditor(() => this.showEditorScreen());
         this.ui.onGoStageEditor(() => this.showStageEditorScreen());
         
         this.ui.onGachaPull(() => this.pullGacha());
         this.ui.onReroll(() => this.rerollGacha());
-        this.ui.onBackFromGacha(() => this.showMainScreen());
+        this.ui.onBackFromGacha(() => this.handleBackFromGacha());
         
         this.ui.onCharacterSelect((charId) => this.toggleCharacterInTeam(charId));
         this.ui.onConfirmTeam(() => this.confirmTeamAndStartBattle());
-        
-        this.ui.onNextStage(() => this.goToNextStage());
+
+        this.ui.onNextStage(() => this.enterCampFromResult());
         this.ui.onRetry(() => this.retryWithSameTeam());
-        this.ui.onRestart(() => this.reselectTeamForCurrentStage());
+        this.ui.onRestart(() => this.returnToCampAfterDefeat());
         this.ui.onGoHome(() => this.resetGame());
+
+        this.ui.onCampDraw(() => this.campDraw5());
+        this.ui.onCampNext(() => this.campNextStage());
+        this.ui.onCampHome(() => this.resetGame());
+        this.ui.onCampSelectDraw((charId) => this.selectCampDraw(charId));
     }
 
     updateMainScreen() {
@@ -95,41 +116,28 @@ class Game {
     }
 
     showGachaScreen() {
-        if (this.hasDrawn) {
-            this.showTeamSelectScreen();
-            return;
-        }
-        
+        this.selectingFromPool = false;
+        const maxTeamSize = this.getCurrentMaxTeamSize();
         if (this.gachaSystem.hasDrawn()) {
             this.ui.renderDrawPool(this.gachaSystem.getCurrentDrawPool(), this.currentTeam.map(c => c.id), false);
-            this.ui.updateTeamCount(this.currentTeam.length, this.maxTeamSize);
+            this.ui.updateTeamCount(this.currentTeam.length, maxTeamSize);
         } else {
             this.ui.clearDrawPool();
-            this.ui.updateTeamCount(0, this.maxTeamSize);
+            this.ui.updateTeamCount(0, maxTeamSize);
         }
         this.ui.updateGachaTickets(this.gachaTickets);
-        this.ui.updateGachaButtons(this.hasDrawn);
-        this.ui.showScreen('gacha');
-    }
-    
-    showTeamSelectScreen() {
-        if (!this.gachaSystem.hasDrawn()) {
-            alert('请先抽取角色！');
-            this.showMainScreen();
-            return;
-        }
-        
-        this.currentTeam = [];
-        this.ui.renderDrawPool(this.gachaSystem.getCurrentDrawPool(), [], false);
-        this.ui.updateTeamCount(0, this.maxTeamSize);
-        this.ui.updateGachaTickets(this.gachaTickets);
-        this.ui.updateGachaButtons(this.hasDrawn);
+        this.ui.updateGachaButtons(this.initialDrawUsed);
+        this.ui.setGachaControls({
+            showDrawButtons: !this.initialDrawUsed,
+            confirmText: '⚔️ 开始战斗',
+            backText: '返回'
+        });
         this.ui.showScreen('gacha');
     }
 
     pullGacha() {
-        if (this.hasDrawn) {
-            alert('已开始挑战，无法重新抽卡！');
+        if (this.initialDrawUsed) {
+            alert('已抽卡，本局开局只能抽一次！');
             return;
         }
         
@@ -140,73 +148,86 @@ class Game {
         
         this.gachaTickets--;
         this.currentTeam = [];
+        this.selectingFromPool = false;
         
         const results = this.gachaSystem.pull10();
         this.ui.renderDrawPool(results, []);
-        this.ui.updateTeamCount(0, this.maxTeamSize);
+        this.ui.updateTeamCount(0, this.getCurrentMaxTeamSize());
         this.ui.updateGachaTickets(this.gachaTickets);
+        this.ui.updateGachaButtons(true);
         this.ui.updateMainScreen(this.gold, this.gachaTickets, this.stageSystem.getCurrentStage());
+        this.initialDrawUsed = true;
     }
 
     rerollGacha() {
-        if (this.hasDrawn) {
-            alert('已开始挑战，无法重新抽卡！');
-            return;
-        }
-        
-        if (this.gachaTickets <= 0) {
-            alert('抽卡券不足！');
-            return;
-        }
-        
-        this.gachaTickets--;
-        this.currentTeam = [];
-        
-        const results = this.gachaSystem.pull10();
-        this.ui.renderDrawPool(results, []);
-        this.ui.updateTeamCount(0, this.maxTeamSize);
-        this.ui.updateGachaTickets(this.gachaTickets);
-        this.ui.updateMainScreen(this.gold, this.gachaTickets, this.stageSystem.getCurrentStage());
+        alert('开局抽卡只能进行一次，不能重抽。');
     }
 
     toggleCharacterInTeam(charId) {
-        const character = this.gachaSystem.getCurrentDrawPool().find(c => c.id === charId);
+        const sourcePool = this.selectingFromPool ? this.playerPool : this.gachaSystem.getCurrentDrawPool();
+        const character = sourcePool.find(c => c.id === charId);
         if (!character) return;
+        if (this.selectingFromPool && character.isDead) {
+            alert('该角色已阵亡，无法上场。');
+            return;
+        }
+        const maxTeamSize = this.getCurrentMaxTeamSize();
         
         const existingIndex = this.currentTeam.findIndex(c => c.id === charId);
         
         if (existingIndex > -1) {
             this.currentTeam.splice(existingIndex, 1);
         } else {
-            if (this.currentTeam.length >= this.maxTeamSize) {
-                alert(`最多只能选择${this.maxTeamSize}个角色！`);
+            if (this.currentTeam.length >= maxTeamSize) {
+                alert(`最多只能选择${maxTeamSize}个角色！`);
                 return;
             }
             this.currentTeam.push(character);
         }
         
-        this.ui.renderDrawPool(this.gachaSystem.getCurrentDrawPool(), this.currentTeam.map(c => c.id), false);
-        this.ui.updateTeamCount(this.currentTeam.length, this.maxTeamSize);
+        const poolToRender = this.selectingFromPool ? this.playerPool : this.gachaSystem.getCurrentDrawPool();
+        const emptyHint = this.selectingFromPool ? '备选池为空，请先抽卡获得角色' : '点击下方按钮抽取10个角色';
+        this.ui.renderDrawPool(poolToRender, this.currentTeam.map(c => c.id), false, emptyHint);
+        this.ui.updateTeamCount(this.currentTeam.length, maxTeamSize);
     }
 
     confirmTeamAndStartBattle() {
-        if (this.currentTeam.length === 0) {
+        const maxTeamSize = this.getCurrentMaxTeamSize();
+        if (this.currentTeam.length < 1) {
             alert('请至少选择1个角色！');
             return;
         }
-        
+        if (this.currentTeam.length > maxTeamSize) {
+            alert(`最多只能选择${maxTeamSize}个角色！`);
+            return;
+        }
+        if (!this.selectingFromPool) {
+            this.currentTeam.forEach(c => {
+                if (!this.playerPool.find(p => p.id === c.id)) {
+                    this.playerPool.push(c);
+                }
+            });
+        }
+        this.gachaSystem.clearDrawPool();
+        this.selectingFromPool = false;
         this.startBattle();
     }
 
     startBattle() {
-        if (this.currentTeam.length === 0) {
-            alert('请先抽取角色并组建队伍！');
-            this.showGachaScreen();
+        const maxTeamSize = this.getCurrentMaxTeamSize();
+        if (this.currentTeam.length < 1 || this.currentTeam.length > maxTeamSize) {
+            alert(`请先选择1到${maxTeamSize}名角色组队！`);
+            if (this.playerPool.length > 0) {
+                this.showTeamSelectFromPool();
+            } else {
+                this.showGachaScreen();
+            }
             return;
         }
 
         this.hasDrawn = true;
         this.currentTeam.forEach(c => c.reset());
+        this.battleDeadIds = new Set();
         
         this.stageSystem.reloadStages();
         const stage = this.stageSystem.getCurrentStage();
@@ -258,6 +279,14 @@ class Game {
                 
             case 'death':
                 if (event.data.defender) {
+                    if (event.data.defender.team === 'A') {
+                        event.data.defender.isDead = true;
+                        this.battleDeadIds.add(event.data.defender.id);
+                        const poolChar = this.playerPool.find(c => c.id === event.data.defender.id);
+                        if (poolChar) {
+                            poolChar.isDead = true;
+                        }
+                    }
                     this.ui.updateBattleCharacter(event.data.defender);
                     this.ui.addBattleLog(`💀 ${event.data.defender.name} 被击败！`, 'turn');
                 }
@@ -283,21 +312,19 @@ class Game {
             const rewards = stage.rewards;
             this.gold += rewards.gold;
             this.gachaTickets += rewards.gachaTickets;
+            this.reorderPlayerPoolByLastTeam();
+            this.lastResultSummary = { stage, rewards, damageStats, totalDamage, turnCount };
+        } else if (this.battleDeadIds.size > 0) {
+            this.battleDeadIds.forEach(id => {
+                const teamChar = this.currentTeam.find(c => c.id === id);
+                if (teamChar) teamChar.isDead = false;
+                const poolChar = this.playerPool.find(c => c.id === id);
+                if (poolChar) poolChar.isDead = false;
+            });
         }
+        this.battleDeadIds = new Set();
         
         this.ui.showResult(isVictory, stage, isVictory ? stage.rewards : null, damageStats, totalDamage, turnCount, this.hasDrawn);
-    }
-
-    goToNextStage() {
-        this.stageSystem.reloadStages();
-        const totalStages = this.stageSystem.getTotalStages();
-        const currentStage = this.stageSystem.getCurrentStage();
-        
-        if (currentStage.id >= totalStages) {
-            this.resetGame();
-        } else if (this.stageSystem.advanceStage()) {
-            this.showTeamSelectScreen();
-        }
     }
 
     retryWithSameTeam() {
@@ -305,16 +332,175 @@ class Game {
         this.startBattle();
     }
     
-    reselectTeamForCurrentStage() {
+    showCamp(stage, rewards, damageStats, totalDamage, turnCount, preserveState = false, subtitleOverride = '') {
+        this.lastCampStage = stage;
+        this.lastCampRewards = rewards;
+        if (!preserveState) {
+            this.campDrawUsed = false;
+        }
+        this.campDrawPool = [];
+        this.campSelectedDrawId = null;
+
+        const subtitle = subtitleOverride || (this.campRetryMode
+            ? `重新挑战 ${this.stageSystem.getCurrentStage().name} | 当前资源 💰${this.gold} 🎫${this.gachaTickets}`
+            : `通过 ${stage.name} | 奖励 💰+${rewards.gold} 🎫+${rewards.gachaTickets} | 当前资源 💰${this.gold} 🎫${this.gachaTickets}`);
+        this.ui.updateCampHeader('🏕️ 营地', subtitle);
+        const hintText = this.campDrawUsed
+            ? '本次营地已抽卡，可直接挑战下一关'
+            : '可选：消耗1张抽卡券抽5张，并选择1张加入备选池';
+        this.ui.updateCampHint(hintText);
+        const availableCount = this.playerPool.filter(c => !c.isDead).length;
+        this.ui.updateCampAvailableCount(availableCount);
+        this.ui.renderCampTeam(this.playerPool, false);
+        this.ui.renderCampDrawPool([], null);
+        const nextText = this.campRetryMode
+            ? '🔄 重新挑战'
+            : (this.stageSystem.isLastStage() ? '🏠 通关返回首页' : '➡️ 挑战下一关');
+        this.ui.setCampButtons({
+            canDraw: !this.campDrawUsed && this.gachaTickets > 0,
+            nextText
+        });
+        this.ui.showScreen('camp');
+    }
+
+    enterCampFromResult() {
+        if (!this.lastResultSummary) return;
+        const { stage, rewards, damageStats, totalDamage, turnCount } = this.lastResultSummary;
+        this.lastResultSummary = null;
+        this.campRetryMode = false;
+        this.showCamp(stage, rewards, damageStats, totalDamage, turnCount, false);
+    }
+
+    reorderPlayerPoolByLastTeam() {
+        if (this.playerPool.length === 0) return;
+        if (this.currentTeam.length === 0) return;
+        const teamIds = this.currentTeam.map(c => c.id);
+        this.playerPool.sort((a, b) => {
+            const aIdx = teamIds.indexOf(a.id);
+            const bIdx = teamIds.indexOf(b.id);
+            if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+            if (aIdx !== -1) return -1;
+            if (bIdx !== -1) return 1;
+            return 0;
+        });
+    }
+
+    campDraw5() {
+        if (this.campDrawUsed) {
+            alert('本次营地已抽卡。');
+            return;
+        }
+        if (this.gachaTickets <= 0) {
+            alert('抽卡券不足！');
+            return;
+        }
+        this.gachaTickets--;
+        this.campDrawUsed = true;
+        this.campDrawPool = this.gachaSystem.pull5();
+        this.campSelectedDrawId = null;
+
+        this.ui.updateMainScreen(this.gold, this.gachaTickets, this.stageSystem.getCurrentStage(), this.currentTeam, this.hasDrawn);
+        this.ui.updateCampHint('请选择1张卡加入备选池');
+        this.ui.renderCampDrawPool(this.campDrawPool, null);
+        this.ui.renderCampTeam(this.playerPool, false);
+        this.ui.setCampButtons({
+            canDraw: false,
+            nextText: this.stageSystem.isLastStage() ? '🏠 通关返回首页' : '➡️ 挑战下一关'
+        });
+    }
+
+    selectCampDraw(charId) {
+        if (this.campSelectedDrawId) {
+            return;
+        }
+        const picked = this.campDrawPool.find(c => c.id === charId);
+        if (!picked) return;
+        this.campSelectedDrawId = charId;
+        this.playerPool.push(picked);
+        this.campDrawPool = [];
+        this.gachaSystem.clearDrawPool();
+
+        this.ui.renderCampTeam(this.playerPool, false);
+        this.ui.renderCampDrawPool([], null);
+        this.ui.updateCampHint(`已保留 ${picked.name}，已加入备选池`);
+        const availableCount = this.playerPool.filter(c => !c.isDead).length;
+        this.ui.updateCampAvailableCount(availableCount);
+    }
+
+    campNextStage() {
+        this.stageSystem.reloadStages();
+        if (this.stageSystem.isLastStage()) {
+            this.resetGame();
+            return;
+        }
+        if (this.campRetryMode) {
+            this.campRetryMode = false;
+            this.showTeamSelectFromPool();
+            return;
+        }
+        if (this.stageSystem.advanceStage()) {
+            this.showTeamSelectFromPool();
+        }
+    }
+
+    showTeamSelectFromPool() {
+        this.selectingFromPool = true;
         this.currentTeam = [];
-        this.showTeamSelectScreen();
+        const maxTeamSize = this.getCurrentMaxTeamSize();
+        const availableCount = this.playerPool.filter(c => !c.isDead).length;
+        this.ui.renderDrawPool(this.playerPool, [], false, '备选池为空，请先抽卡获得角色');
+        this.ui.updateTeamCount(0, maxTeamSize);
+        this.ui.updateGachaTickets(this.gachaTickets);
+        this.ui.setGachaControls({
+            showDrawButtons: false,
+            confirmText: '⚔️ 开始战斗',
+            backText: '返回营地'
+        });
+        this.ui.updateCampAvailableCount(availableCount);
+        this.ui.showScreen('gacha');
+    }
+
+    getCurrentMaxTeamSize() {
+        const stage = this.stageSystem.getCurrentStage();
+        return stage?.maxTeamSize ?? 3;
+    }
+
+    handleBackFromGacha() {
+        if (this.selectingFromPool && this.lastCampStage && this.lastCampRewards) {
+            this.showCamp(this.lastCampStage, this.lastCampRewards, null, null, null, true);
+            return;
+        }
+        this.showMainScreen();
+    }
+
+    returnToCampAfterDefeat() {
+        if (this.lastCampStage && this.lastCampRewards) {
+            this.campRetryMode = true;
+            this.showCamp(this.lastCampStage, this.lastCampRewards, null, null, null, true);
+            return;
+        }
+        if (this.playerPool.length > 0) {
+            this.showTeamSelectFromPool();
+            return;
+        }
+        this.showGachaScreen();
     }
 
     resetGame() {
         this.gold = 0;
         this.gachaTickets = 10;
         this.currentTeam = [];
+        this.playerPool = [];
         this.hasDrawn = false;
+        this.initialDrawUsed = false;
+        this.selectingFromPool = false;
+        this.campDrawUsed = false;
+        this.campDrawPool = [];
+        this.campSelectedDrawId = null;
+        this.lastCampStage = null;
+        this.lastCampRewards = null;
+        this.lastResultSummary = null;
+        this.campRetryMode = false;
         this.gachaSystem.clearDrawPool();
         this.stageSystem.reset();
         this.updateMainScreen();

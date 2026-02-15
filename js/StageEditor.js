@@ -3,24 +3,31 @@ import { RARITY, getCharacterPool } from './GachaSystem.js';
 const STAGES_STORAGE_KEY = 'fightdemo_stages';
 
 export const DEFAULT_STAGES = [
-    { id: 1, name: '第1关：新手村', description: '击败弱小的哥布林团伙', enemies: ['goblin', 'goblin', 'goblin_boss'], rewards: { gold: 100, gachaTickets: 3 } },
-    { id: 2, name: '第2关：迷雾森林', description: '森林中的野兽和亡灵出没', enemies: ['wolf', 'wolf', 'skeleton', 'skeleton'], rewards: { gold: 150, gachaTickets: 4 } },
-    { id: 3, name: '第3关：荒废矿坑', description: '深入地下，面对矿坑怪物', enemies: ['skeleton', 'skeleton', 'goblin_boss', 'goblin_boss'], rewards: { gold: 200, gachaTickets: 5 } },
-    { id: 4, name: '第4关：幽灵古堡', description: '古堡中游荡着强大的亡灵', enemies: ['ghost', 'ghost', 'vampire', 'skeleton'], rewards: { gold: 300, gachaTickets: 6 } },
-    { id: 5, name: '第5关：熔岩地狱', description: '炽热的地狱中潜伏着恶魔', enemies: ['demon', 'demon', 'demon', 'demon'], rewards: { gold: 400, gachaTickets: 8 } },
-    { id: 6, name: '第6关：魔王城', description: '最终决战！击败魔王军团', enemies: ['demon', 'vampire', 'dragon', 'demon_king'], rewards: { gold: 600, gachaTickets: 12 } }
+    { id: 1, name: '第1关：新手村', description: '击败弱小的哥布林团伙', enemies: ['goblin', 'goblin', 'goblin_boss'], rewards: { gold: 100, gachaTickets: 3 }, maxTeamSize: 3 },
+    { id: 2, name: '第2关：迷雾森林', description: '森林中的野兽和亡灵出没', enemies: ['wolf', 'wolf', 'skeleton', 'skeleton'], rewards: { gold: 150, gachaTickets: 4 }, maxTeamSize: 3 },
+    { id: 3, name: '第3关：荒废矿坑', description: '深入地下，面对矿坑怪物', enemies: ['skeleton', 'skeleton', 'goblin_boss', 'goblin_boss'], rewards: { gold: 200, gachaTickets: 5 }, maxTeamSize: 3 },
+    { id: 4, name: '第4关：幽灵古堡', description: '古堡中游荡着强大的亡灵', enemies: ['ghost', 'ghost', 'vampire', 'skeleton'], rewards: { gold: 300, gachaTickets: 6 }, maxTeamSize: 3 },
+    { id: 5, name: '第5关：熔岩地狱', description: '炽热的地狱中潜伏着恶魔', enemies: ['demon', 'demon', 'demon', 'demon'], rewards: { gold: 400, gachaTickets: 8 }, maxTeamSize: 3 },
+    { id: 6, name: '第6关：魔王城', description: '最终决战！击败魔王军团', enemies: ['demon', 'vampire', 'dragon', 'demon_king'], rewards: { gold: 600, gachaTickets: 12 }, maxTeamSize: 3 }
 ];
+
+function normalizeStages(stages) {
+    return stages.map(stage => ({
+        ...stage,
+        maxTeamSize: stage.maxTeamSize ?? 3
+    }));
+}
 
 export function getStages() {
     const stored = localStorage.getItem(STAGES_STORAGE_KEY);
     if (stored) {
         try {
-            return JSON.parse(stored);
+            return normalizeStages(JSON.parse(stored));
         } catch (e) {
-            return [...DEFAULT_STAGES];
+            return normalizeStages([...DEFAULT_STAGES]);
         }
     }
-    return [...DEFAULT_STAGES];
+    return normalizeStages([...DEFAULT_STAGES]);
 }
 
 export function saveStages(stages) {
@@ -29,7 +36,7 @@ export function saveStages(stages) {
 
 export function resetStages() {
     localStorage.removeItem(STAGES_STORAGE_KEY);
-    return [...DEFAULT_STAGES];
+    return normalizeStages([...DEFAULT_STAGES]);
 }
 
 export class StageEditor {
@@ -89,6 +96,10 @@ export class StageEditor {
                                     <label>抽卡券奖励</label>
                                     <input type="number" id="edit-stage-tickets" min="0" max="99">
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label>最大上场人数</label>
+                                <input type="number" id="edit-stage-team-max" min="1" max="5">
                             </div>
                             <div class="form-group">
                                 <label>已选敌人 (<span id="selected-count">0</span>个)</label>
@@ -156,7 +167,7 @@ export class StageEditor {
                         <div class="stage-name">${stage.name}</div>
                         <div class="stage-desc">${stage.description}</div>
                         <div class="stage-enemies">敌人: ${enemyNames}</div>
-                        <div class="stage-rewards">奖励: 💰${stage.rewards.gold} 🎫${stage.rewards.gachaTickets}</div>
+                        <div class="stage-rewards">奖励: 💰${stage.rewards.gold} 🎫${stage.rewards.gachaTickets} | 上场上限: ${stage.maxTeamSize ?? 3}</div>
                     </div>
                     <div class="stage-actions">
                         <button class="btn-small btn-edit-stage" data-id="${stage.id}">✏️</button>
@@ -277,6 +288,7 @@ export class StageEditor {
         document.getElementById('edit-stage-desc').value = '';
         document.getElementById('edit-stage-gold').value = 100;
         document.getElementById('edit-stage-tickets').value = 3;
+        document.getElementById('edit-stage-team-max').value = 3;
         
         document.querySelectorAll('.char-select-item').forEach(item => item.classList.remove('selected'));
         document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
@@ -298,6 +310,7 @@ export class StageEditor {
         document.getElementById('edit-stage-desc').value = stage.description;
         document.getElementById('edit-stage-gold').value = stage.rewards.gold;
         document.getElementById('edit-stage-tickets').value = stage.rewards.gachaTickets;
+        document.getElementById('edit-stage-team-max').value = stage.maxTeamSize ?? 3;
         
         document.querySelectorAll('.char-select-item').forEach(item => {
             if (this.selectedEnemies.includes(item.dataset.id)) {
@@ -325,6 +338,8 @@ export class StageEditor {
         const desc = document.getElementById('edit-stage-desc').value.trim();
         const gold = parseInt(document.getElementById('edit-stage-gold').value) || 100;
         const tickets = parseInt(document.getElementById('edit-stage-tickets').value) || 3;
+        const teamMaxInput = parseInt(document.getElementById('edit-stage-team-max').value);
+        const maxTeamSize = Math.max(1, Math.min(5, Number.isNaN(teamMaxInput) ? 3 : teamMaxInput));
         
         if (!name) {
             alert('请填写关卡名称！');
@@ -341,6 +356,7 @@ export class StageEditor {
             name,
             description: desc,
             enemies: [...this.selectedEnemies],
+            maxTeamSize,
             rewards: {
                 gold: Math.max(0, Math.min(9999, gold)),
                 gachaTickets: Math.max(0, Math.min(99, tickets))
