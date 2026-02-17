@@ -1,0 +1,3645 @@
+{
+  "totalRuns": 500,
+  "fullClears": 307,
+  "failureStageCounts": {
+    "第6关：魔王城": 126,
+    "第5关：熔岩地狱": 40,
+    "第4关：幽灵古堡": 25,
+    "第2关：迷雾森林": 2
+  },
+  "runLogs": [
+    {
+      "runId": 1,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 5,
+          "team": [
+            "ninja",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "paladin",
+            "ninja",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "paladin",
+            "ninja",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 34,
+          "team": [
+            "paladin",
+            "paladin",
+            "ninja",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 52,
+          "team": [
+            "paladin",
+            "paladin",
+            "ninja",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 49,
+          "team": [
+            "paladin",
+            "paladin",
+            "ninja",
+            "knight",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    },
+    {
+      "runId": 2,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 11,
+          "team": [
+            "paladin",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 18,
+          "team": [
+            "paladin",
+            "archmage",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 29,
+          "team": [
+            "paladin",
+            "archmage",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 58,
+          "team": [
+            "paladin",
+            "paladin",
+            "archmage",
+            "archmage",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 3,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 34,
+          "team": [
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 16,
+          "team": [
+            "paladin",
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 44,
+          "team": [
+            "paladin",
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "失败",
+          "turns": 61,
+          "team": [
+            "paladin",
+            "berserker",
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": "第5关：熔岩地狱"
+    },
+    {
+      "runId": 4,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "berserker",
+            "berserker",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 18,
+          "team": [
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "archmage",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 21,
+          "team": [
+            "paladin",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 17,
+          "team": [
+            "phoenix",
+            "paladin",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 23,
+          "team": [
+            "phoenix",
+            "paladin",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 5,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 5,
+          "team": [
+            "ninja",
+            "archmage",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 11,
+          "team": [
+            "ninja",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "paladin",
+            "ninja",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 18,
+          "team": [
+            "paladin",
+            "ninja",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 32,
+          "team": [
+            "paladin",
+            "paladin",
+            "ninja",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 52,
+          "team": [
+            "paladin",
+            "paladin",
+            "paladin",
+            "ninja",
+            "archmage"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    },
+    {
+      "runId": 6,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "paladin",
+            "berserker",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 17,
+          "team": [
+            "paladin",
+            "paladin",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 11,
+          "team": [
+            "paladin",
+            "paladin",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 18,
+          "team": [
+            "dragon_knight",
+            "paladin",
+            "paladin",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 22,
+          "team": [
+            "dragon_knight",
+            "paladin",
+            "paladin",
+            "ninja",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 34,
+          "team": [
+            "dragon_knight",
+            "paladin",
+            "paladin",
+            "ninja",
+            "archmage"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 7,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 5,
+          "team": [
+            "paladin",
+            "ninja",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "paladin",
+            "ninja",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "paladin",
+            "ninja",
+            "assassin",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 20,
+          "team": [
+            "paladin",
+            "ninja",
+            "assassin",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 40,
+          "team": [
+            "paladin",
+            "ninja",
+            "berserker",
+            "assassin",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 44,
+          "team": [
+            "paladin",
+            "ninja",
+            "berserker",
+            "berserker",
+            "assassin"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    },
+    {
+      "runId": 8,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 4,
+          "team": [
+            "ninja",
+            "berserker",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "ninja",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "ninja",
+            "ninja",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 15,
+          "team": [
+            "paladin",
+            "ninja",
+            "ninja",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 20,
+          "team": [
+            "paladin",
+            "ninja",
+            "ninja",
+            "ninja",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 26,
+          "team": [
+            "paladin",
+            "ninja",
+            "ninja",
+            "ninja",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 9,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 5,
+          "team": [
+            "dragon_knight",
+            "assassin",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "dragon_knight",
+            "archmage",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "dragon_knight",
+            "archmage",
+            "berserker",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 14,
+          "team": [
+            "dragon_knight",
+            "archmage",
+            "berserker",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 24,
+          "team": [
+            "dragon_knight",
+            "archmage",
+            "berserker",
+            "berserker",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 30,
+          "team": [
+            "dragon_knight",
+            "archmage",
+            "berserker",
+            "berserker",
+            "assassin"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 10,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "archmage",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 18,
+          "team": [
+            "archmage",
+            "berserker",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 31,
+          "team": [
+            "archmage",
+            "berserker",
+            "berserker",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 23,
+          "team": [
+            "phoenix",
+            "archmage",
+            "berserker",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 11,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 4,
+          "team": [
+            "paladin",
+            "ninja",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "paladin",
+            "ninja",
+            "ninja"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "paladin",
+            "ninja",
+            "ninja",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 16,
+          "team": [
+            "paladin",
+            "ninja",
+            "ninja",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 21,
+          "team": [
+            "paladin",
+            "ninja",
+            "ninja",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 50,
+          "team": [
+            "paladin",
+            "paladin",
+            "ninja",
+            "ninja",
+            "archmage"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    },
+    {
+      "runId": 12,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 14,
+          "team": [
+            "berserker",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "berserker",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 26,
+          "team": [
+            "paladin",
+            "berserker",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 57,
+          "team": [
+            "paladin",
+            "berserker",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 47,
+          "team": [
+            "paladin",
+            "berserker",
+            "berserker",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    },
+    {
+      "runId": 13,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "berserker",
+            "warrior",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 26,
+          "team": [
+            "berserker",
+            "knight",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "berserker",
+            "knight",
+            "assassin",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 19,
+          "team": [
+            "dragon_knight",
+            "berserker",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 27,
+          "team": [
+            "dragon_knight",
+            "berserker",
+            "berserker",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 34,
+          "team": [
+            "dragon_knight",
+            "paladin",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 14,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "berserker",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 17,
+          "team": [
+            "berserker",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "berserker",
+            "knight",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "失败",
+          "turns": 44,
+          "team": [
+            "ninja",
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": "第4关：幽灵古堡"
+    },
+    {
+      "runId": 15,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "assassin",
+            "warrior",
+            "mage"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 17,
+          "team": [
+            "berserker",
+            "assassin",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 6,
+          "team": [
+            "phoenix",
+            "berserker",
+            "assassin",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "phoenix",
+            "berserker",
+            "berserker",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 21,
+          "team": [
+            "phoenix",
+            "ninja",
+            "berserker",
+            "berserker",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 26,
+          "team": [
+            "phoenix",
+            "ninja",
+            "berserker",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 16,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 7,
+          "team": [
+            "archmage",
+            "warrior",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "ninja",
+            "archmage",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "ninja",
+            "archmage",
+            "knight",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 20,
+          "team": [
+            "ninja",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 45,
+          "team": [
+            "paladin",
+            "ninja",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 50,
+          "team": [
+            "paladin",
+            "paladin",
+            "ninja",
+            "archmage",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    },
+    {
+      "runId": 17,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 3,
+          "team": [
+            "phoenix",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "phoenix",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 7,
+          "team": [
+            "phoenix",
+            "knight",
+            "knight",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "phoenix",
+            "knight",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 21,
+          "team": [
+            "phoenix",
+            "berserker",
+            "knight",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 28,
+          "team": [
+            "phoenix",
+            "berserker",
+            "knight",
+            "knight",
+            "assassin"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 18,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "berserker",
+            "warrior",
+            "mage"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 22,
+          "team": [
+            "paladin",
+            "berserker",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "paladin",
+            "berserker",
+            "berserker",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 26,
+          "team": [
+            "paladin",
+            "berserker",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 39,
+          "team": [
+            "paladin",
+            "berserker",
+            "berserker",
+            "berserker",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 36,
+          "team": [
+            "paladin",
+            "berserker",
+            "berserker",
+            "berserker",
+            "assassin"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    },
+    {
+      "runId": 19,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 4,
+          "team": [
+            "paladin",
+            "archmage",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 16,
+          "team": [
+            "paladin",
+            "paladin",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 7,
+          "team": [
+            "phoenix",
+            "paladin",
+            "paladin",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "phoenix",
+            "paladin",
+            "paladin",
+            "paladin"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 20,
+          "team": [
+            "phoenix",
+            "paladin",
+            "paladin",
+            "paladin",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 24,
+          "team": [
+            "phoenix",
+            "paladin",
+            "paladin",
+            "paladin",
+            "archmage"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 20,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 5,
+          "team": [
+            "ninja",
+            "archmage",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "ninja",
+            "archmage",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "ninja",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 20,
+          "team": [
+            "ninja",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 29,
+          "team": [
+            "ninja",
+            "archmage",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 29,
+          "team": [
+            "dragon_knight",
+            "ninja",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 21,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 5,
+          "team": [
+            "ninja",
+            "archmage",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "ninja",
+            "archmage",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "ninja",
+            "archmage",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 20,
+          "team": [
+            "ninja",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 22,
+          "team": [
+            "ninja",
+            "ninja",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 22,
+          "team": [
+            "dragon_knight",
+            "ninja",
+            "ninja",
+            "archmage",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 22,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 34,
+          "team": [
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "ninja",
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "失败",
+          "turns": 44,
+          "team": [
+            "ninja",
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": "第4关：幽灵古堡"
+    },
+    {
+      "runId": 23,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "archmage",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "ninja",
+            "archmage",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "paladin",
+            "ninja",
+            "archmage",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "dragon_knight",
+            "paladin",
+            "ninja",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 19,
+          "team": [
+            "dragon_knight",
+            "paladin",
+            "ninja",
+            "ninja",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 27,
+          "team": [
+            "dragon_knight",
+            "paladin",
+            "ninja",
+            "ninja",
+            "archmage"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 24,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 4,
+          "team": [
+            "paladin",
+            "ninja",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "dragon_knight",
+            "paladin",
+            "ninja"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "dragon_knight",
+            "paladin",
+            "ninja",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "dragon_knight",
+            "phoenix",
+            "paladin",
+            "ninja"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 17,
+          "team": [
+            "dragon_knight",
+            "phoenix",
+            "paladin",
+            "ninja",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 18,
+          "team": [
+            "dragon_knight",
+            "phoenix",
+            "phoenix",
+            "paladin",
+            "ninja"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 25,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 4,
+          "team": [
+            "paladin",
+            "archmage",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "paladin",
+            "archmage",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "paladin",
+            "paladin",
+            "archmage",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 19,
+          "team": [
+            "paladin",
+            "paladin",
+            "ninja",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 27,
+          "team": [
+            "paladin",
+            "paladin",
+            "ninja",
+            "archmage",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 48,
+          "team": [
+            "paladin",
+            "paladin",
+            "ninja",
+            "archmage",
+            "archmage"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    },
+    {
+      "runId": 26,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 5,
+          "team": [
+            "archmage",
+            "assassin",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 14,
+          "team": [
+            "archmage",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "archmage",
+            "berserker",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 20,
+          "team": [
+            "archmage",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 31,
+          "team": [
+            "archmage",
+            "archmage",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 51,
+          "team": [
+            "archmage",
+            "archmage",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    },
+    {
+      "runId": 27,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "berserker",
+            "assassin",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "berserker",
+            "berserker",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "berserker",
+            "berserker",
+            "berserker",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 11,
+          "team": [
+            "phoenix",
+            "berserker",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 17,
+          "team": [
+            "phoenix",
+            "archmage",
+            "berserker",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 23,
+          "team": [
+            "phoenix",
+            "archmage",
+            "berserker",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 28,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "berserker",
+            "warrior",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "ninja",
+            "berserker",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "ninja",
+            "berserker",
+            "warrior",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 36,
+          "team": [
+            "paladin",
+            "ninja",
+            "berserker",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 23,
+          "team": [
+            "paladin",
+            "ninja",
+            "ninja",
+            "berserker",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 40,
+          "team": [
+            "paladin",
+            "ninja",
+            "ninja",
+            "berserker",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    },
+    {
+      "runId": 29,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "archmage",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 17,
+          "team": [
+            "archmage",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 15,
+          "team": [
+            "archmage",
+            "knight",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 53,
+          "team": [
+            "archmage",
+            "knight",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "失败",
+          "turns": 68,
+          "team": [
+            "archmage",
+            "archmage",
+            "knight",
+            "knight",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": "第5关：熔岩地狱"
+    },
+    {
+      "runId": 30,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 3,
+          "team": [
+            "phoenix",
+            "paladin",
+            "paladin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 7,
+          "team": [
+            "phoenix",
+            "paladin",
+            "paladin"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 4,
+          "team": [
+            "phoenix",
+            "phoenix",
+            "paladin",
+            "paladin"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "phoenix",
+            "phoenix",
+            "paladin",
+            "paladin"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 17,
+          "team": [
+            "phoenix",
+            "phoenix",
+            "paladin",
+            "paladin",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 20,
+          "team": [
+            "phoenix",
+            "phoenix",
+            "paladin",
+            "paladin",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 31,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 4,
+          "team": [
+            "archmage",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "ninja",
+            "archmage",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "ninja",
+            "archmage",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 16,
+          "team": [
+            "ninja",
+            "archmage",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 24,
+          "team": [
+            "ninja",
+            "archmage",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 36,
+          "team": [
+            "ninja",
+            "archmage",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 32,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 11,
+          "team": [
+            "knight",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 34,
+          "team": [
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 18,
+          "team": [
+            "berserker",
+            "knight",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "phoenix",
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 23,
+          "team": [
+            "phoenix",
+            "berserker",
+            "knight",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 29,
+          "team": [
+            "phoenix",
+            "berserker",
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 33,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 7,
+          "team": [
+            "archmage",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "ninja",
+            "archmage",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "ninja",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 18,
+          "team": [
+            "paladin",
+            "ninja",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 45,
+          "team": [
+            "paladin",
+            "ninja",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 46,
+          "team": [
+            "paladin",
+            "ninja",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    },
+    {
+      "runId": 34,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 7,
+          "team": [
+            "paladin",
+            "archmage",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 17,
+          "team": [
+            "paladin",
+            "archmage",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "paladin",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 27,
+          "team": [
+            "paladin",
+            "paladin",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 36,
+          "team": [
+            "paladin",
+            "paladin",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 31,
+          "team": [
+            "dragon_knight",
+            "paladin",
+            "paladin",
+            "archmage",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 35,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 4,
+          "team": [
+            "ninja",
+            "warrior",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "ninja",
+            "berserker",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "ninja",
+            "berserker",
+            "knight",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 17,
+          "team": [
+            "ninja",
+            "ninja",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 23,
+          "team": [
+            "paladin",
+            "ninja",
+            "ninja",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 40,
+          "team": [
+            "paladin",
+            "ninja",
+            "ninja",
+            "berserker",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    },
+    {
+      "runId": 36,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 7,
+          "team": [
+            "dragon_knight",
+            "berserker",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "dragon_knight",
+            "berserker",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "dragon_knight",
+            "berserker",
+            "assassin",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 15,
+          "team": [
+            "dragon_knight",
+            "ninja",
+            "berserker",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 21,
+          "team": [
+            "dragon_knight",
+            "paladin",
+            "ninja",
+            "berserker",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 30,
+          "team": [
+            "dragon_knight",
+            "paladin",
+            "ninja",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 37,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 4,
+          "team": [
+            "phoenix",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "phoenix",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 7,
+          "team": [
+            "phoenix",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 11,
+          "team": [
+            "phoenix",
+            "archmage",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 18,
+          "team": [
+            "phoenix",
+            "archmage",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 23,
+          "team": [
+            "phoenix",
+            "archmage",
+            "archmage",
+            "archmage",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 38,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "berserker",
+            "berserker",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 7,
+          "team": [
+            "phoenix",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 5,
+          "team": [
+            "phoenix",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 11,
+          "team": [
+            "phoenix",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 23,
+          "team": [
+            "phoenix",
+            "berserker",
+            "berserker",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 22,
+          "team": [
+            "phoenix",
+            "phoenix",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 39,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 16,
+          "team": [
+            "knight",
+            "knight",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 37,
+          "team": [
+            "knight",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 24,
+          "team": [
+            "knight",
+            "knight",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 65,
+          "team": [
+            "knight",
+            "knight",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "失败",
+          "turns": 52,
+          "team": [
+            "berserker",
+            "knight",
+            "knight",
+            "knight",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": "第5关：熔岩地狱"
+    },
+    {
+      "runId": 40,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "archmage",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 17,
+          "team": [
+            "archmage",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 15,
+          "team": [
+            "archmage",
+            "knight",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 53,
+          "team": [
+            "archmage",
+            "knight",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "失败",
+          "turns": 68,
+          "team": [
+            "archmage",
+            "archmage",
+            "knight",
+            "knight",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": "第5关：熔岩地狱"
+    },
+    {
+      "runId": 41,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 4,
+          "team": [
+            "ninja",
+            "knight",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "ninja",
+            "archmage",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "ninja",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 20,
+          "team": [
+            "ninja",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 29,
+          "team": [
+            "ninja",
+            "archmage",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 30,
+          "team": [
+            "ninja",
+            "ninja",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 42,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "berserker",
+            "berserker",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 15,
+          "team": [
+            "paladin",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 5,
+          "team": [
+            "phoenix",
+            "paladin",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "phoenix",
+            "paladin",
+            "paladin",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 19,
+          "team": [
+            "phoenix",
+            "paladin",
+            "paladin",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 25,
+          "team": [
+            "phoenix",
+            "paladin",
+            "paladin",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 43,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "archmage",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 16,
+          "team": [
+            "ninja",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 28,
+          "team": [
+            "paladin",
+            "ninja",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 31,
+          "team": [
+            "paladin",
+            "ninja",
+            "ninja",
+            "archmage",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 44,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 4,
+          "team": [
+            "ninja",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 11,
+          "team": [
+            "dragon_knight",
+            "ninja",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 7,
+          "team": [
+            "dragon_knight",
+            "ninja",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 19,
+          "team": [
+            "dragon_knight",
+            "ninja",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 18,
+          "team": [
+            "dragon_knight",
+            "ninja",
+            "ninja",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 24,
+          "team": [
+            "dragon_knight",
+            "ninja",
+            "ninja",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 45,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "paladin",
+            "paladin",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 25,
+          "team": [
+            "paladin",
+            "paladin",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 16,
+          "team": [
+            "paladin",
+            "paladin",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 41,
+          "team": [
+            "paladin",
+            "paladin",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 51,
+          "team": [
+            "paladin",
+            "paladin",
+            "paladin",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 55,
+          "team": [
+            "paladin",
+            "paladin",
+            "paladin",
+            "berserker",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    },
+    {
+      "runId": 46,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 8,
+          "team": [
+            "berserker",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 18,
+          "team": [
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "ninja",
+            "berserker",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 17,
+          "team": [
+            "ninja",
+            "berserker",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 21,
+          "team": [
+            "ninja",
+            "ninja",
+            "berserker",
+            "berserker",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 30,
+          "team": [
+            "ninja",
+            "ninja",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 47,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "berserker",
+            "warrior",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 26,
+          "team": [
+            "berserker",
+            "knight",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 18,
+          "team": [
+            "berserker",
+            "knight",
+            "warrior",
+            "warrior"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "失败",
+          "turns": 36,
+          "team": [
+            "ninja",
+            "berserker",
+            "knight",
+            "warrior"
+          ]
+        }
+      ],
+      "failedStageName": "第4关：幽灵古堡"
+    },
+    {
+      "runId": 48,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 5,
+          "team": [
+            "ninja",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 12,
+          "team": [
+            "ninja",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "ninja",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 20,
+          "team": [
+            "ninja",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 16,
+          "team": [
+            "phoenix",
+            "ninja",
+            "archmage",
+            "berserker",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 24,
+          "team": [
+            "phoenix",
+            "ninja",
+            "archmage",
+            "berserker",
+            "berserker"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 49,
+      "result": "通关",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 4,
+          "team": [
+            "archmage",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 13,
+          "team": [
+            "paladin",
+            "archmage",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "paladin",
+            "archmage",
+            "archmage",
+            "berserker"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 17,
+          "team": [
+            "paladin",
+            "ninja",
+            "archmage",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 24,
+          "team": [
+            "paladin",
+            "ninja",
+            "archmage",
+            "archmage",
+            "archmage"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "胜利",
+          "turns": 32,
+          "team": [
+            "paladin",
+            "ninja",
+            "ninja",
+            "archmage",
+            "archmage"
+          ]
+        }
+      ],
+      "failedStageName": null
+    },
+    {
+      "runId": 50,
+      "result": "失败",
+      "stages": [
+        {
+          "stageName": "第1关：新手村",
+          "result": "胜利",
+          "turns": 5,
+          "team": [
+            "ninja",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第2关：迷雾森林",
+          "result": "胜利",
+          "turns": 10,
+          "team": [
+            "ninja",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第3关：荒废矿坑",
+          "result": "胜利",
+          "turns": 9,
+          "team": [
+            "ninja",
+            "knight",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第4关：幽灵古堡",
+          "result": "胜利",
+          "turns": 25,
+          "team": [
+            "ninja",
+            "archmage",
+            "knight",
+            "knight"
+          ]
+        },
+        {
+          "stageName": "第5关：熔岩地狱",
+          "result": "胜利",
+          "turns": 26,
+          "team": [
+            "ninja",
+            "archmage",
+            "knight",
+            "knight",
+            "assassin"
+          ]
+        },
+        {
+          "stageName": "第6关：魔王城",
+          "result": "失败",
+          "turns": 41,
+          "team": [
+            "paladin",
+            "ninja",
+            "archmage",
+            "knight",
+            "knight"
+          ]
+        }
+      ],
+      "failedStageName": "第6关：魔王城"
+    }
+  ],
+  "stageSummaries": [
+    {
+      "stageName": "第1关：新手村",
+      "attempts": 500,
+      "wins": 500,
+      "totalTurnsWin": 3661,
+      "totalTurnsAll": 3661,
+      "winRate": 1,
+      "avgTurnsWin": 7.322,
+      "avgTurnsAll": 7.322
+    },
+    {
+      "stageName": "第2关：迷雾森林",
+      "attempts": 500,
+      "wins": 498,
+      "totalTurnsWin": 7278,
+      "totalTurnsAll": 7362,
+      "winRate": 0.996,
+      "avgTurnsWin": 14.614457831325302,
+      "avgTurnsAll": 14.724
+    },
+    {
+      "stageName": "第3关：荒废矿坑",
+      "attempts": 498,
+      "wins": 498,
+      "totalTurnsWin": 4987,
+      "totalTurnsAll": 4987,
+      "winRate": 1,
+      "avgTurnsWin": 10.014056224899598,
+      "avgTurnsAll": 10.014056224899598
+    },
+    {
+      "stageName": "第4关：幽灵古堡",
+      "attempts": 498,
+      "wins": 473,
+      "totalTurnsWin": 9856,
+      "totalTurnsAll": 10929,
+      "winRate": 0.9497991967871486,
+      "avgTurnsWin": 20.837209302325583,
+      "avgTurnsAll": 21.94578313253012
+    },
+    {
+      "stageName": "第5关：熔岩地狱",
+      "attempts": 473,
+      "wins": 433,
+      "totalTurnsWin": 11835,
+      "totalTurnsAll": 14038,
+      "winRate": 0.9154334038054969,
+      "avgTurnsWin": 27.33256351039261,
+      "avgTurnsAll": 29.67864693446089
+    },
+    {
+      "stageName": "第6关：魔王城",
+      "attempts": 433,
+      "wins": 307,
+      "totalTurnsWin": 8565,
+      "totalTurnsAll": 14285,
+      "winRate": 0.7090069284064665,
+      "avgTurnsWin": 27.89902280130293,
+      "avgTurnsAll": 32.99076212471132
+    }
+  ],
+  "gacha": {
+    "totalPulls": 17010,
+    "rarityCounts": {
+      "COMMON": 11636,
+      "RARE": 3682,
+      "EPIC": 1363,
+      "LEGENDARY": 329
+    },
+    "rarityRates": {
+      "COMMON": 0.6840681951793063,
+      "RARE": 0.21646090534979423,
+      "EPIC": 0.08012933568489124,
+      "LEGENDARY": 0.01934156378600823
+    },
+    "templateCounts": {
+      "archer": 2917,
+      "warrior": 2907,
+      "assassin": 1185,
+      "knight": 1230,
+      "mage": 2891,
+      "ninja": 442,
+      "priest": 2921,
+      "paladin": 445,
+      "berserker": 1267,
+      "archmage": 476,
+      "phoenix": 154,
+      "dragon_knight": 175
+    }
+  },
+  "teamUsage": {
+    "ninja": 1507,
+    "knight": 1599,
+    "assassin": 789,
+    "paladin": 1579,
+    "berserker": 2931,
+    "archmage": 1418,
+    "warrior": 403,
+    "phoenix": 605,
+    "dragon_knight": 627,
+    "mage": 56
+  }
+}
