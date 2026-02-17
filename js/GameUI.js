@@ -17,7 +17,8 @@ export class GameUI {
                 camp: document.getElementById('screen-camp'),
                 result: document.getElementById('screen-result'),
                 editor: document.getElementById('screen-editor'),
-                stageEditor: document.getElementById('screen-stage-editor')
+                stageEditor: document.getElementById('screen-stage-editor'),
+                mapEditor: document.getElementById('screen-map-editor')
             },
             main: {
                 gold: document.getElementById('main-gold'),

@@ -1,9 +1,10 @@
 import { GachaSystem } from './GachaSystem.js';
 import { StageSystem } from './StageSystem.js';
-import { BattleSystem } from './BattleSystem.js';
 import { GameUI } from './GameUI.js';
 import { PoolEditor } from './PoolEditor.js';
 import { StageEditor, getStages } from './StageEditor.js';
+import { EmbeddedMapEditor } from './hex-map-editor-embedded.js';
+import { initHexBattlefield } from './hex-battlefield.js';
 
 class Game {
     ui;
@@ -12,6 +13,8 @@ class Game {
     battleSystem = null;
     poolEditor = null;
     stageEditor = null;
+    mapEditor = null;
+    hexBattlefield = null;
     
     gold = 0;
     gachaTickets = 10;
@@ -35,6 +38,34 @@ class Game {
         this.stageSystem = new StageSystem();
         this.poolEditor = new PoolEditor('editor-container');
         this.stageEditor = new StageEditor('stage-editor-container');
+        this.hexBattlefield = initHexBattlefield({
+            ids: {
+                hexMap: 'battle-hex-map',
+                toggleEditorBtn: 'battle-toggle-editor',
+                editorBar: 'battle-editor-bar',
+                editorSaveDefaultBtn: 'battle-editor-save-default',
+                editorSaveStageBtn: 'battle-editor-save-stage',
+                editorResetBtn: 'battle-editor-reset',
+                coordDisplayEl: 'battle-coord-display',
+                stageNameEl: 'battle-prep-stage-name',
+                phaseLabelEl: 'battle-phase-label',
+                enemyCountEl: 'battle-enemy-count',
+                playerCountEl: 'battle-player-count',
+                playerPoolEl: 'battle-player-pool',
+                startBattleBtn: 'battle-start-battle-btn',
+                resetPlacementBtn: 'battle-reset-placement-btn',
+                battlePanelEl: 'battle-panel',
+                battleStageNameEl: 'battle-stage-name',
+                battleRoundEl: 'battle-round',
+                battleStatusEl: 'battle-status',
+                turnOrderEl: 'battle-turn-order',
+                turnOrderListEl: 'battle-turn-order-list',
+                battleHintsEl: 'battle-hints',
+                hintTitleEl: 'battle-hint-title',
+                hintMainEl: 'battle-hint-main',
+                hintSubEl: 'battle-hint-sub'
+            }
+        });
         
         this.poolEditor.onSave(() => {
             this.gachaSystem = new GachaSystem();
@@ -51,10 +82,26 @@ class Game {
         this.stageEditor.onClose(() => {
             this.showMainScreen();
         });
+
+        this.stageEditor.onMapEdit((stageId) => {
+            this.showMapEditorScreen(stageId);
+        });
         
         this.setupEventListeners();
         this.updateMainScreen();
-        this.showMainScreen();
+        const params = new URLSearchParams(window.location.search);
+        const screen = params.get('screen');
+        const hash = window.location.hash.replace('#', '');
+        let openStageEditor = false;
+        try {
+            openStageEditor = sessionStorage.getItem('openStageEditor') === '1';
+            if (openStageEditor) sessionStorage.removeItem('openStageEditor');
+        } catch (e) {}
+        if (screen === 'stageEditor' || hash === 'stageEditor' || hash === 'stage-editor' || openStageEditor) {
+            this.showStageEditorScreen();
+        } else {
+            this.showMainScreen();
+        }
     }
 
     setupEventListeners() {
@@ -113,6 +160,20 @@ class Game {
         }
         this.stageEditor.show();
         this.ui.showScreen('stageEditor');
+    }
+
+    showMapEditorScreen(stageId) {
+        if (this.hasDrawn) {
+            alert('已开始挑战，无法编辑关卡地图！请返回首页重新开始后再编辑。');
+            return;
+        }
+        if (!this.mapEditor) {
+            this.mapEditor = new EmbeddedMapEditor(() => {
+                this.showStageEditorScreen();
+            });
+        }
+        this.mapEditor.setStage(stageId);
+        this.ui.showScreen('mapEditor');
     }
 
     showGachaScreen() {
@@ -238,24 +299,22 @@ class Game {
             alert('当前关卡没有敌人，请检查关卡配置！');
             return;
         }
-        
-        document.getElementById('battle-stage-info').textContent = stage.name;
-        
-        this.ui.renderBattleTeam(this.currentTeam, 'battle-team-a');
-        this.ui.renderBattleTeam(enemies, 'battle-team-b');
-        this.ui.clearBattleLog();
+
         this.ui.showScreen('battle');
-        
-        this.battleSystem = new BattleSystem(this.currentTeam, enemies);
-        
-        this.battleSystem.addEventListener((event) => {
-            this.handleBattleEvent(event);
-        });
-        
-        this.ui.addBattleLog(`⚔️ ${stage.name} 开始！`, 'turn');
-        
-        this.battleSystem.start().then((winner) => {
-            this.handleBattleEnd(winner);
+        const battleApi = this.hexBattlefield?.battleApi;
+        if (!battleApi) {
+            alert('战斗系统未就绪，请刷新页面重试。');
+            return;
+        }
+        battleApi.loadBattle({
+            stage,
+            stageId: stage.id,
+            playerUnits: this.currentTeam,
+            enemyUnits: enemies,
+            onBattleEnd: ({ winner, damageStats, totalDamage, turnCount, deadAllyIds }) => {
+                this.battleDeadIds = new Set(deadAllyIds || []);
+                this.handleBattleEnd(winner, { damageStats, totalDamage, turnCount });
+            }
         });
     }
 
@@ -301,18 +360,26 @@ class Game {
         }
     }
 
-    handleBattleEnd(winner) {
+    handleBattleEnd(winner, stats = {}) {
         const stage = this.stageSystem.getCurrentStage();
         const isVictory = winner === 'A';
-        const damageStats = this.battleSystem.getDamageStats();
-        const totalDamage = this.battleSystem.getTotalDamage();
-        const turnCount = this.battleSystem.getTurnCount();
+        const damageStats = stats.damageStats || [];
+        const totalDamage = stats.totalDamage || 0;
+        const turnCount = stats.turnCount || 0;
         
         if (isVictory) {
             this.stageSystem.clearCurrentStage();
             const rewards = stage.rewards;
             this.gold += rewards.gold;
             this.gachaTickets += rewards.gachaTickets;
+            if (this.battleDeadIds.size > 0) {
+                this.battleDeadIds.forEach(id => {
+                    const teamChar = this.currentTeam.find(c => c.id === id);
+                    if (teamChar) teamChar.isDead = true;
+                    const poolChar = this.playerPool.find(c => c.id === id);
+                    if (poolChar) poolChar.isDead = true;
+                });
+            }
             this.reorderPlayerPoolByLastTeam();
             this.lastResultSummary = { stage, rewards, damageStats, totalDamage, turnCount };
         } else if (this.battleDeadIds.size > 0) {

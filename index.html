@@ -492,6 +492,529 @@
             0% { opacity: 1; transform: translateY(0) scale(1); }
             100% { opacity: 0; transform: translateY(-25px) scale(1.3); }
         }
+
+        #screen-battle {
+            padding: 0;
+            --panel-bg: rgba(10, 14, 26, 0.55);
+            --panel-bg-strong: rgba(12, 16, 30, 0.78);
+            --panel-border: rgba(170, 195, 255, 0.12);
+            --text-dim: rgba(220, 230, 255, 0.78);
+            --accent-amber: #f3c97a;
+            --accent-blue-a: #2c74d6;
+            --accent-blue-b: #1e4aa6;
+        }
+
+        #screen-battle .status-header {
+            padding: 12px;
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--panel-border);
+            flex-shrink: 0;
+        }
+
+        #screen-battle .status-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            gap: 10px;
+        }
+
+        #screen-battle .turn-info {
+            font-weight: bold;
+            color: var(--accent-amber);
+        }
+
+        #screen-battle .team-stats {
+            display: flex;
+            gap: 12px;
+        }
+
+        #screen-battle .status-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #screen-battle .editor-toggle {
+            display: none;
+        }
+
+        #screen-battle .battlefield-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            position: relative;
+            min-height: 0;
+            background: var(--panel-bg-strong);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            overflow: hidden;
+            --hex-gap-color: rgba(12, 16, 30, 0.82);
+            --hex-fill-bg: rgba(180, 160, 255, 0.22);
+            --hex-stroke: rgba(180, 205, 255, 0.18);
+            --hex-boundary-bg: rgba(243, 201, 122, 0.3);
+            --hex-ally-bg: rgba(84, 166, 255, 0.22);
+            --hex-enemy-bg: rgba(255, 106, 128, 0.22);
+        }
+
+        #screen-battle .editor-bar {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 8px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.55);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            backdrop-filter: blur(8px);
+            z-index: 2;
+        }
+
+        #screen-battle .editor-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        #screen-battle .editor-row.types {
+            padding-top: 2px;
+            border-top: 1px dashed rgba(170, 195, 255, 0.14);
+            margin-top: 2px;
+        }
+
+        #screen-battle .editor-row.types.disabled {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+        #screen-battle .editor-bar[hidden] {
+            display: none;
+        }
+
+        #screen-battle .editor-btn {
+            padding: 7px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: rgba(170, 195, 255, 0.08);
+            color: rgba(232, 240, 255, 0.9);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        #screen-battle .editor-btn.active {
+            border-color: rgba(243, 201, 122, 0.55);
+            box-shadow: 0 0 10px rgba(243, 201, 122, 0.16);
+        }
+
+        #screen-battle .hex-map {
+            position: relative;
+            perspective: 1000px;
+            --hex-w: 64px;
+            --hex-h: calc(var(--hex-w) * 0.8660254);
+            --gap-x: 4px;
+            --hex-gap: 2.6px;
+        }
+
+        #screen-battle .hex-cell {
+            width: var(--hex-w);
+            height: var(--hex-h);
+            background: var(--hex-gap-color);
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: absolute;
+            border: none;
+            transform: translateZ(0);
+            transform-origin: center;
+        }
+
+        #screen-battle .hex-fill {
+            position: absolute;
+            inset: var(--hex-gap);
+            background: var(--hex-fill-bg);
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            border: none;
+            box-shadow: inset 0 0 0 1px var(--hex-stroke);
+        }
+
+        #screen-battle .hex-cell.boundary .hex-fill {
+            background: var(--hex-boundary-bg);
+        }
+
+        #screen-battle .hex-cell:hover {
+            transform: translateY(-2px);
+        }
+
+        #screen-battle .hex-cell.selected .hex-fill {
+            background: rgba(243, 201, 122, 0.32);
+            box-shadow: inset 0 0 0 2px rgba(243, 201, 122, 0.65), 0 0 12px rgba(243, 201, 122, 0.18);
+        }
+
+        #screen-battle .hex-cell.ally .hex-fill {
+            background: var(--hex-ally-bg);
+        }
+
+        #screen-battle .hex-cell.enemy .hex-fill {
+            background: var(--hex-enemy-bg);
+        }
+
+        #screen-battle .hex-cell.has-unit .hex-fill {
+            box-shadow: inset 0 0 0 2px rgba(210, 225, 255, 0.18);
+        }
+
+        #screen-battle .hex-cell.move-option .hex-fill {
+            box-shadow: inset 0 0 0 2px rgba(120, 180, 255, 0.35), 0 0 10px rgba(120, 180, 255, 0.12);
+        }
+
+        #screen-battle .hex-cell.attack-option .hex-fill {
+            box-shadow: inset 0 0 0 2px rgba(255, 140, 140, 0.45), 0 0 12px rgba(255, 106, 128, 0.2);
+        }
+
+        #screen-battle .unit-icon {
+            position: relative;
+            z-index: 1;
+            font-size: 1.6rem;
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(10, 14, 26, 0.45);
+        }
+
+        #screen-battle .hex-cell.ghost {
+            pointer-events: none;
+            opacity: 0.55;
+        }
+
+        #screen-battle .hex-cell.ghost .hex-fill {
+            background: rgba(170, 195, 255, 0.08);
+            box-shadow: inset 0 0 0 1px rgba(170, 195, 255, 0.22);
+        }
+
+        #screen-battle .legend {
+            position: absolute;
+            right: 14px;
+            bottom: 88px;
+            display: grid;
+            gap: 6px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.6);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            color: rgba(232, 240, 255, 0.85);
+            font-size: 0.72rem;
+            z-index: 3;
+        }
+
+        #screen-battle .coord-display {
+            position: absolute;
+            left: 14px;
+            bottom: 88px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.6);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            color: rgba(232, 240, 255, 0.85);
+            font-size: 0.72rem;
+            z-index: 3;
+        }
+
+        #screen-battle .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #screen-battle .legend-swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            box-shadow: inset 0 0 0 1px rgba(180, 205, 255, 0.25);
+        }
+
+        #screen-battle .legend-swatch.boundary {
+            background: var(--hex-boundary-bg);
+        }
+
+        #screen-battle .legend-swatch.ally {
+            background: var(--hex-ally-bg);
+        }
+
+        #screen-battle .legend-swatch.enemy {
+            background: var(--hex-enemy-bg);
+        }
+
+        #screen-battle .legend-swatch.neutral {
+            background: var(--hex-fill-bg);
+        }
+
+        #screen-battle .action-area {
+            background: var(--panel-bg);
+            border-top: 1px solid var(--panel-border);
+            padding: 10px;
+            flex-shrink: 0;
+        }
+
+        #screen-battle .battle-hints {
+            display: grid;
+            gap: 4px;
+            margin-bottom: 8px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.55);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            color: rgba(232, 240, 255, 0.85);
+            font-size: 0.72rem;
+        }
+
+        #screen-battle .hint-title {
+            font-size: 0.68rem;
+            color: var(--text-dim);
+        }
+
+        #screen-battle .hint-main {
+            font-weight: 600;
+        }
+
+        #screen-battle .hint-sub {
+            color: rgba(214, 226, 255, 0.75);
+        }
+
+        #screen-battle .turn-order {
+            display: flex;
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.55);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+        }
+
+        #screen-battle .order-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
+
+        #screen-battle .order-list {
+            display: flex;
+            gap: 6px;
+            flex-wrap: nowrap;
+        }
+
+        #screen-battle .order-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            background: rgba(170, 195, 255, 0.08);
+            border: 1px solid rgba(170, 195, 255, 0.2);
+        }
+
+        #screen-battle .order-avatar.active {
+            border-color: rgba(243, 201, 122, 0.7);
+            box-shadow: 0 0 10px rgba(243, 201, 122, 0.25);
+        }
+
+        #screen-battle .order-avatar.enemy {
+            border-color: rgba(255, 106, 128, 0.35);
+        }
+
+        #screen-battle .order-avatar.ally {
+            border-color: rgba(84, 166, 255, 0.35);
+        }
+
+        #screen-battle .prep-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #screen-battle .battle-panel {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #screen-battle .prep-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+        }
+
+        #screen-battle .prep-stage {
+            font-weight: 700;
+            color: rgba(232, 240, 255, 0.92);
+        }
+
+        #screen-battle .prep-stats {
+            display: flex;
+            gap: 10px;
+            font-size: 0.72rem;
+        }
+
+        #screen-battle .pool-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #screen-battle .pool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 8px;
+        }
+
+        #screen-battle .character-card {
+            min-height: 78px;
+            background: rgba(170, 195, 255, 0.08);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            padding: 6px 4px;
+            gap: 4px;
+        }
+
+        #screen-battle .character-card:hover {
+            background: rgba(170, 195, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        #screen-battle .character-card.selected {
+            border-color: rgba(243, 201, 122, 0.6);
+            box-shadow: 0 0 12px rgba(243, 201, 122, 0.18);
+        }
+
+        #screen-battle .character-card.placed {
+            border-color: rgba(120, 180, 255, 0.45);
+            box-shadow: 0 0 10px rgba(120, 180, 255, 0.18);
+        }
+
+        #screen-battle .character-card.disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #screen-battle .character-icon {
+            font-size: 1.5rem;
+        }
+
+        #screen-battle .character-name {
+            font-size: 0.68rem;
+            text-align: center;
+        }
+
+        #screen-battle .phase-label {
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            background: rgba(170, 195, 255, 0.12);
+            border: 1px solid rgba(170, 195, 255, 0.18);
+        }
+
+        #screen-battle .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        #screen-battle .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #screen-battle .btn:active {
+            transform: scale(0.97);
+        }
+
+        #screen-battle .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue-a), var(--accent-blue-b));
+            color: white;
+        }
+
+        #screen-battle .btn-secondary {
+            background: rgba(170, 195, 255, 0.08);
+            color: white;
+            border: 1px solid rgba(170, 195, 255, 0.14);
+        }
+
+        @media (max-width: 480px) {
+            #screen-battle .hex-map {
+                --hex-w: 44px;
+                --hex-h: calc(var(--hex-w) * 0.8660254);
+                --gap-x: 4px;
+                --hex-gap: 2.1px;
+            }
+
+            #screen-battle .character-icon {
+                font-size: 1.2rem;
+            }
+
+            #screen-battle .editor-bar {
+                left: 8px;
+                top: 8px;
+                padding: 6px;
+                gap: 5px;
+            }
+
+            #screen-battle .editor-row {
+                gap: 5px;
+            }
+
+            #screen-battle .editor-btn {
+                padding: 6px 8px;
+                font-size: 0.72rem;
+            }
+
+            #screen-battle .legend {
+                right: 10px;
+                bottom: 78px;
+                padding: 6px 8px;
+                font-size: 0.68rem;
+            }
+        }
+
+        @media (max-height: 600px) {
+            #screen-battle .status-header {
+                padding: 8px 10px;
+            }
+
+            #screen-battle .status-info {
+                font-size: 0.8rem;
+            }
+
+            #screen-battle .action-area {
+                padding: 8px;
+            }
+        }
+
         
         .result-container {
             flex: 1;
@@ -818,6 +1341,306 @@
         
         .btn-stage-editor {
             background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        #screen-map-editor {
+            padding: 0;
+        }
+
+        #screen-map-editor .status-header {
+            padding: 12px;
+            background: rgba(10, 14, 26, 0.55);
+            border-bottom: 1px solid rgba(170, 195, 255, 0.12);
+            flex-shrink: 0;
+        }
+
+        #screen-map-editor .status-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: rgba(220, 230, 255, 0.78);
+            gap: 10px;
+        }
+
+        #screen-map-editor .stage-title {
+            font-weight: 700;
+            color: #f3c97a;
+        }
+
+        #screen-map-editor .stage-enemies {
+            font-size: 0.72rem;
+            color: rgba(232, 240, 255, 0.78);
+            text-align: right;
+        }
+
+        #screen-map-editor .editor-toggle,
+        #screen-map-editor .back-btn {
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: rgba(170, 195, 255, 0.08);
+            color: rgba(232, 240, 255, 0.9);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #screen-map-editor .editor-toggle:active,
+        #screen-map-editor .back-btn:active {
+            transform: scale(0.98);
+        }
+
+        #screen-map-editor .battlefield-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            position: relative;
+            min-height: 0;
+            background: rgba(12, 16, 30, 0.78);
+            border: 1px solid rgba(170, 195, 255, 0.12);
+            border-radius: 14px;
+            overflow: hidden;
+            --hex-gap-color: rgba(12, 16, 30, 0.82);
+            --hex-fill-bg: rgba(180, 160, 255, 0.22);
+            --hex-stroke: rgba(180, 205, 255, 0.18);
+            --hex-boundary-bg: rgba(243, 201, 122, 0.3);
+            --hex-ally-bg: rgba(84, 166, 255, 0.22);
+            --hex-enemy-bg: rgba(255, 106, 128, 0.22);
+        }
+
+        #screen-map-editor .editor-bar {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 8px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.55);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            backdrop-filter: blur(8px);
+            z-index: 2;
+        }
+
+        #screen-map-editor .editor-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        #screen-map-editor .editor-row.types {
+            padding-top: 2px;
+            border-top: 1px dashed rgba(170, 195, 255, 0.14);
+            margin-top: 2px;
+        }
+
+        #screen-map-editor .editor-row.types.disabled {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+        #screen-map-editor .editor-btn {
+            padding: 7px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: rgba(170, 195, 255, 0.08);
+            color: rgba(232, 240, 255, 0.9);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        #screen-map-editor .editor-btn.active {
+            border-color: rgba(243, 201, 122, 0.55);
+            box-shadow: 0 0 10px rgba(243, 201, 122, 0.16);
+        }
+
+        #screen-map-editor .hex-map {
+            position: relative;
+            perspective: 1000px;
+            --hex-w: 64px;
+            --hex-h: calc(var(--hex-w) * 0.8660254);
+            --gap-x: 4px;
+            --hex-gap: 2.6px;
+        }
+
+        #screen-map-editor .hex-cell {
+            width: var(--hex-w);
+            height: var(--hex-h);
+            background: var(--hex-gap-color);
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: absolute;
+            border: none;
+            transform: translateZ(0);
+            transform-origin: center;
+        }
+
+        #screen-map-editor .hex-fill {
+            position: absolute;
+            inset: var(--hex-gap);
+            background: var(--hex-fill-bg);
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            border: none;
+            box-shadow: inset 0 0 0 1px var(--hex-stroke);
+        }
+
+        #screen-map-editor .hex-cell.boundary .hex-fill {
+            background: var(--hex-boundary-bg);
+        }
+
+        #screen-map-editor .hex-cell.ally .hex-fill {
+            background: var(--hex-ally-bg);
+        }
+
+        #screen-map-editor .hex-cell.enemy .hex-fill {
+            background: var(--hex-enemy-bg);
+        }
+
+        #screen-map-editor .hex-cell.has-unit .hex-fill {
+            box-shadow: inset 0 0 0 2px rgba(210, 225, 255, 0.18);
+        }
+
+        #screen-map-editor .hex-cell.selected .hex-fill {
+            box-shadow: inset 0 0 0 2px rgba(120, 180, 255, 0.7), 0 0 12px rgba(120, 180, 255, 0.25);
+        }
+
+        #screen-map-editor .hex-cell.ghost {
+            pointer-events: none;
+            opacity: 0.55;
+        }
+
+        #screen-map-editor .hex-cell.ghost .hex-fill {
+            background: rgba(170, 195, 255, 0.08);
+            box-shadow: inset 0 0 0 1px rgba(170, 195, 255, 0.22);
+        }
+
+        #screen-map-editor .unit-icon {
+            position: relative;
+            z-index: 1;
+            font-size: 1.6rem;
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(10, 14, 26, 0.45);
+        }
+
+        #screen-map-editor .coord-display {
+            position: absolute;
+            left: 14px;
+            bottom: 88px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.6);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            color: rgba(232, 240, 255, 0.85);
+            font-size: 0.72rem;
+            z-index: 3;
+        }
+
+        #screen-map-editor .legend {
+            position: absolute;
+            right: 14px;
+            bottom: 88px;
+            display: grid;
+            gap: 6px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.6);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            color: rgba(232, 240, 255, 0.85);
+            font-size: 0.72rem;
+            z-index: 3;
+        }
+
+        #screen-map-editor .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #screen-map-editor .legend-swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            box-shadow: inset 0 0 0 1px rgba(180, 205, 255, 0.25);
+        }
+
+        #screen-map-editor .legend-swatch.boundary {
+            background: var(--hex-boundary-bg);
+        }
+
+        #screen-map-editor .legend-swatch.ally {
+            background: var(--hex-ally-bg);
+        }
+
+        #screen-map-editor .legend-swatch.enemy {
+            background: var(--hex-enemy-bg);
+        }
+
+        #screen-map-editor .legend-swatch.neutral {
+            background: var(--hex-fill-bg);
+        }
+
+        #screen-map-editor .editor-footer {
+            padding: 10px 12px 14px;
+            background: rgba(10, 14, 26, 0.55);
+            border-top: 1px solid rgba(170, 195, 255, 0.12);
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        #screen-map-editor .footer-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: rgba(170, 195, 255, 0.08);
+            color: rgba(232, 240, 255, 0.9);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            transition: all 0.15s ease;
+        }
+
+        #screen-map-editor .footer-btn.primary {
+            background: linear-gradient(135deg, #2c74d6, #1e4aa6);
+            color: white;
+        }
+
+        #screen-map-editor .map-editor-toast {
+            position: absolute;
+            left: 50%;
+            bottom: 78px;
+            transform: translateX(-50%);
+            padding: 8px 14px;
+            border-radius: 12px;
+            background: rgba(26, 140, 90, 0.92);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 4;
+        }
+
+        #screen-map-editor .map-editor-toast.show {
+            opacity: 1;
         }
         
         .stage-list {
@@ -1294,20 +2117,82 @@
         </div>
         
         <div id="screen-battle" class="screen">
-            <div class="battle-header">
-                <div class="battle-stage-name" id="battle-stage-info">第1关：新手村</div>
-            </div>
-            <div class="battle-teams">
-                <div class="battle-team">
-                    <div class="team-label my-team">🔵 我方</div>
-                    <div id="battle-team-a"></div>
-                </div>
-                <div class="battle-team">
-                    <div class="team-label enemy-team">🔴 敌方</div>
-                    <div id="battle-team-b"></div>
+            <div class="status-header">
+                <div class="status-info">
+                    <div class="turn-info" id="battle-turn-info"></div>
+                    <div class="status-right">
+                        <div class="team-stats" id="battle-team-stats"></div>
+                        <button class="editor-toggle" id="battle-toggle-editor" type="button">编辑地图</button>
+                    </div>
                 </div>
             </div>
-            <div class="battle-log" id="battle-log"></div>
+
+            <div class="battlefield-container">
+                <div class="editor-bar" id="battle-editor-bar" hidden>
+                    <div class="editor-row tools">
+                        <button class="editor-btn active" data-tool="select" type="button">选择/移动</button>
+                        <button class="editor-btn" data-tool="add" type="button">添加</button>
+                        <button class="editor-btn" data-tool="delete" type="button">删除</button>
+                        <button class="editor-btn" data-tool="paint" type="button">改类型</button>
+                        <button class="editor-btn" id="battle-editor-save-default" type="button">设为默认</button>
+                        <button class="editor-btn" id="battle-editor-save-stage" type="button">保存关卡</button>
+                        <button class="editor-btn" id="battle-editor-reset" type="button">重置</button>
+                    </div>
+                    <div class="editor-row types disabled" data-type-row>
+                        <button class="editor-btn active" data-kind="neutral" type="button">中性</button>
+                        <button class="editor-btn" data-kind="boundary" type="button">野外</button>
+                        <button class="editor-btn" data-kind="ally" type="button">我方</button>
+                        <button class="editor-btn" data-kind="enemy" type="button">敌方</button>
+                    </div>
+                </div>
+                <div class="hex-map" id="battle-hex-map"></div>
+                <div class="coord-display" id="battle-coord-display" hidden></div>
+                <div class="legend">
+                    <div class="legend-item"><span class="legend-swatch boundary"></span><span>野外</span></div>
+                    <div class="legend-item"><span class="legend-swatch ally"></span><span>我方</span></div>
+                    <div class="legend-item"><span class="legend-swatch enemy"></span><span>敌方</span></div>
+                    <div class="legend-item"><span class="legend-swatch neutral"></span><span>中性</span></div>
+                </div>
+            </div>
+
+            <div class="action-area">
+                <div class="battle-hints" id="battle-hints" hidden>
+                    <div class="hint-title" id="battle-hint-title"></div>
+                    <div class="hint-main" id="battle-hint-main"></div>
+                    <div class="hint-sub" id="battle-hint-sub"></div>
+                </div>
+                <div class="turn-order" id="battle-turn-order">
+                    <div class="order-row">
+                        <div class="order-list" id="battle-turn-order-list"></div>
+                    </div>
+                </div>
+                <div class="prep-panel">
+                    <div class="prep-header">
+                        <div class="prep-stage" id="battle-prep-stage-name"></div>
+                        <div class="phase-label" id="battle-phase-label"></div>
+                    </div>
+                    <div class="prep-stats">
+                        <div id="battle-enemy-count"></div>
+                        <div id="battle-player-count"></div>
+                    </div>
+                    <div class="pool-section">
+                        <div class="pool-grid" id="battle-player-pool"></div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="battle-start-battle-btn">开始战斗</button>
+                        <button class="btn btn-secondary" id="battle-reset-placement-btn">重置布阵</button>
+                    </div>
+                </div>
+                <div class="battle-panel" id="battle-panel">
+                    <div class="prep-header">
+                        <div class="prep-stage" id="battle-stage-name"></div>
+                        <div class="phase-label" id="battle-round"></div>
+                    </div>
+                    <div class="prep-stats">
+                        <div id="battle-status"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="screen-camp" class="screen">
@@ -1359,6 +2244,47 @@
         
         <div id="screen-stage-editor" class="screen">
             <div class="editor-container" id="stage-editor-container"></div>
+        </div>
+
+        <div id="screen-map-editor" class="screen">
+            <div class="status-header">
+                <div class="status-info">
+                    <button class="back-btn" id="map-editor-back" type="button">返回关卡</button>
+                    <div class="stage-title" id="map-editor-stage-name">关卡地图</div>
+                    <div class="stage-enemies" id="map-editor-stage-enemies"></div>
+                    <button class="editor-toggle" id="map-editor-toggle" type="button">退出编辑</button>
+                </div>
+            </div>
+            <div class="battlefield-container">
+                <div class="editor-bar" id="map-editor-bar">
+                    <div class="editor-row tools">
+                        <button class="editor-btn active" data-tool="select" type="button">选择/移动</button>
+                        <button class="editor-btn" data-tool="add" type="button">添加</button>
+                        <button class="editor-btn" data-tool="delete" type="button">删除</button>
+                        <button class="editor-btn" data-tool="paint" type="button">改类型</button>
+                    </div>
+                    <div class="editor-row types disabled" data-type-row>
+                        <button class="editor-btn active" data-kind="neutral" type="button">中性</button>
+                        <button class="editor-btn" data-kind="boundary" type="button">野外</button>
+                        <button class="editor-btn" data-kind="ally" type="button">我方</button>
+                        <button class="editor-btn" data-kind="enemy" type="button">敌方</button>
+                    </div>
+                </div>
+                <div class="hex-map" id="map-editor-hex-map"></div>
+                <div class="coord-display" id="map-editor-coord-display" hidden></div>
+                <div class="legend">
+                    <div class="legend-item"><span class="legend-swatch boundary"></span><span>野外</span></div>
+                    <div class="legend-item"><span class="legend-swatch ally"></span><span>我方</span></div>
+                    <div class="legend-item"><span class="legend-swatch enemy"></span><span>敌方</span></div>
+                    <div class="legend-item"><span class="legend-swatch neutral"></span><span>中性</span></div>
+                </div>
+            </div>
+            <div class="editor-footer">
+                <button class="footer-btn primary" id="map-editor-save-stage" type="button">保存关卡</button>
+                <button class="footer-btn" id="map-editor-save-default" type="button">设为默认</button>
+                <button class="footer-btn" id="map-editor-reset" type="button">重置</button>
+            </div>
+            <div class="map-editor-toast" id="map-editor-toast">保存成功</div>
         </div>
     </div>
     <script type="module" src="js/main.js"></script>

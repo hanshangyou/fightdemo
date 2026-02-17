@@ -216,6 +216,26 @@
             background: var(--hex-enemy-bg);
         }
 
+        .hex-cell.has-unit .hex-fill {
+            box-shadow: inset 0 0 0 2px rgba(210, 225, 255, 0.18);
+        }
+
+        .hex-cell.move-option .hex-fill {
+            box-shadow: inset 0 0 0 2px rgba(120, 180, 255, 0.35), 0 0 10px rgba(120, 180, 255, 0.12);
+        }
+
+        .hex-cell.attack-option .hex-fill {
+            box-shadow: inset 0 0 0 2px rgba(255, 140, 140, 0.45), 0 0 12px rgba(255, 106, 128, 0.2);
+        }
+
+        .unit-icon {
+            position: relative;
+            z-index: 1;
+            font-size: 1.6rem;
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(10, 14, 26, 0.45);
+        }
+
         .hex-cell.ghost {
             pointer-events: none;
             opacity: 0.55;
@@ -232,6 +252,19 @@
             bottom: 88px;
             display: grid;
             gap: 6px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.6);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            color: rgba(232, 240, 255, 0.85);
+            font-size: 0.72rem;
+            z-index: 3;
+        }
+
+        .coord-display {
+            position: absolute;
+            left: 14px;
+            bottom: 88px;
             padding: 8px 10px;
             border-radius: 12px;
             background: rgba(12, 16, 30, 0.6);
@@ -291,19 +324,131 @@
             padding: 10px;
             flex-shrink: 0;
         }
-        
-        .card-pool {
+
+        .battle-hints {
+            display: grid;
+            gap: 4px;
+            margin-bottom: 8px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.55);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            color: rgba(232, 240, 255, 0.85);
+            font-size: 0.72rem;
+        }
+
+        .hint-title {
+            font-size: 0.68rem;
+            color: var(--text-dim);
+        }
+
+        .hint-main {
+            font-weight: 600;
+        }
+
+        .hint-sub {
+            color: rgba(214, 226, 255, 0.75);
+        }
+
+        .turn-order {
             display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.55);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+        }
+
+        .order-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
             overflow-x: auto;
-            padding-bottom: 5px;
-            -webkit-overflow-scrolling: touch;
+        }
+
+        .order-list {
+            display: flex;
+            gap: 6px;
+            flex-wrap: nowrap;
+        }
+
+        .order-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            min-width: 38px;
+        }
+
+        .order-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            background: rgba(170, 195, 255, 0.08);
+            border: 1px solid rgba(170, 195, 255, 0.2);
+        }
+
+        .order-avatar.active {
+            border-color: rgba(243, 201, 122, 0.7);
+            box-shadow: 0 0 10px rgba(243, 201, 122, 0.25);
+        }
+
+        .order-avatar.enemy {
+            border-color: rgba(255, 106, 128, 0.35);
+        }
+
+        .order-avatar.ally {
+            border-color: rgba(84, 166, 255, 0.35);
         }
         
-        .action-card {
-            min-width: 60px;
-            height: 80px;
+        .prep-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .battle-panel {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .prep-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+        }
+
+        .prep-stage {
+            font-weight: 700;
+            color: rgba(232, 240, 255, 0.92);
+        }
+
+        .prep-stats {
+            display: flex;
+            gap: 10px;
+            font-size: 0.72rem;
+        }
+
+        .pool-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .pool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 8px;
+        }
+
+        .character-card {
+            min-height: 78px;
             background: rgba(170, 195, 255, 0.08);
             border-radius: 8px;
             display: flex;
@@ -313,26 +458,46 @@
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid rgba(170, 195, 255, 0.14);
+            padding: 6px 4px;
+            gap: 4px;
         }
-        
-        .action-card:hover {
+
+        .character-card:hover {
             background: rgba(170, 195, 255, 0.12);
             transform: translateY(-2px);
         }
-        
-        .action-card.selected {
+
+        .character-card.selected {
             border-color: rgba(243, 201, 122, 0.6);
             box-shadow: 0 0 12px rgba(243, 201, 122, 0.18);
         }
-        
-        .card-icon {
-            font-size: 1.5rem;
-            margin-bottom: 4px;
+
+        .character-card.placed {
+            border-color: rgba(120, 180, 255, 0.45);
+            box-shadow: 0 0 10px rgba(120, 180, 255, 0.18);
         }
-        
-        .card-name {
-            font-size: 0.7rem;
+
+        .character-card.disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .character-icon {
+            font-size: 1.5rem;
+        }
+
+        .character-name {
+            font-size: 0.68rem;
             text-align: center;
+        }
+
+        .phase-label {
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            background: rgba(170, 195, 255, 0.12);
+            border: 1px solid rgba(170, 195, 255, 0.18);
         }
         
         .action-buttons {
@@ -469,513 +634,69 @@
                     <button class="editor-btn" data-tool="delete" type="button">删除</button>
                     <button class="editor-btn" data-tool="paint" type="button">改类型</button>
                     <button class="editor-btn" id="editor-save-default" type="button">设为默认</button>
+                    <button class="editor-btn" id="editor-save-stage" type="button">保存关卡</button>
                     <button class="editor-btn" id="editor-reset" type="button">重置</button>
                 </div>
                 <div class="editor-row types disabled" data-type-row>
                     <button class="editor-btn active" data-kind="neutral" type="button">中性</button>
-                    <button class="editor-btn" data-kind="boundary" type="button">边界</button>
+                    <button class="editor-btn" data-kind="boundary" type="button">野外</button>
                     <button class="editor-btn" data-kind="ally" type="button">我方</button>
                     <button class="editor-btn" data-kind="enemy" type="button">敌方</button>
                 </div>
             </div>
             <div class="hex-map" id="hex-map"></div>
+            <div class="coord-display" id="map-coord-display" hidden></div>
             <div class="legend">
-                <div class="legend-item"><span class="legend-swatch boundary"></span><span>边界</span></div>
+                <div class="legend-item"><span class="legend-swatch boundary"></span><span>野外</span></div>
                 <div class="legend-item"><span class="legend-swatch ally"></span><span>我方</span></div>
                 <div class="legend-item"><span class="legend-swatch enemy"></span><span>敌方</span></div>
                 <div class="legend-item"><span class="legend-swatch neutral"></span><span>中性</span></div>
             </div>
         </div>
         
-        <!-- 底部卡池和操作区 -->
         <div class="action-area">
-            <div class="card-pool">
-                <div class="action-card">
-                    <div class="card-icon">⚡</div>
-                    <div class="card-name">攻击</div>
-                </div>
-                <div class="action-card">
-                    <div class="card-icon">🛡️</div>
-                    <div class="card-name">防御</div>
-                </div>
-                <div class="action-card">
-                    <div class="card-icon">💊</div>
-                    <div class="card-name">治疗</div>
-                </div>
-                <div class="action-card">
-                    <div class="card-icon">✨</div>
-                    <div class="card-name">技能</div>
-                </div>
-                <div class="action-card">
-                    <div class="card-icon">🎯</div>
-                    <div class="card-name">瞄准</div>
+            <div class="battle-hints" id="battle-hints" hidden>
+                <div class="hint-title" id="hint-title"></div>
+                <div class="hint-main" id="hint-main"></div>
+                <div class="hint-sub" id="hint-sub"></div>
+            </div>
+            <div class="turn-order" id="turn-order">
+                <div class="order-row">
+                    <div class="order-list" id="turn-order-list"></div>
                 </div>
             </div>
-            
-            <div class="action-buttons">
-                <button class="btn btn-primary">执行行动</button>
-                <button class="btn btn-secondary">结束回合</button>
+            <div class="prep-panel">
+                <div class="prep-header">
+                    <div class="prep-stage" id="stage-name"></div>
+                    <div class="phase-label" id="phase-label"></div>
+                </div>
+                <div class="prep-stats">
+                    <div id="enemy-count"></div>
+                    <div id="player-count"></div>
+                </div>
+                <div class="pool-section">
+                    <div class="pool-grid" id="player-pool"></div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="start-battle-btn">开始战斗</button>
+                    <button class="btn btn-secondary" id="reset-placement-btn">重置布阵</button>
+                </div>
+            </div>
+            <div class="battle-panel" id="battle-panel">
+                <div class="prep-header">
+                    <div class="prep-stage" id="battle-stage-name"></div>
+                    <div class="phase-label" id="battle-round"></div>
+                </div>
+                <div class="prep-stats">
+                    <div id="battle-status"></div>
+                </div>
             </div>
         </div>
     </div>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const hexMap = document.getElementById('hex-map');
-            const toggleEditorBtn = document.getElementById('toggle-editor');
-            const editorBar = document.getElementById('editor-bar');
-            const editorSaveDefaultBtn = document.getElementById('editor-save-default');
-            const editorResetBtn = document.getElementById('editor-reset');
-            const actionCards = document.querySelectorAll('.action-card');
-
-            const storageKey = 'fightdemo.hex-map.v1';
-            const defaultStorageKey = 'fightdemo.hex-map.default.v1';
-
-            const state = {
-                mode: 'play',
-                tool: 'select',
-                paintKind: 'neutral',
-                cells: new Map(),
-                selected: null,
-                dragging: null,
-                dragPointerId: null,
-                dragStartKey: null,
-                hoverCoord: null,
-                layout: null,
-                ghostEl: null,
-            };
-
-            function key(col, row) {
-                return `${col},${row}`;
-            }
-
-            function parseKey(k) {
-                const [c, r] = k.split(',').map(Number);
-                return { col: c, row: r };
-            }
-
-            function getMetrics() {
-                const mapStyle = getComputedStyle(hexMap);
-                const hexW = parseFloat(mapStyle.getPropertyValue('--hex-w')) || 64;
-                const hexH = parseFloat(mapStyle.getPropertyValue('--hex-h')) || hexW * 0.8660254;
-                const gapX = parseFloat(mapStyle.getPropertyValue('--gap-x')) || 0;
-                const stepX = hexW * 0.75;
-                const stepY = hexH;
-                const pad = 6;
-                return { hexW, hexH, gapX, stepX, stepY, pad };
-            }
-
-            function coordToXY(col, row, m) {
-                const sideShift = col === 0 ? 0 : Math.sign(col) * m.gapX;
-                const x = col * m.stepX + sideShift;
-                const y = row * m.stepY + (Math.abs(col) % 2 ? m.stepY / 2 : 0);
-                return { x, y };
-            }
-
-            function buildDefaultCells() {
-                const cols = new Map();
-                cols.set(-4, { rStart: 1, rEnd: 5 });
-                cols.set(-3, { rStart: 0, rEnd: 5 });
-                cols.set(-2, { rStart: 0, rEnd: 6 });
-                cols.set(-1, { rStart: 1, rEnd: 5 });
-                cols.set(0, { rStart: 0, rEnd: 6 });
-                cols.set(1, { rStart: 1, rEnd: 5 });
-                cols.set(2, { rStart: 0, rEnd: 6 });
-                cols.set(3, { rStart: 0, rEnd: 5 });
-                cols.set(4, { rStart: 1, rEnd: 5 });
-
-                const cells = [];
-                Array.from(cols.entries()).forEach(([col, cfg]) => {
-                    for (let row = cfg.rStart; row <= cfg.rEnd; row++) {
-                        let kind = 'neutral';
-                        if (col === 0) kind = 'boundary';
-                        if (col < 0) kind = 'ally';
-                        if (col > 0) kind = 'enemy';
-                        cells.push({ col, row, kind });
-                    }
-                });
-                return cells;
-            }
-
-            function parseCells(raw) {
-                try {
-                    const parsed = JSON.parse(raw);
-                    if (!Array.isArray(parsed)) return null;
-                    if (!parsed.every(x => typeof x?.col === 'number' && typeof x?.row === 'number')) return null;
-                    return parsed.map(x => ({
-                        col: x.col,
-                        row: x.row,
-                        kind: ['boundary', 'ally', 'enemy', 'neutral'].includes(x.kind) ? x.kind : 'neutral',
-                    }));
-                } catch (e) {
-                    return null;
-                }
-            }
-
-            function saveToStorage() {
-                try {
-                    const payload = Array.from(state.cells.values());
-                    localStorage.setItem(storageKey, JSON.stringify(payload));
-                } catch (e) {}
-            }
-
-            function saveDefault(cells) {
-                try {
-                    localStorage.setItem(defaultStorageKey, JSON.stringify(cells));
-                } catch (e) {}
-            }
-
-            function loadCellsFromStorage(keyName) {
-                try {
-                    const raw = localStorage.getItem(keyName);
-                    if (!raw) return null;
-                    return parseCells(raw);
-                } catch (e) {
-                    return null;
-                }
-            }
-
-            function setCells(cells) {
-                state.cells.clear();
-                cells.forEach(c => state.cells.set(key(c.col, c.row), { ...c }));
-                state.selected = null;
-                saveToStorage();
-                render();
-            }
-
-            function ensureGhost() {
-                if (state.ghostEl) return state.ghostEl;
-                const ghost = document.createElement('div');
-                ghost.className = 'hex-cell ghost';
-                const fill = document.createElement('div');
-                fill.className = 'hex-fill';
-                ghost.appendChild(fill);
-                ghost.style.display = 'none';
-                state.ghostEl = ghost;
-                hexMap.appendChild(ghost);
-                return ghost;
-            }
-
-            function setGhostCoord(coord) {
-                const ghost = ensureGhost();
-                if (!coord || !state.layout) {
-                    ghost.style.display = 'none';
-                    return;
-                }
-                const m = state.layout.m;
-                const world = coordToXY(coord.col, coord.row, m);
-                ghost.style.left = `${(world.x - state.layout.minX) + m.pad}px`;
-                ghost.style.top = `${(world.y - state.layout.minY) + m.pad}px`;
-                ghost.style.display = '';
-            }
-
-            function computeBounds(m) {
-                let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-                state.cells.forEach(c => {
-                    const p = coordToXY(c.col, c.row, m);
-                    minX = Math.min(minX, p.x);
-                    minY = Math.min(minY, p.y);
-                    maxX = Math.max(maxX, p.x);
-                    maxY = Math.max(maxY, p.y);
-                });
-
-                if (!isFinite(minX)) {
-                    minX = 0;
-                    minY = 0;
-                    maxX = 0;
-                    maxY = 0;
-                }
-
-                return { minX, minY, maxX, maxY };
-            }
-
-            function render() {
-                const m = getMetrics();
-                const { minX, minY, maxX, maxY } = computeBounds(m);
-                state.layout = { m, minX, minY };
-                hexMap.style.width = `${(maxX - minX) + m.hexW + m.pad * 2}px`;
-                hexMap.style.height = `${(maxY - minY) + m.hexH + m.pad * 2}px`;
-                hexMap.innerHTML = '';
-
-                const frag = document.createDocumentFragment();
-                Array.from(state.cells.values()).forEach(c => {
-                    const p = coordToXY(c.col, c.row, m);
-                    const cell = document.createElement('div');
-                    cell.className = 'hex-cell';
-                    if (c.kind === 'boundary') cell.classList.add('boundary');
-                    if (c.kind === 'ally') cell.classList.add('ally');
-                    if (c.kind === 'enemy') cell.classList.add('enemy');
-                    if (state.selected === key(c.col, c.row)) cell.classList.add('selected');
-
-                    const fill = document.createElement('div');
-                    fill.className = 'hex-fill';
-                    cell.appendChild(fill);
-
-                    cell.style.left = `${(p.x - minX) + m.pad}px`;
-                    cell.style.top = `${(p.y - minY) + m.pad}px`;
-                    cell.dataset.col = String(c.col);
-                    cell.dataset.row = String(c.row);
-                    frag.appendChild(cell);
-                });
-
-                hexMap.appendChild(frag);
-
-                if (state.mode === 'edit') {
-                    const ghost = ensureGhost();
-                    hexMap.appendChild(ghost);
-                    setGhostCoord(state.hoverCoord);
-                }
-            }
-
-            function setMode(mode) {
-                state.mode = mode;
-                if (mode === 'edit') {
-                    editorBar.hidden = false;
-                    toggleEditorBtn.textContent = '退出编辑';
-                    setTool(state.tool);
-                } else {
-                    editorBar.hidden = true;
-                    toggleEditorBtn.textContent = '编辑地图';
-                    state.hoverCoord = null;
-                }
-                render();
-            }
-
-            function setTool(tool) {
-                state.tool = tool;
-                editorBar.querySelectorAll('[data-tool]').forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.tool === tool);
-                });
-                const typeRow = editorBar.querySelector('[data-type-row]');
-                if (typeRow) typeRow.classList.toggle('disabled', tool !== 'paint');
-                state.hoverCoord = null;
-                setGhostCoord(null);
-            }
-
-            function setPaintKind(kind) {
-                state.paintKind = kind;
-                editorBar.querySelectorAll('[data-kind]').forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.kind === kind);
-                });
-            }
-
-            function getSearchRange() {
-                let minCol = Infinity, maxCol = -Infinity, minRow = Infinity, maxRow = -Infinity;
-                state.cells.forEach(c => {
-                    minCol = Math.min(minCol, c.col);
-                    maxCol = Math.max(maxCol, c.col);
-                    minRow = Math.min(minRow, c.row);
-                    maxRow = Math.max(maxRow, c.row);
-                });
-                if (!isFinite(minCol)) return { minCol: -6, maxCol: 6, minRow: -2, maxRow: 10 };
-                return { minCol: minCol - 3, maxCol: maxCol + 3, minRow: minRow - 3, maxRow: maxRow + 3 };
-            }
-
-            function findNearestCoordFromEvent(e) {
-                if (!state.layout) return null;
-                const rect = hexMap.getBoundingClientRect();
-                const localX = e.clientX - rect.left;
-                const localY = e.clientY - rect.top;
-                const m = state.layout.m;
-                const worldX = localX + state.layout.minX - m.pad;
-                const worldY = localY + state.layout.minY - m.pad;
-
-                const range = getSearchRange();
-                let best = null;
-                let bestD2 = Infinity;
-                for (let col = range.minCol; col <= range.maxCol; col++) {
-                    for (let row = range.minRow; row <= range.maxRow; row++) {
-                        const p = coordToXY(col, row, m);
-                        const dx = worldX - p.x;
-                        const dy = worldY - p.y;
-                        const d2 = dx * dx + dy * dy;
-                        if (d2 < bestD2) {
-                            bestD2 = d2;
-                            best = { col, row };
-                        }
-                    }
-                }
-
-                const threshold = (m.hexW * 0.65) * (m.hexW * 0.65);
-                if (bestD2 > threshold) return null;
-                return best;
-            }
-
-            function addCellAt(coord) {
-                if (!coord) return;
-                const k = key(coord.col, coord.row);
-                if (state.cells.has(k)) return;
-                state.cells.set(k, { col: coord.col, row: coord.row, kind: state.paintKind });
-                state.selected = k;
-                saveToStorage();
-                render();
-            }
-
-            function setCellKind(col, row, kind) {
-                const k = key(col, row);
-                const cell = state.cells.get(k);
-                if (!cell) return;
-                if (cell.kind === kind) return;
-                state.cells.set(k, { ...cell, kind });
-                saveToStorage();
-                render();
-            }
-
-            function deleteCellAt(col, row) {
-                const k = key(col, row);
-                if (!state.cells.has(k)) return;
-                state.cells.delete(k);
-                if (state.selected === k) state.selected = null;
-                saveToStorage();
-                render();
-            }
-
-            function moveCell(fromKey, toCoord) {
-                if (!fromKey || !toCoord) return;
-                const from = parseKey(fromKey);
-                const toKey = key(toCoord.col, toCoord.row);
-                if (fromKey === toKey) return;
-                if (state.cells.has(toKey)) return;
-                const cell = state.cells.get(fromKey);
-                if (!cell) return;
-                state.cells.delete(fromKey);
-                state.cells.set(toKey, { ...cell, col: toCoord.col, row: toCoord.row });
-                state.selected = toKey;
-                saveToStorage();
-                render();
-            }
-
-            toggleEditorBtn.addEventListener('click', function() {
-                setMode(state.mode === 'edit' ? 'play' : 'edit');
-            });
-
-            editorBar.addEventListener('click', function(e) {
-                const btn = e.target.closest('[data-tool]');
-                if (btn) setTool(btn.dataset.tool);
-                const kindBtn = e.target.closest('[data-kind]');
-                if (kindBtn) {
-                    setPaintKind(kindBtn.dataset.kind);
-                    if (state.tool !== 'paint') setTool('paint');
-                }
-            });
-
-            editorResetBtn.addEventListener('click', function() {
-                const fallback = state.defaultCells?.length ? state.defaultCells : buildDefaultCells();
-                saveDefault(fallback);
-                setCells(fallback);
-            });
-
-            editorSaveDefaultBtn.addEventListener('click', function() {
-                const snapshot = Array.from(state.cells.values());
-                saveDefault(snapshot);
-                state.defaultCells = snapshot.map(c => ({ ...c }));
-            });
-
-            hexMap.addEventListener('pointerdown', function(e) {
-                const cellEl = e.target.closest('.hex-cell');
-                if (state.mode !== 'edit') {
-                    if (!cellEl) return;
-                    hexMap.querySelectorAll('.hex-cell').forEach(c => c.classList.remove('selected', 'highlighted'));
-                    cellEl.classList.add('selected');
-                    console.log('选中格子:', `${cellEl.dataset.col},${cellEl.dataset.row}`);
-                    return;
-                }
-
-                if (cellEl && !cellEl.classList.contains('ghost')) {
-                    const col = Number(cellEl.dataset.col);
-                    const row = Number(cellEl.dataset.row);
-                    const k = key(col, row);
-
-                    if (state.tool === 'delete') {
-                        deleteCellAt(col, row);
-                        return;
-                    }
-
-                    state.selected = k;
-                    render();
-
-                    if (state.tool === 'paint') {
-                        setCellKind(col, row, state.paintKind);
-                        return;
-                    }
-
-                    if (state.tool === 'select') {
-                        state.dragging = k;
-                        state.dragStartKey = k;
-                        state.dragPointerId = e.pointerId;
-                        cellEl.setPointerCapture(e.pointerId);
-                        state.hoverCoord = { col, row };
-                        setGhostCoord(state.hoverCoord);
-                    }
-                    return;
-                }
-
-                const coord = findNearestCoordFromEvent(e);
-                if (state.tool === 'add') {
-                    addCellAt(coord);
-                    return;
-                }
-
-                if (state.tool === 'select') {
-                    state.selected = null;
-                    state.hoverCoord = coord;
-                    setGhostCoord(state.hoverCoord);
-                    render();
-                }
-            });
-
-            hexMap.addEventListener('pointermove', function(e) {
-                if (state.mode !== 'edit') return;
-                if (!state.dragging && state.tool !== 'add') return;
-                const coord = findNearestCoordFromEvent(e);
-                state.hoverCoord = coord;
-                setGhostCoord(coord);
-            });
-
-            hexMap.addEventListener('pointerup', function(e) {
-                if (state.mode !== 'edit') return;
-                if (!state.dragging) return;
-                if (state.dragPointerId !== e.pointerId) return;
-                const coord = findNearestCoordFromEvent(e);
-                const fromKey = state.dragging;
-                state.dragging = null;
-                state.dragPointerId = null;
-                state.hoverCoord = null;
-                setGhostCoord(null);
-                moveCell(fromKey, coord);
-            });
-
-            window.addEventListener('keydown', function(e) {
-                if (state.mode !== 'edit') return;
-                if (e.key !== 'Backspace' && e.key !== 'Delete') return;
-                if (!state.selected) return;
-                const { col, row } = parseKey(state.selected);
-                deleteCellAt(col, row);
-            });
-
-            const storedCurrent = loadCellsFromStorage(storageKey);
-            const storedDefault = loadCellsFromStorage(defaultStorageKey);
-            const initial = storedCurrent || storedDefault || buildDefaultCells();
-            if (storedCurrent) saveDefault(storedCurrent);
-            state.defaultCells = storedCurrent || storedDefault || buildDefaultCells();
-            setPaintKind('neutral');
-            setCells(initial);
-            
-            actionCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    actionCards.forEach(c => c.classList.remove('selected'));
-                    this.classList.add('selected');
-                });
-            });
-            
-            document.querySelector('.btn-primary').addEventListener('click', function() {
-                console.log('执行行动');
-            });
-            
-            document.querySelector('.btn-secondary').addEventListener('click', function() {
-                console.log('结束回合');
-            });
-        });
+    <script type="module">
+        import { initHexBattlefield } from './js/hex-battlefield.js';
+        document.addEventListener('DOMContentLoaded', initHexBattlefield);
     </script>
 </body>
 </html>

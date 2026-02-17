@@ -14,7 +14,9 @@ export const DEFAULT_STAGES = [
 function normalizeStages(stages) {
     return stages.map(stage => ({
         ...stage,
-        maxTeamSize: stage.maxTeamSize ?? 3
+        maxTeamSize: stage.maxTeamSize ?? 3,
+        mapId: stage.mapId ?? null,
+        enemySpawns: stage.enemySpawns ?? null
     }));
 }
 
@@ -45,6 +47,7 @@ export class StageEditor {
     editingId = null;
     onSaveCallback = null;
     onCloseCallback = null;
+    onMapEditCallback = null;
     selectedEnemies = [];
 
     constructor(containerId) {
@@ -168,9 +171,11 @@ export class StageEditor {
                         <div class="stage-desc">${stage.description}</div>
                         <div class="stage-enemies">敌人: ${enemyNames}</div>
                         <div class="stage-rewards">奖励: 💰${stage.rewards.gold} 🎫${stage.rewards.gachaTickets} | 上场上限: ${stage.maxTeamSize ?? 3}</div>
+                        <div class="stage-map">地图: ${stage.mapId ? '自定义' : '默认'}</div>
                     </div>
                     <div class="stage-actions">
                         <button class="btn-small btn-edit-stage" data-id="${stage.id}">✏️</button>
+                        <button class="btn-small btn-map-stage" data-id="${stage.id}">🗺️</button>
                         <button class="btn-small btn-delete-stage" data-id="${stage.id}">🗑️</button>
                     </div>
                 </div>
@@ -195,6 +200,16 @@ export class StageEditor {
         document.querySelectorAll('.btn-delete-stage').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 this.deleteStage(parseInt(e.target.dataset.id));
+            });
+        });
+
+        document.querySelectorAll('.btn-map-stage').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(e.target.dataset.id);
+                if (Number.isNaN(id)) return;
+                if (this.onMapEditCallback) {
+                    this.onMapEditCallback(id);
+                }
             });
         });
         
@@ -351,6 +366,7 @@ export class StageEditor {
             return;
         }
         
+        const existing = this.editingId ? this.stages.find(s => s.id === this.editingId) : null;
         const stageData = {
             id: this.editingId || (this.stages.length > 0 ? Math.max(...this.stages.map(s => s.id)) + 1 : 1),
             name,
@@ -360,7 +376,9 @@ export class StageEditor {
             rewards: {
                 gold: Math.max(0, Math.min(9999, gold)),
                 gachaTickets: Math.max(0, Math.min(99, tickets))
-            }
+            },
+            mapId: existing?.mapId ?? null,
+            enemySpawns: existing?.enemySpawns ?? null
         };
         
         if (this.editingId) {
@@ -432,5 +450,9 @@ export class StageEditor {
 
     onClose(callback) {
         this.onCloseCallback = callback;
+    }
+
+    onMapEdit(callback) {
+        this.onMapEditCallback = callback;
     }
 }

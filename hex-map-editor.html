@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>关卡地图编辑</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: rgba(232, 240, 255, 0.9);
+            touch-action: manipulation;
+            overflow: hidden;
+        }
+        
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            --panel-bg: rgba(10, 14, 26, 0.55);
+            --panel-bg-strong: rgba(12, 16, 30, 0.78);
+            --panel-border: rgba(170, 195, 255, 0.12);
+            --text-dim: rgba(220, 230, 255, 0.78);
+            --accent-amber: #f3c97a;
+        }
+        
+        .status-header {
+            padding: 12px;
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--panel-border);
+            flex-shrink: 0;
+        }
+        
+        .status-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            gap: 10px;
+        }
+        
+        .stage-title {
+            font-weight: 700;
+            color: var(--accent-amber);
+        }
+
+        .stage-enemies {
+            font-size: 0.72rem;
+            color: rgba(232, 240, 255, 0.78);
+            text-align: right;
+        }
+
+        .editor-toggle {
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: rgba(170, 195, 255, 0.08);
+            color: rgba(232, 240, 255, 0.9);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .editor-toggle:active {
+            transform: scale(0.98);
+        }
+
+        .back-btn {
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: rgba(170, 195, 255, 0.08);
+            color: rgba(232, 240, 255, 0.9);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .back-btn:active {
+            transform: scale(0.98);
+        }
+
+        .editor-footer {
+            padding: 10px 12px 14px;
+            background: var(--panel-bg);
+            border-top: 1px solid var(--panel-border);
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .footer-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: rgba(170, 195, 255, 0.08);
+            color: rgba(232, 240, 255, 0.9);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            transition: all 0.15s ease;
+        }
+
+        .footer-btn.primary {
+            background: linear-gradient(135deg, #2c74d6, #1e4aa6);
+            color: white;
+        }
+        
+        .battlefield-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            position: relative;
+            min-height: 0;
+            background: var(--panel-bg-strong);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            overflow: hidden;
+            --hex-gap-color: rgba(12, 16, 30, 0.82);
+            --hex-fill-bg: rgba(180, 160, 255, 0.22);
+            --hex-stroke: rgba(180, 205, 255, 0.18);
+            --hex-boundary-bg: rgba(243, 201, 122, 0.3);
+            --hex-ally-bg: rgba(84, 166, 255, 0.22);
+            --hex-enemy-bg: rgba(255, 106, 128, 0.22);
+        }
+
+        .editor-bar {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 8px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.55);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            backdrop-filter: blur(8px);
+            z-index: 2;
+        }
+
+        .editor-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .editor-row.types {
+            padding-top: 2px;
+            border-top: 1px dashed rgba(170, 195, 255, 0.14);
+            margin-top: 2px;
+        }
+
+        .editor-row.types.disabled {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+        .editor-btn {
+            padding: 7px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: rgba(170, 195, 255, 0.08);
+            color: rgba(232, 240, 255, 0.9);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .editor-btn.active {
+            border-color: rgba(243, 201, 122, 0.55);
+            box-shadow: 0 0 10px rgba(243, 201, 122, 0.16);
+        }
+
+        .hex-map {
+            position: relative;
+            perspective: 1000px;
+            --hex-w: 64px;
+            --hex-h: calc(var(--hex-w) * 0.8660254);
+            --gap-x: 4px;
+            --hex-gap: 2.6px;
+        }
+        
+        .hex-cell {
+            width: var(--hex-w);
+            height: var(--hex-h);
+            background: var(--hex-gap-color);
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: absolute;
+            border: none;
+            transform: translateZ(0);
+            transform-origin: center;
+        }
+
+        .hex-fill {
+            position: absolute;
+            inset: var(--hex-gap);
+            background: var(--hex-fill-bg);
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            border: none;
+            box-shadow: inset 0 0 0 1px var(--hex-stroke);
+        }
+
+        .hex-cell.boundary .hex-fill {
+            background: var(--hex-boundary-bg);
+        }
+
+        .hex-cell.ally .hex-fill {
+            background: var(--hex-ally-bg);
+        }
+
+        .hex-cell.enemy .hex-fill {
+            background: var(--hex-enemy-bg);
+        }
+
+        .hex-cell.has-unit .hex-fill {
+            box-shadow: inset 0 0 0 2px rgba(210, 225, 255, 0.18);
+        }
+
+        .hex-cell.selected .hex-fill {
+            box-shadow: inset 0 0 0 2px rgba(120, 180, 255, 0.7), 0 0 12px rgba(120, 180, 255, 0.25);
+        }
+
+        .hex-cell.ghost {
+            pointer-events: none;
+            opacity: 0.55;
+        }
+
+        .hex-cell.ghost .hex-fill {
+            background: rgba(170, 195, 255, 0.08);
+            box-shadow: inset 0 0 0 1px rgba(170, 195, 255, 0.22);
+        }
+
+        .unit-icon {
+            position: relative;
+            z-index: 1;
+            font-size: 1.6rem;
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(10, 14, 26, 0.45);
+        }
+
+        .coord-display {
+            position: absolute;
+            left: 14px;
+            bottom: 88px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.6);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            color: rgba(232, 240, 255, 0.85);
+            font-size: 0.72rem;
+            z-index: 3;
+        }
+
+        .legend {
+            position: absolute;
+            right: 14px;
+            bottom: 88px;
+            display: grid;
+            gap: 6px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(12, 16, 30, 0.6);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            color: rgba(232, 240, 255, 0.85);
+            font-size: 0.72rem;
+            z-index: 3;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            box-shadow: inset 0 0 0 1px rgba(180, 205, 255, 0.25);
+        }
+
+        .legend-swatch.boundary {
+            background: var(--hex-boundary-bg);
+        }
+
+        .legend-swatch.ally {
+            background: var(--hex-ally-bg);
+        }
+
+        .legend-swatch.enemy {
+            background: var(--hex-enemy-bg);
+        }
+
+        .legend-swatch.neutral {
+            background: var(--hex-fill-bg);
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div class="status-header">
+            <div class="status-info">
+                <button class="back-btn" id="btn-back-stage-editor" type="button">返回关卡</button>
+                <div class="stage-title" id="map-stage-name">关卡地图</div>
+                <div class="stage-enemies" id="map-stage-enemies"></div>
+                <button class="editor-toggle" id="toggle-editor" type="button">退出编辑</button>
+            </div>
+        </div>
+
+        <div class="battlefield-container">
+            <div class="editor-bar" id="editor-bar">
+                <div class="editor-row tools">
+                    <button class="editor-btn active" data-tool="select" type="button">选择/移动</button>
+                    <button class="editor-btn" data-tool="add" type="button">添加</button>
+                    <button class="editor-btn" data-tool="delete" type="button">删除</button>
+                    <button class="editor-btn" data-tool="paint" type="button">改类型</button>
+                </div>
+                <div class="editor-row types disabled" data-type-row>
+                    <button class="editor-btn active" data-kind="neutral" type="button">中性</button>
+                    <button class="editor-btn" data-kind="boundary" type="button">野外</button>
+                    <button class="editor-btn" data-kind="ally" type="button">我方</button>
+                    <button class="editor-btn" data-kind="enemy" type="button">敌方</button>
+                </div>
+            </div>
+            <div class="hex-map" id="hex-map"></div>
+            <div class="coord-display" id="map-coord-display" hidden></div>
+            <div class="legend">
+                <div class="legend-item"><span class="legend-swatch boundary"></span><span>野外</span></div>
+                <div class="legend-item"><span class="legend-swatch ally"></span><span>我方</span></div>
+                <div class="legend-item"><span class="legend-swatch enemy"></span><span>敌方</span></div>
+                <div class="legend-item"><span class="legend-swatch neutral"></span><span>中性</span></div>
+            </div>
+        </div>
+        <div class="editor-footer">
+            <button class="footer-btn primary" id="editor-save-stage" type="button">保存关卡</button>
+            <button class="footer-btn" id="editor-save-default" type="button">设为默认</button>
+            <button class="footer-btn" id="editor-reset" type="button">重置</button>
+        </div>
+    </div>
+
+    <script type="module" src="js/hex-map-editor-page.js"></script>
+</body>
+</html>
