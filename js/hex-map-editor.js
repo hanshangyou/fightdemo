@@ -603,7 +603,7 @@ export function initHexMapEditor(elements, options = {}) {
     });
 
     editorResetBtn.addEventListener('click', function() {
-        const fallback = loadDefaultCells();
+        const fallback = state.stageId ? loadCellsForStage(state.stageId) : loadDefaultCells();
         setCells(fallback);
     });
 
