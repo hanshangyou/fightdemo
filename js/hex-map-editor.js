@@ -64,23 +64,28 @@ export function initHexMapEditor(elements, options = {}) {
 
     function buildDefaultCells() {
         const cols = new Map();
-        cols.set(-4, { rStart: 1, rEnd: 5 });
-        cols.set(-3, { rStart: 0, rEnd: 5 });
-        cols.set(-2, { rStart: 0, rEnd: 6 });
-        cols.set(-1, { rStart: 1, rEnd: 5 });
+        cols.set(-4, { rStart: 2, rEnd: 4 });
+        cols.set(-3, { rStart: 1, rEnd: 4 });
+        cols.set(-2, { rStart: 1, rEnd: 5 });
+        cols.set(-1, { rStart: 0, rEnd: 5 });
         cols.set(0, { rStart: 0, rEnd: 6 });
-        cols.set(1, { rStart: 1, rEnd: 5 });
-        cols.set(2, { rStart: 0, rEnd: 6 });
-        cols.set(3, { rStart: 0, rEnd: 5 });
-        cols.set(4, { rStart: 1, rEnd: 5 });
+        cols.set(1, { rStart: 0, rEnd: 5 });
+        cols.set(2, { rStart: 1, rEnd: 5 });
+        cols.set(3, { rStart: 1, rEnd: 4 });
+        cols.set(4, { rStart: 2, rEnd: 4 });
 
         const cells = [];
         Array.from(cols.entries()).forEach(([col, cfg]) => {
             for (let row = cfg.rStart; row <= cfg.rEnd; row++) {
                 let kind = 'neutral';
-                if (col === 0) kind = 'boundary';
-                if (col < 0) kind = 'ally';
-                if (col > 0) kind = 'enemy';
+                if (col === 0 ||col===1||col===-1 ) kind = 'boundary';
+                if (col < -1) kind = 'ally';
+                if(col==-1 && row==3) kind = 'ally';
+                if(col==-1 && row==2) kind = 'ally';
+                if (col > 1) kind = 'enemy';
+                if(col==1 && row==3) kind = 'enemy';
+                if(col==1 && row==2) kind = 'enemy';
+                if(col==0 && row==3) kind = 'neutral';
                 cells.push({ col, row, kind });
             }
         });
