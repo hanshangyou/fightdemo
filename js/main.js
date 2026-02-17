@@ -56,10 +56,12 @@ class Game {
                 resetPlacementBtn: 'battle-reset-placement-btn',
                 turnOrderEl: 'battle-turn-order',
                 turnOrderListEl: 'battle-turn-order-list',
-                battleHintsEl: 'battle-hints',
-                hintTitleEl: 'battle-hint-title',
-                hintMainEl: 'battle-hint-main',
-                hintSubEl: 'battle-hint-sub'
+                battleLogEl: 'battle-log',
+                battleLogListEl: 'battle-log-list',
+                battleActionLayoutEl: 'battle-action-layout',
+                battleActiveUnitEl: 'battle-active-unit',
+                battleTargetListEl: 'battle-target-list',
+                battleSkipTurnBtn: 'battle-skip-turn-btn'
             }
         });
         

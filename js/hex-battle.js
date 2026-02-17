@@ -19,10 +19,12 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         turnOrderEl,
         turnOrderListEl,
         enemyPoolEl,
-        battleHintsEl,
-        hintTitleEl,
-        hintMainEl,
-        hintSubEl,
+        battleLogEl,
+        battleLogListEl,
+        battleActionLayoutEl,
+        battleActiveUnitEl,
+        battleTargetListEl,
+        battleSkipTurnBtn,
     } = elements;
 
     const state = {
@@ -46,76 +48,54 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         damageStats: new Map(),
         totalDamage: 0,
         turnCount: 0,
-        external: { ...config }
+        external: { ...config },
+        lastLogTurnKey: null,
+        lastLogRound: 0
     };
 
     mapApi.setUnitProvider((col, row) => state.units.get(mapApi.key(col, row)));
 
-    const hintState = {
-        base: { title: '', main: '', sub: '' },
-    };
-
-    function setHintLines(title, main, sub) {
-        if (!battleHintsEl) return;
-        const empty = !title && !main && !sub;
-        battleHintsEl.hidden = empty;
-        hintTitleEl.textContent = title || '';
-        hintMainEl.textContent = main || '';
-        hintSubEl.textContent = sub || '';
-        hintTitleEl.hidden = !title;
-        hintMainEl.hidden = !main;
-        hintSubEl.hidden = !sub;
+    function setBattleLogVisible(visible) {
+        if (!battleLogEl) return;
+        battleLogEl.hidden = !visible;
     }
 
-    function setBaseHint(title, main, sub) {
-        hintState.base = { title, main, sub };
-        setHintLines(title, main, sub);
+    function clearBattleLog() {
+        if (!battleLogListEl) return;
+        battleLogListEl.innerHTML = '';
+    }
+
+    function appendBattleLog(message) {
+        if (!battleLogListEl || !message) return;
+        const item = document.createElement('div');
+        item.className = 'battle-log-item';
+        item.textContent = message;
+        battleLogListEl.appendChild(item);
+        if (battleLogListEl.children.length > 200) {
+            battleLogListEl.removeChild(battleLogListEl.firstChild);
+        }
+        battleLogListEl.scrollTop = battleLogListEl.scrollHeight;
     }
 
     function updatePrepareHint() {
         if (state.phase === 'battle') return;
-        const playerPlaced = Array.from(state.units.values()).filter(u => u.team === 'ally').length;
-        const selectedTemplate = state.playerPool.find(t => t.id === state.selectedUnitId);
-        if (selectedTemplate && !selectedTemplate.used) {
-            setBaseHint('布阵提示', `选择 ${selectedTemplate.name}，点击我方格子放置`, '拖拽已上阵单位可调整位置');
-            return;
-        }
-        if (playerPlaced < state.maxTeamSize) {
-            setBaseHint('布阵提示', '点击卡牌选择上阵，再点击我方格子放置', '拖拽已上阵单位可调整位置');
-            return;
-        }
-        setBaseHint('布阵完成', '可以开始战斗', '点击开始战斗进入回合制');
+        setBattleLogVisible(false);
     }
 
     function updateBattleHint() {
         if (state.phase !== 'battle') return;
-        if (!state.awaitingAction || !state.activeUnitKey) {
-            setBaseHint('交战提示', '敌方行动中', '');
-            return;
-        }
-        const unit = state.units.get(state.activeUnitKey);
-        const moveCount = state.validMoves?.size || 0;
-        const attackCount = state.validAttacks?.size || 0;
-        setBaseHint('交战提示', `轮到 ${unit?.name || '我方'} 行动，可移动 ${moveCount}，可攻击 ${attackCount}`, '点击蓝色格移动，点击红色格攻击');
+        setBattleLogVisible(true);
+        const currentKey = state.turnOrder[state.turnIndex];
+        if (!currentKey || !state.units.has(currentKey)) return;
+        if (state.lastLogTurnKey === currentKey && state.lastLogRound === state.round) return;
+        state.lastLogTurnKey = currentKey;
+        state.lastLogRound = state.round;
+        const unit = state.units.get(currentKey);
+        const name = unit?.name || (unit?.team === 'enemy' ? '敌方' : '我方');
+        appendBattleLog(`回合 ${state.round}：${name} 行动`);
     }
 
-    function updateHoverHint(coord) {
-        if (state.phase !== 'battle' || !state.awaitingAction) return;
-        if (!coord) {
-            setHintLines(hintState.base.title, hintState.base.main, hintState.base.sub);
-            return;
-        }
-        const key = mapApi.key(coord.col, coord.row);
-        let sub = hintState.base.sub;
-        if (state.validAttacks?.has(key)) {
-            const target = state.units.get(key);
-            const hp = target?.stats?.hp ?? 0;
-            const maxHp = target?.stats?.maxHp ?? hp;
-            sub = `攻击 ${target?.name || '敌方'} HP ${hp}/${maxHp}`;
-        } else if (state.validMoves?.has(key)) {
-            sub = `移动到 (${coord.col}, ${coord.row})`;
-        }
-        setHintLines(hintState.base.title, hintState.base.main, sub);
+    function updateHoverHint() {
     }
 
     function getUnitAt(col, row) {
@@ -312,6 +292,14 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         }
     }
 
+    function logMove(unit, fromKey, toKey) {
+        if (state.phase !== 'battle') return;
+        const from = mapApi.parseKey(fromKey);
+        const to = mapApi.parseKey(toKey);
+        const name = unit?.name || (unit?.team === 'enemy' ? '敌方' : '我方');
+        appendBattleLog(`${name} 移动 (${from.col},${from.row}) → (${to.col},${to.row})`);
+    }
+
     function moveUnit(fromKey, toCoord) {
         if (!fromKey || !toCoord) return false;
         const toKey = mapApi.key(toCoord.col, toCoord.row);
@@ -324,6 +312,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         state.units.delete(fromKey);
         state.units.set(toKey, unit);
         replaceKeyInTurnOrder(fromKey, toKey);
+        logMove(unit, fromKey, toKey);
         return true;
     }
 
@@ -339,6 +328,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         state.units.delete(fromKey);
         state.units.set(toKey, unit);
         replaceKeyInTurnOrder(fromKey, toKey);
+        logMove(unit, fromKey, toKey);
         return true;
     }
 
@@ -368,10 +358,14 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         state.activeUnitKey = null;
         state.validMoves = null;
         state.validAttacks = null;
+        state.lastLogTurnKey = null;
+        state.lastLogRound = 0;
         mapApi.setActiveUnitKey(null);
         mapApi.setHighlights(null, null);
         mapApi.render();
         renderPrepUI();
+        clearBattleLog();
+        renderBattleActionPanels();
         updatePrepareHint();
     }
 
@@ -463,10 +457,15 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         if (actionButtonsEl) {
             actionButtonsEl.style.display = state.phase === 'battle' ? 'none' : 'flex';
         }
+        const prepPanelEl = playerPoolEl?.closest('.prep-panel');
+        if (prepPanelEl) {
+            prepPanelEl.style.display = state.phase === 'battle' ? 'none' : 'flex';
+        }
         if (battlePanelEl) {
             battlePanelEl.style.display = state.phase === 'battle' ? 'flex' : 'none';
         }
         turnOrderEl.style.display = state.phase === 'battle' ? 'grid' : 'none';
+        renderBattleActionPanels();
         updatePrepareHint();
     }
 
@@ -531,6 +530,113 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
                 turnOrderListEl.appendChild(createOrderCard(unit, false, true));
             });
         }
+    }
+
+    function renderBattleActionPanels() {
+        if (battleActionLayoutEl) {
+            battleActionLayoutEl.style.display = state.phase === 'battle' ? 'grid' : 'none';
+        }
+        if (!battleActiveUnitEl && !battleTargetListEl) return;
+        const activeUnit = state.activeUnitKey ? state.units.get(state.activeUnitKey) : null;
+        if (battleActiveUnitEl) {
+            battleActiveUnitEl.innerHTML = '';
+            if (!activeUnit) {
+                const empty = document.createElement('div');
+                empty.className = 'battle-empty';
+                empty.textContent = '暂无行动单位';
+                battleActiveUnitEl.appendChild(empty);
+            } else {
+                const maxHp = Number.isFinite(activeUnit.stats?.maxHp) ? activeUnit.stats.maxHp : (activeUnit.stats?.hp ?? 0);
+                const hp = Number.isFinite(activeUnit.stats?.hp) ? activeUnit.stats.hp : maxHp;
+                const hpPercent = maxHp > 0 ? Math.max(0, Math.min(100, (hp / maxHp) * 100)) : 0;
+                const attack = activeUnit.stats?.attack ?? '-';
+                const defense = activeUnit.stats?.defense ?? '-';
+                const speed = activeUnit.stats?.speed ?? '-';
+                const card = document.createElement('div');
+                card.className = `battle-active-card ${activeUnit.team}`;
+                card.innerHTML = `
+                    <div class="battle-active-header">
+                        <div class="order-icon">${activeUnit.icon || '❔'}</div>
+                        <div>${activeUnit.name || '未知角色'}</div>
+                    </div>
+                    <div class="order-hp">
+                        <div class="order-hp-bar">
+                            <div class="order-hp-fill" style="width: ${hpPercent}%"></div>
+                        </div>
+                        <div class="order-hp-text">${hp}/${maxHp || '-'}</div>
+                    </div>
+                    <div class="order-stats">
+                        <span>⚔️${attack}</span>
+                        <span>🛡️${defense}</span>
+                        <span>💨${speed}</span>
+                    </div>
+                `;
+                battleActiveUnitEl.appendChild(card);
+            }
+        }
+        if (battleTargetListEl) {
+            battleTargetListEl.innerHTML = '';
+            const canAct = state.phase === 'battle' && state.awaitingAction && activeUnit && activeUnit.team === 'ally';
+            if (battleSkipTurnBtn) battleSkipTurnBtn.disabled = !canAct;
+            if (!canAct) {
+                const empty = document.createElement('div');
+                empty.className = 'battle-empty';
+                empty.textContent = '等待行动';
+                battleTargetListEl.appendChild(empty);
+                return;
+            }
+            const targets = Array.from(state.validAttacks ?? []).map(k => ({ key: k, unit: state.units.get(k) })).filter(t => t.unit);
+            if (!targets.length) {
+                const empty = document.createElement('div');
+                empty.className = 'battle-empty';
+                empty.textContent = '范围内无目标';
+                battleTargetListEl.appendChild(empty);
+                return;
+            }
+            targets.forEach(({ key, unit }) => {
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = `order-card battle-target-card ${unit.team}`;
+                const maxHp = Number.isFinite(unit.stats?.maxHp) ? unit.stats.maxHp : (unit.stats?.hp ?? 0);
+                const hp = Number.isFinite(unit.stats?.hp) ? unit.stats.hp : maxHp;
+                const hpPercent = maxHp > 0 ? Math.max(0, Math.min(100, (hp / maxHp) * 100)) : 0;
+                const attack = unit.stats?.attack ?? '-';
+                const defense = unit.stats?.defense ?? '-';
+                card.innerHTML = `
+                    <div class="order-icon">${unit.icon || '❔'}</div>
+                    <div class="order-hp">
+                        <div class="order-hp-bar">
+                            <div class="order-hp-fill" style="width: ${hpPercent}%"></div>
+                        </div>
+                        <div class="order-hp-text">${hp}/${maxHp || '-'}</div>
+                    </div>
+                    <div class="order-stats">
+                        <span>⚔️${attack}</span>
+                        <span>🛡️${defense}</span>
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    if (!canAct) return;
+                    applyAttack(state.activeUnitKey, key);
+                    finalizePlayerAction();
+                });
+                battleTargetListEl.appendChild(card);
+            });
+        }
+    }
+
+    function finalizePlayerAction() {
+        state.awaitingAction = false;
+        state.validMoves = null;
+        state.validAttacks = null;
+        mapApi.setHighlights(null, null);
+        mapApi.render();
+        renderTurnOrder();
+        updateBattleUI();
+        updateHoverHint(null);
+        renderBattleActionPanels();
+        state.turnCount += 1;
+        nextTurn();
     }
 
     function computeActionOptions(unitKey) {
@@ -629,6 +735,12 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         const def = target.stats?.defense || 0;
         const dmg = Math.max(1, atk - def);
         target.stats.hp = Math.max(0, target.stats.hp - dmg);
+        if (state.phase === 'battle') {
+            const attackerName = attacker.name || (attacker.team === 'enemy' ? '敌方' : '我方');
+            const targetName = target.name || (target.team === 'enemy' ? '敌方' : '我方');
+            const maxHp = target.stats?.maxHp ?? target.stats?.hp ?? 0;
+            appendBattleLog(`${attackerName} 攻击 ${targetName}，造成 ${dmg} 伤害（HP ${target.stats.hp}/${maxHp}）`);
+        }
         if (attacker.team === 'ally') {
             const sourceId = attacker.sourceId ?? attacker.id;
             const stats = state.damageStats.get(sourceId);
@@ -640,6 +752,10 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         }
         if (target.stats.hp <= 0) {
             state.units.delete(toKey);
+            if (state.phase === 'battle') {
+                const targetName = target.name || (target.team === 'enemy' ? '敌方' : '我方');
+                appendBattleLog(`${targetName} 被击败`);
+            }
             if (attacker.team === 'ally') {
                 const sourceId = attacker.sourceId ?? attacker.id;
                 const stats = state.damageStats.get(sourceId);
@@ -673,6 +789,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
             updateBattleUI();
             updateBattleHint();
             updateHoverHint(null);
+            renderBattleActionPanels();
             return;
         }
         state.awaitingAction = false;
@@ -688,6 +805,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         mapApi.render();
         renderTurnOrder();
         updateBattleUI();
+        renderBattleActionPanels();
         state.turnCount += 1;
         nextTurn();
     }
@@ -699,6 +817,11 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         state.turnCount = 0;
         state.totalDamage = 0;
         state.damageStats = new Map();
+        state.lastLogTurnKey = null;
+        state.lastLogRound = 0;
+        clearBattleLog();
+        setBattleLogVisible(true);
+        appendBattleLog('战斗开始');
         Array.from(state.units.values()).filter(u => u.team === 'ally').forEach(u => {
             const id = u.sourceId ?? u.id;
             state.damageStats.set(id, { unit: u, totalDamage: 0, attacks: 0, kills: 0 });
@@ -722,6 +845,15 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         mapApi.setHighlights(null, null);
         mapApi.render();
         updateBattleUI();
+        setBattleLogVisible(true);
+        if (winner === 'A') {
+            appendBattleLog('战斗结束：我方胜利');
+        } else if (winner === 'B') {
+            appendBattleLog('战斗结束：我方失败');
+        } else {
+            appendBattleLog('战斗结束');
+        }
+        renderBattleActionPanels();
         const aliveAllyIds = new Set(Array.from(state.units.values()).filter(u => u.team === 'ally').map(u => u.sourceId ?? u.id));
         const deadAllyIds = state.playerPool.map(t => t.sourceId ?? t.id).filter(id => !aliveAllyIds.has(id));
         const damageStats = Array.from(state.damageStats.entries()).map(([id, stats]) => ({
@@ -777,16 +909,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
                 } else {
                     return;
                 }
-                state.awaitingAction = false;
-                state.validMoves = null;
-                state.validAttacks = null;
-                mapApi.setHighlights(null, null);
-                mapApi.render();
-                renderTurnOrder();
-                updateBattleUI();
-                updateHoverHint(null);
-                state.turnCount += 1;
-                nextTurn();
+                finalizePlayerAction();
             }
         },
         onPointerMove: (e) => {
@@ -846,6 +969,16 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
     resetPlacementBtn.addEventListener('click', function() {
         resetPlacement();
     });
+
+    if (battleSkipTurnBtn) {
+        battleSkipTurnBtn.addEventListener('click', function() {
+            if (state.phase !== 'battle' || !state.awaitingAction || !state.activeUnitKey) return;
+            const unit = state.units.get(state.activeUnitKey);
+            const name = unit?.name || (unit?.team === 'enemy' ? '敌方' : '我方');
+            appendBattleLog(`${name} 跳过回合`);
+            finalizePlayerAction();
+        });
+    }
 
     return {
         loadBattle,

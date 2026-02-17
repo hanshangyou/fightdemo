@@ -26,10 +26,12 @@ export function initHexBattlefield(options = {}) {
         battleStatusEl: getEl('battleStatusEl', 'battle-status'),
         turnOrderEl: getEl('turnOrderEl', 'turn-order'),
         turnOrderListEl: getEl('turnOrderListEl', 'turn-order-list'),
-        battleHintsEl: getEl('battleHintsEl', 'battle-hints'),
-        hintTitleEl: getEl('hintTitleEl', 'hint-title'),
-        hintMainEl: getEl('hintMainEl', 'hint-main'),
-        hintSubEl: getEl('hintSubEl', 'hint-sub'),
+        battleLogEl: getEl('battleLogEl', 'battle-log'),
+        battleLogListEl: getEl('battleLogListEl', 'battle-log-list'),
+        battleActionLayoutEl: getEl('battleActionLayoutEl', 'battle-action-layout'),
+        battleActiveUnitEl: getEl('battleActiveUnitEl', 'battle-active-unit'),
+        battleTargetListEl: getEl('battleTargetListEl', 'battle-target-list'),
+        battleSkipTurnBtn: getEl('battleSkipTurnBtn', 'battle-skip-turn-btn'),
     };
 
     const mapApi = initHexMapEditor(elements, options.mapOptions || {});

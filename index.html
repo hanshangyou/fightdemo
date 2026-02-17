@@ -831,29 +831,124 @@
             flex-shrink: 0;
         }
 
-        #screen-battle .battle-hints {
+        #screen-battle .battle-action-layout {
+            display: none;
+            grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        #screen-battle .battle-action-panel {
+            background: rgba(12, 16, 30, 0.55);
+            border: 1px solid rgba(170, 195, 255, 0.14);
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #screen-battle .battle-panel-title {
+            font-size: 0.68rem;
+            color: var(--text-dim);
+        }
+
+        #screen-battle .battle-active-unit {
+            min-height: 84px;
             display: grid;
-            gap: 4px;
+            gap: 6px;
+        }
+
+        #screen-battle .battle-active-card {
+            display: grid;
+            gap: 6px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(170, 195, 255, 0.08);
+            border: 1px solid rgba(170, 195, 255, 0.2);
+        }
+
+        #screen-battle .battle-active-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(232, 240, 255, 0.9);
+        }
+
+        #screen-battle .battle-active-header .order-icon {
+            font-size: 1.3rem;
+        }
+
+        #screen-battle .battle-target-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        #screen-battle .battle-skip-btn {
+            padding: 6px 10px;
+            font-size: 0.7rem;
+            border-radius: 10px;
+        }
+
+        #screen-battle .battle-target-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            min-height: 84px;
+        }
+
+        #screen-battle .battle-target-card {
+            cursor: pointer;
+            transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        #screen-battle .battle-target-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(243, 201, 122, 0.55);
+            box-shadow: 0 0 8px rgba(243, 201, 122, 0.2);
+        }
+
+        #screen-battle .battle-target-card:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #screen-battle .battle-empty {
+            font-size: 0.7rem;
+            color: rgba(232, 240, 255, 0.55);
+        }
+
+        #screen-battle .battle-log {
+            display: grid;
+            gap: 6px;
             padding: 8px 10px;
             border-radius: 12px;
             background: rgba(12, 16, 30, 0.55);
             border: 1px solid rgba(170, 195, 255, 0.14);
             color: rgba(232, 240, 255, 0.85);
             font-size: 0.72rem;
-            max-width: 58%;
+            width: 320px;
+            max-width: 100%;
+            height: 120px;
         }
 
-        #screen-battle .hint-title {
-            font-size: 0.68rem;
-            color: var(--text-dim);
+        #screen-battle .battle-log-list {
+            display: grid;
+            gap: 4px;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 4px;
+            word-break: break-word;
         }
 
-        #screen-battle .hint-main {
-            font-weight: 600;
-        }
-
-        #screen-battle .hint-sub {
-            color: rgba(214, 226, 255, 0.75);
+        #screen-battle .battle-log-item {
+            color: rgba(214, 226, 255, 0.82);
         }
 
         #screen-battle .turn-order {
@@ -2312,10 +2407,8 @@
                         <div id="battle-player-count"></div>
                     </div>
                 </div>
-                <div class="battle-hints" id="battle-hints" hidden>
-                    <div class="hint-title" id="battle-hint-title"></div>
-                    <div class="hint-main" id="battle-hint-main"></div>
-                    <div class="hint-sub" id="battle-hint-sub"></div>
+                <div class="battle-log" id="battle-log" hidden>
+                    <div class="battle-log-list" id="battle-log-list"></div>
                 </div>
             </div>
             <div class="turn-order" id="battle-turn-order">
@@ -2356,6 +2449,18 @@
             </div>
 
             <div class="action-area">
+                <div class="battle-action-layout" id="battle-action-layout">
+                    <div class="battle-action-panel">
+                        <div class="battle-active-unit" id="battle-active-unit"></div>
+                    </div>
+                    <div class="battle-action-panel">
+                        <div class="battle-target-header">
+                            <div class="battle-panel-title">攻击范围</div>
+                            <button class="btn btn-secondary battle-skip-btn" id="battle-skip-turn-btn" type="button">跳过回合</button>
+                        </div>
+                        <div class="battle-target-list" id="battle-target-list"></div>
+                    </div>
+                </div>
                 <div class="prep-panel">
                     <div class="pool-section">
                         <div class="pool-grid" id="battle-player-pool"></div>
