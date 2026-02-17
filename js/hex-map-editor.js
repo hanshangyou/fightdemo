@@ -32,6 +32,7 @@ export function initHexMapEditor(elements, options = {}) {
         ghostEl: null,
         highlightMoves: null,
         highlightAttacks: null,
+        activeUnitKey: null,
         defaultCells: null,
         stageId: Number.isFinite(options.stageId) ? options.stageId : getStageId(),
     };
@@ -251,6 +252,7 @@ export function initHexMapEditor(elements, options = {}) {
                 const icon = document.createElement('div');
                 icon.className = 'unit-icon';
                 icon.textContent = unit.icon || '❔';
+                if (state.activeUnitKey === key(c.col, c.row)) icon.classList.add('active-unit-icon');
                 cell.appendChild(icon);
             }
 
@@ -290,6 +292,10 @@ export function initHexMapEditor(elements, options = {}) {
         saveCurrent(cells);
         render();
         if (cellsChangedHandler) cellsChangedHandler(Array.from(state.cells.values()));
+    }
+
+    function setActiveUnitKey(activeKey) {
+        state.activeUnitKey = activeKey;
     }
 
     function ensureGhost() {
@@ -332,6 +338,15 @@ export function initHexMapEditor(elements, options = {}) {
 
     function findNearestCoordFromEvent(e) {
         if (!state.layout) return null;
+        const target = document.elementFromPoint(e.clientX, e.clientY);
+        const cellEl = target?.closest?.('.hex-cell');
+        if (cellEl && !cellEl.classList.contains('ghost')) {
+            const col = Number(cellEl.dataset.col);
+            const row = Number(cellEl.dataset.row);
+            if (Number.isFinite(col) && Number.isFinite(row)) {
+                return { col, row };
+            }
+        }
         const rect = hexMap.getBoundingClientRect();
         const localX = e.clientX - rect.left;
         const localY = e.clientY - rect.top;
@@ -687,6 +702,7 @@ export function initHexMapEditor(elements, options = {}) {
         setUnitProvider,
         setUnitDragHandler,
         setHighlights,
+        setActiveUnitKey,
         setHoverCoord,
         setGhostCoord,
         findNearestCoordFromEvent,

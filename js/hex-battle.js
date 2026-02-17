@@ -301,6 +301,17 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         return true;
     }
 
+    function replaceKeyInTurnOrder(fromKey, toKey) {
+        if (!fromKey || !toKey || fromKey === toKey) return;
+        if (Array.isArray(state.turnOrder) && state.turnOrder.length) {
+            state.turnOrder = state.turnOrder.map(k => (k === fromKey ? toKey : k));
+        }
+        if (state.activeUnitKey === fromKey) {
+            state.activeUnitKey = toKey;
+            mapApi.setActiveUnitKey(toKey);
+        }
+    }
+
     function moveUnit(fromKey, toCoord) {
         if (!fromKey || !toCoord) return false;
         const toKey = mapApi.key(toCoord.col, toCoord.row);
@@ -312,6 +323,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         if (!unit) return false;
         state.units.delete(fromKey);
         state.units.set(toKey, unit);
+        replaceKeyInTurnOrder(fromKey, toKey);
         return true;
     }
 
@@ -326,6 +338,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         if (!unit || unit.team !== 'ally') return false;
         state.units.delete(fromKey);
         state.units.set(toKey, unit);
+        replaceKeyInTurnOrder(fromKey, toKey);
         return true;
     }
 
@@ -355,6 +368,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         state.activeUnitKey = null;
         state.validMoves = null;
         state.validAttacks = null;
+        mapApi.setActiveUnitKey(null);
         mapApi.setHighlights(null, null);
         mapApi.render();
         renderPrepUI();
@@ -444,32 +458,79 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         }
         const ready = playerPlaced === state.maxTeamSize;
         startBattleBtn.disabled = !ready || state.phase === 'battle';
-        battlePanelEl.style.display = state.phase === 'battle' ? 'flex' : 'none';
+        resetPlacementBtn.disabled = state.phase === 'battle';
+        const actionButtonsEl = startBattleBtn?.closest('.action-buttons');
+        if (actionButtonsEl) {
+            actionButtonsEl.style.display = state.phase === 'battle' ? 'none' : 'flex';
+        }
+        if (battlePanelEl) {
+            battlePanelEl.style.display = state.phase === 'battle' ? 'flex' : 'none';
+        }
         turnOrderEl.style.display = state.phase === 'battle' ? 'grid' : 'none';
         updatePrepareHint();
     }
 
     function updateBattleUI() {
         if (!state.stage) return;
-        battleStageNameEl.textContent = state.stage.name || '战斗阶段';
-        battleRoundEl.textContent = `回合 ${state.round}/${state.roundLimit}`;
+        if (battleStageNameEl) {
+            battleStageNameEl.textContent = state.stage.name || '战斗阶段';
+        }
+        if (battleRoundEl) {
+            battleRoundEl.textContent = `回合 ${state.round}/${state.roundLimit}`;
+        }
         const allyAlive = Array.from(state.units.values()).filter(u => u.team === 'ally').length;
         const enemyAlive = Array.from(state.units.values()).filter(u => u.team === 'enemy').length;
-        battleStatusEl.textContent = `我方: ${allyAlive}  敌方: ${enemyAlive}`;
+        if (battleStatusEl) {
+            battleStatusEl.textContent = `我方: ${allyAlive}  敌方: ${enemyAlive}`;
+        }
     }
 
     function renderTurnOrder() {
         turnOrderListEl.innerHTML = '';
         const remaining = state.turnOrder.slice(state.turnIndex);
+        const createOrderCard = (unit, isActive, isNextRound) => {
+            const card = document.createElement('div');
+            card.className = `order-card ${unit.team}`;
+            if (isActive) card.classList.add('active');
+            if (isNextRound) card.classList.add('next-round');
+            const maxHp = Number.isFinite(unit.stats?.maxHp) ? unit.stats.maxHp : (unit.stats?.hp ?? 0);
+            const hp = Number.isFinite(unit.stats?.hp) ? unit.stats.hp : maxHp;
+            const hpPercent = maxHp > 0 ? Math.max(0, Math.min(100, (hp / maxHp) * 100)) : 0;
+            const attack = unit.stats?.attack ?? '-';
+            const defense = unit.stats?.defense ?? '-';
+            card.innerHTML = `
+                <div class="order-icon">${unit.icon || '❔'}</div>
+                <div class="order-hp">
+                    <div class="order-hp-bar">
+                        <div class="order-hp-fill" style="width: ${hpPercent}%"></div>
+                    </div>
+                    <div class="order-hp-text">${hp}/${maxHp || '-'}</div>
+                </div>
+                <div class="order-stats">
+                    <span>⚔️${attack}</span>
+                    <span>🛡️${defense}</span>
+                </div>
+            `;
+            return card;
+        };
         remaining.forEach(k => {
             const unit = state.units.get(k);
             if (!unit) return;
-            const avatar = document.createElement('div');
-            avatar.className = `order-avatar ${unit.team}`;
-            if (k === state.activeUnitKey) avatar.classList.add('active');
-            avatar.textContent = unit.icon || '❔';
-            turnOrderListEl.appendChild(avatar);
+            turnOrderListEl.appendChild(createOrderCard(unit, k === state.activeUnitKey, false));
         });
+        if (state.turnOrder.length) {
+            if (remaining.length) {
+                const divider = document.createElement('div');
+                divider.className = 'order-divider';
+                divider.innerHTML = '<span>⏳</span>';
+                turnOrderListEl.appendChild(divider);
+            }
+            state.turnOrder.forEach(k => {
+                const unit = state.units.get(k);
+                if (!unit) return;
+                turnOrderListEl.appendChild(createOrderCard(unit, false, true));
+            });
+        }
     }
 
     function computeActionOptions(unitKey) {
@@ -599,6 +660,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
             return;
         }
         state.activeUnitKey = currentKey;
+        mapApi.setActiveUnitKey(currentKey);
         const unit = state.units.get(currentKey);
         if (unit.team === 'ally') {
             state.awaitingAction = true;
@@ -655,6 +717,8 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         state.awaitingAction = false;
         state.validMoves = null;
         state.validAttacks = null;
+        state.activeUnitKey = null;
+        mapApi.setActiveUnitKey(null);
         mapApi.setHighlights(null, null);
         mapApi.render();
         updateBattleUI();

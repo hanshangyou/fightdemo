@@ -586,7 +586,7 @@
             --hex-gap-color: rgba(12, 16, 30, 0.82);
             --hex-fill-bg: rgba(180, 160, 255, 0.22);
             --hex-stroke: rgba(180, 205, 255, 0.18);
-            --hex-boundary-bg: rgba(243, 201, 122, 0.3);
+            --hex-boundary-bg: rgba(90, 190, 120, 0.3);
             --hex-ally-bg: rgba(84, 166, 255, 0.22);
             --hex-enemy-bg: rgba(255, 106, 128, 0.22);
         }
@@ -714,6 +714,7 @@
             box-shadow: inset 0 0 0 2px rgba(243, 201, 122, 0.65), 0 0 12px rgba(243, 201, 122, 0.18);
         }
 
+
         #screen-battle .hex-cell.ally .hex-fill {
             background: var(--hex-ally-bg);
         }
@@ -740,6 +741,19 @@
             font-size: 1.6rem;
             pointer-events: none;
             text-shadow: 0 0 10px rgba(10, 14, 26, 0.45);
+        }
+
+        #screen-battle .unit-icon.active-unit-icon {
+            animation: battleUnitBounce 0.9s ease-in-out infinite;
+        }
+
+        @keyframes battleUnitBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-6px);
+            }
         }
 
         #screen-battle .hex-cell.ghost {
@@ -844,11 +858,16 @@
 
         #screen-battle .turn-order {
             display: flex;
-            margin-bottom: 8px;
-            padding: 8px;
+            margin: 8px 0;
+            padding: 8px 12px;
             border-radius: 12px;
             background: rgba(12, 16, 30, 0.55);
             border: 1px solid rgba(170, 195, 255, 0.14);
+            width: 100%;
+            max-width: 100%;
+            align-self: stretch;
+            justify-content: center;
+            min-height: 44px;
         }
 
         #screen-battle .order-row {
@@ -857,57 +876,106 @@
             gap: 6px;
             flex-wrap: nowrap;
             overflow-x: auto;
+            width: 100%;
+            justify-content: flex-start;
+            scroll-padding-left: 6px;
         }
 
         #screen-battle .order-list {
             display: flex;
             gap: 6px;
             flex-wrap: nowrap;
+            justify-content: flex-start;
+            width: max-content;
+            padding: 0 4px;
         }
 
-        #screen-battle .order-avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
+        #screen-battle .order-card {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            font-size: 1rem;
+            gap: 4px;
+            padding: 6px;
+            border-radius: 10px;
+            min-width: 64px;
             background: rgba(170, 195, 255, 0.08);
             border: 1px solid rgba(170, 195, 255, 0.2);
         }
 
-        #screen-battle .order-avatar.active {
+        #screen-battle .order-card.next-round {
+            opacity: 0.65;
+        }
+
+        #screen-battle .order-card.active {
             border-color: rgba(243, 201, 122, 0.7);
             box-shadow: 0 0 10px rgba(243, 201, 122, 0.25);
         }
 
-        #screen-battle .order-avatar.enemy {
+        #screen-battle .order-card.enemy {
             border-color: rgba(255, 106, 128, 0.35);
         }
 
-        #screen-battle .order-avatar.ally {
+        #screen-battle .order-card.ally {
             border-color: rgba(84, 166, 255, 0.35);
+        }
+
+        #screen-battle .order-icon {
+            font-size: 1rem;
+        }
+
+        #screen-battle .order-hp {
+            display: grid;
+            gap: 2px;
+            width: 100%;
+            font-size: 0.6rem;
+            color: rgba(232, 240, 255, 0.8);
+            text-align: center;
+        }
+
+        #screen-battle .order-hp-bar {
+            width: 100%;
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(170, 195, 255, 0.12);
+            overflow: hidden;
+        }
+
+        #screen-battle .order-hp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8fd98f, #55c47a);
+        }
+
+        #screen-battle .order-stats {
+            display: flex;
+            gap: 6px;
+            font-size: 0.62rem;
+            color: rgba(232, 240, 255, 0.85);
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+        }
+
+        #screen-battle .order-stats span {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        #screen-battle .order-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(232, 240, 255, 0.55);
+            font-size: 0.75rem;
+            padding: 0 4px;
         }
 
         #screen-battle .prep-panel {
             display: flex;
             flex-direction: column;
             gap: 10px;
-        }
-
-        #screen-battle .battle-panel {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        #screen-battle .prep-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.78rem;
-            color: var(--text-dim);
         }
 
         #screen-battle .prep-stage {
@@ -1523,7 +1591,7 @@
             --hex-gap-color: rgba(12, 16, 30, 0.82);
             --hex-fill-bg: rgba(180, 160, 255, 0.22);
             --hex-stroke: rgba(180, 205, 255, 0.18);
-            --hex-boundary-bg: rgba(243, 201, 122, 0.3);
+            --hex-boundary-bg: rgba(90, 190, 120, 0.3);
             --hex-ally-bg: rgba(84, 166, 255, 0.22);
             --hex-enemy-bg: rgba(255, 106, 128, 0.22);
         }
@@ -2250,6 +2318,11 @@
                     <div class="hint-sub" id="battle-hint-sub"></div>
                 </div>
             </div>
+            <div class="turn-order" id="battle-turn-order">
+                <div class="order-row">
+                    <div class="order-list" id="battle-turn-order-list"></div>
+                </div>
+            </div>
             <div class="enemy-pool-panel">
                 <div class="enemy-pool-grid" id="battle-enemy-pool"></div>
             </div>
@@ -2283,11 +2356,6 @@
             </div>
 
             <div class="action-area">
-                <div class="turn-order" id="battle-turn-order">
-                    <div class="order-row">
-                        <div class="order-list" id="battle-turn-order-list"></div>
-                    </div>
-                </div>
                 <div class="prep-panel">
                     <div class="pool-section">
                         <div class="pool-grid" id="battle-player-pool"></div>
@@ -2295,15 +2363,6 @@
                     <div class="action-buttons">
                         <button class="btn btn-primary" id="battle-start-battle-btn">开始战斗</button>
                         <button class="btn btn-secondary" id="battle-reset-placement-btn">重置布阵</button>
-                    </div>
-                </div>
-                <div class="battle-panel" id="battle-panel">
-                    <div class="prep-header">
-                        <div class="prep-stage" id="battle-stage-name"></div>
-                        <div class="phase-label" id="battle-round"></div>
-                    </div>
-                    <div class="prep-stats">
-                        <div id="battle-status"></div>
                     </div>
                 </div>
             </div>
