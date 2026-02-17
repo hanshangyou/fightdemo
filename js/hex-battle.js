@@ -18,6 +18,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         battleStatusEl,
         turnOrderEl,
         turnOrderListEl,
+        enemyPoolEl,
         battleHintsEl,
         hintTitleEl,
         hintMainEl,
@@ -155,6 +156,20 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         const pool = getCharacterPool();
         const map = new Map(pool.map(c => [c.id, c]));
         return (state.stage?.enemies || []).map(id => map.get(id)).filter(Boolean);
+    }
+
+    function getEnemyPoolTemplates() {
+        const pool = getCharacterPool();
+        const map = new Map(pool.map(c => [c.id, c]));
+        const spawns = Array.isArray(state.stage?.enemySpawns) ? state.stage.enemySpawns : null;
+        let ids = [];
+        if (spawns && spawns.length) {
+            ids = spawns.map(s => s?.enemyId).filter(Boolean);
+        }
+        if (!ids.length) {
+            ids = state.stage?.enemies || [];
+        }
+        return ids.map(id => map.get(id)).filter(Boolean);
     }
 
     function buildPlayerPool() {
@@ -366,13 +381,25 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         playerPoolEl.innerHTML = '';
         if (state.phase !== 'battle') {
             state.playerPool.forEach(template => {
+                const rarity = (template.rarity || template.source?.rarity || 'COMMON').toLowerCase();
+                const baseStats = template.baseStats || template.stats || {};
                 const card = document.createElement('button');
                 card.type = 'button';
                 card.className = 'character-card';
                 if (template.used) card.classList.add('placed');
                 if (state.selectedUnitId === template.id) card.classList.add('selected');
+                card.classList.add(`rarity-${rarity}`);
                 card.dataset.id = template.id;
-                card.innerHTML = `<div class="character-icon">${template.icon}</div><div class="character-name">${template.name}</div>`;
+                card.innerHTML = `
+                    <div class="character-icon">${template.icon}</div>
+                    <div class="character-name">${template.name}</div>
+                    <div class="character-stats">
+                        <span>❤️${baseStats.maxHp ?? '-'}</span>
+                        <span>💨${baseStats.speed ?? '-'}</span>
+                        <span>⚔️${baseStats.attack ?? '-'}</span>
+                        <span>🛡️${baseStats.defense ?? '-'}</span>
+                    </div>
+                `;
                 card.addEventListener('click', () => {
                     if (template.used) {
                         removePlayerPlacementById(template.id);
@@ -383,6 +410,37 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
                 });
                 playerPoolEl.appendChild(card);
             });
+        }
+        if (enemyPoolEl) {
+            const panel = enemyPoolEl.closest('.enemy-pool-panel');
+            if (state.phase === 'battle') {
+                enemyPoolEl.innerHTML = '';
+                if (panel) panel.style.display = 'none';
+            } else {
+                if (panel) panel.style.display = 'flex';
+                enemyPoolEl.innerHTML = '';
+                const templates = getEnemyPoolTemplates();
+                templates.forEach(template => {
+                    const rarity = (template?.rarity || 'ENEMY').toLowerCase();
+                    const baseStats = template?.baseStats || {};
+                    const card = document.createElement('button');
+                    card.type = 'button';
+                    card.className = 'character-card enemy-readonly';
+                    card.classList.add(`rarity-${rarity}`);
+                    card.disabled = true;
+                    card.innerHTML = `
+                        <div class="character-icon">${template?.icon || '❔'}</div>
+                        <div class="character-name">${template?.name || '敌人'}</div>
+                        <div class="character-stats">
+                            <span>❤️${baseStats.maxHp ?? '-'}</span>
+                            <span>💨${baseStats.speed ?? '-'}</span>
+                            <span>⚔️${baseStats.attack ?? '-'}</span>
+                            <span>🛡️${baseStats.defense ?? '-'}</span>
+                        </div>
+                    `;
+                    enemyPoolEl.appendChild(card);
+                });
+            }
         }
         const ready = playerPlaced === state.maxTeamSize;
         startBattleBtn.disabled = !ready || state.phase === 'battle';

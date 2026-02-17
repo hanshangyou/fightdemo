@@ -363,12 +363,12 @@ export function initHexMapEditor(elements, options = {}) {
     function setMode(mode) {
         state.mode = mode;
         if (mode === 'edit') {
-            editorBar.hidden = false;
-            toggleEditorBtn.textContent = '退出编辑';
+            if (editorBar) editorBar.hidden = false;
+            if (toggleEditorBtn) toggleEditorBtn.textContent = '退出编辑';
             setTool(state.tool);
         } else {
-            editorBar.hidden = true;
-            toggleEditorBtn.textContent = '编辑地图';
+            if (editorBar) editorBar.hidden = true;
+            if (toggleEditorBtn) toggleEditorBtn.textContent = '编辑地图';
             state.hoverCoord = null;
         }
         render();
@@ -593,30 +593,38 @@ export function initHexMapEditor(elements, options = {}) {
         setGhostCoord(coord);
     }
 
-    toggleEditorBtn.addEventListener('click', function() {
-        setMode(state.mode === 'edit' ? 'play' : 'edit');
-    });
+    if (toggleEditorBtn) {
+        toggleEditorBtn.addEventListener('click', function() {
+            setMode(state.mode === 'edit' ? 'play' : 'edit');
+        });
+    }
 
-    editorBar.addEventListener('click', function(e) {
-        const btn = e.target.closest('[data-tool]');
-        if (btn) setTool(btn.dataset.tool);
-        const kindBtn = e.target.closest('[data-kind]');
-        if (kindBtn) {
-            setPaintKind(kindBtn.dataset.kind);
-            if (state.tool !== 'paint') setTool('paint');
-        }
-    });
+    if (editorBar) {
+        editorBar.addEventListener('click', function(e) {
+            const btn = e.target.closest('[data-tool]');
+            if (btn) setTool(btn.dataset.tool);
+            const kindBtn = e.target.closest('[data-kind]');
+            if (kindBtn) {
+                setPaintKind(kindBtn.dataset.kind);
+                if (state.tool !== 'paint') setTool('paint');
+            }
+        });
+    }
 
-    editorResetBtn.addEventListener('click', function() {
-        const fallback = state.stageId ? loadCellsForStage(state.stageId) : loadDefaultCells();
-        setCells(fallback);
-    });
+    if (editorResetBtn) {
+        editorResetBtn.addEventListener('click', function() {
+            const fallback = state.stageId ? loadCellsForStage(state.stageId) : loadDefaultCells();
+            setCells(fallback);
+        });
+    }
 
-    editorSaveDefaultBtn.addEventListener('click', function() {
-        const snapshot = Array.from(state.cells.values());
-        saveDefault(snapshot);
-        state.defaultCells = snapshot.map(c => ({ ...c }));
-    });
+    if (editorSaveDefaultBtn) {
+        editorSaveDefaultBtn.addEventListener('click', function() {
+            const snapshot = Array.from(state.cells.values());
+            saveDefault(snapshot);
+            state.defaultCells = snapshot.map(c => ({ ...c }));
+        });
+    }
 
     updateSaveStageVisibility();
 

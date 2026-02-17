@@ -17,6 +17,7 @@ export function initHexBattlefield(options = {}) {
         enemyCountEl: getEl('enemyCountEl', 'enemy-count'),
         playerCountEl: getEl('playerCountEl', 'player-count'),
         playerPoolEl: getEl('playerPoolEl', 'player-pool'),
+        enemyPoolEl: getEl('enemyPoolEl', 'enemy-pool'),
         startBattleBtn: getEl('startBattleBtn', 'start-battle-btn'),
         resetPlacementBtn: getEl('resetPlacementBtn', 'reset-placement-btn'),
         battlePanelEl: getEl('battlePanelEl', 'battle-panel'),

@@ -41,7 +41,6 @@ class Game {
         this.hexBattlefield = initHexBattlefield({
             ids: {
                 hexMap: 'battle-hex-map',
-                toggleEditorBtn: 'battle-toggle-editor',
                 editorBar: 'battle-editor-bar',
                 editorSaveDefaultBtn: 'battle-editor-save-default',
                 editorSaveStageBtn: 'battle-editor-save-stage',
@@ -52,6 +51,7 @@ class Game {
                 enemyCountEl: 'battle-enemy-count',
                 playerCountEl: 'battle-player-count',
                 playerPoolEl: 'battle-player-pool',
+                enemyPoolEl: 'battle-enemy-pool',
                 startBattleBtn: 'battle-start-battle-btn',
                 resetPlacementBtn: 'battle-reset-placement-btn',
                 battlePanelEl: 'battle-panel',

@@ -37,6 +37,36 @@
         }
         
         /* 顶部状态信息区域 */
+        .battle-topbar {
+            padding: 10px 12px;
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--panel-border);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .battle-stage-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+        }
+
+        .battle-stage-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .battle-stage-info .prep-stats {
+            margin-top: 2px;
+        }
+
         .status-header {
             padding: 12px;
             background: var(--panel-bg);
@@ -104,6 +134,27 @@
             --hex-boundary-bg: rgba(243, 201, 122, 0.3);
             --hex-ally-bg: rgba(84, 166, 255, 0.22);
             --hex-enemy-bg: rgba(255, 106, 128, 0.22);
+        }
+
+        .enemy-pool-panel {
+            width: 100%;
+            max-width: 100%;
+            align-self: stretch;
+            display: flex;
+            justify-content: center;
+            padding: 8px 12px;
+            gap: 8px;
+            border-radius: 12px;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+        }
+
+        .enemy-pool-grid {
+            width: 100%;
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 8px;
         }
 
         .editor-bar {
@@ -249,9 +300,10 @@
         .legend {
             position: absolute;
             right: 14px;
-            bottom: 88px;
+            bottom: 14px;
             display: grid;
-            gap: 6px;
+            grid-template-columns: repeat(2, auto);
+            gap: 6px 10px;
             padding: 8px 10px;
             border-radius: 12px;
             background: rgba(12, 16, 30, 0.6);
@@ -328,13 +380,13 @@
         .battle-hints {
             display: grid;
             gap: 4px;
-            margin-bottom: 8px;
             padding: 8px 10px;
             border-radius: 12px;
             background: rgba(12, 16, 30, 0.55);
             border: 1px solid rgba(170, 195, 255, 0.14);
             color: rgba(232, 240, 255, 0.85);
             font-size: 0.72rem;
+            max-width: 58%;
         }
 
         .hint-title {
@@ -442,13 +494,15 @@
         }
 
         .pool-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
             gap: 8px;
         }
 
         .character-card {
-            min-height: 78px;
+            min-height: 104px;
+            min-width: 92px;
             background: rgba(170, 195, 255, 0.08);
             border-radius: 8px;
             display: flex;
@@ -483,6 +537,14 @@
             transform: none;
         }
 
+        .character-card.enemy-readonly {
+            cursor: default;
+        }
+
+        .character-card.enemy-readonly:disabled {
+            opacity: 1;
+        }
+
         .character-icon {
             font-size: 1.5rem;
         }
@@ -490,6 +552,55 @@
         .character-name {
             font-size: 0.68rem;
             text-align: center;
+            color: rgba(232, 240, 255, 0.95);
+        }
+
+        .character-stats {
+            display: grid;
+            grid-template-columns: repeat(2, max-content);
+            justify-content: center;
+            gap: 4px 6px;
+            font-size: 0.6rem;
+            color: rgba(214, 226, 255, 0.8);
+            width: 100%;
+        }
+
+        .character-stats span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px 5px;
+            border-radius: 999px;
+            background: rgba(10, 14, 26, 0.35);
+            border: 1px solid rgba(170, 195, 255, 0.12);
+            line-height: 1;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+
+        .character-card.rarity-common {
+            background: rgba(149, 165, 166, 0.18);
+            border-color: rgba(149, 165, 166, 0.35);
+        }
+
+        .character-card.rarity-rare {
+            background: rgba(52, 152, 219, 0.18);
+            border-color: rgba(52, 152, 219, 0.35);
+        }
+
+        .character-card.rarity-epic {
+            background: rgba(155, 89, 182, 0.2);
+            border-color: rgba(155, 89, 182, 0.4);
+        }
+
+        .character-card.rarity-legendary {
+            background: rgba(243, 156, 18, 0.2);
+            border-color: rgba(243, 156, 18, 0.45);
+        }
+
+        .character-card.rarity-enemy {
+            background: rgba(231, 76, 60, 0.18);
+            border-color: rgba(231, 76, 60, 0.4);
         }
 
         .phase-label {
@@ -562,9 +673,13 @@
 
             .legend {
                 right: 10px;
-                bottom: 78px;
+                bottom: 10px;
                 padding: 6px 8px;
                 font-size: 0.68rem;
+            }
+
+            .enemy-pool-panel {
+                padding: 6px 8px;
             }
         }
         
@@ -611,21 +726,26 @@
 </head>
 <body>
     <div id="game-container">
-        <!-- 顶部状态信息 -->
-        <div class="status-header">
-            <div class="status-info">
-                <div class="turn-info">回合 3 / 20</div>
-                <div class="status-right">
-                    <div class="team-stats">
-                        <div>我方: 3/3</div>
-                        <div>敌方: 2/3</div>
-                    </div>
-                    <button class="editor-toggle" id="toggle-editor" type="button">编辑地图</button>
+        <div class="battle-topbar">
+            <div class="battle-stage-info">
+                <div class="battle-stage-row">
+                    <div class="prep-stage" id="stage-name"></div>
+                    <div class="phase-label" id="phase-label"></div>
+                </div>
+                <div class="prep-stats">
+                    <div id="enemy-count"></div>
+                    <div id="player-count"></div>
                 </div>
             </div>
+            <div class="battle-hints" id="battle-hints" hidden>
+                <div class="hint-title" id="hint-title"></div>
+                <div class="hint-main" id="hint-main"></div>
+                <div class="hint-sub" id="hint-sub"></div>
+            </div>
         </div>
-        
-        <!-- 战场网格 -->
+        <div class="enemy-pool-panel">
+            <div class="enemy-pool-grid" id="enemy-pool"></div>
+        </div>
         <div class="battlefield-container">
             <div class="editor-bar" id="editor-bar" hidden>
                 <div class="editor-row tools">
@@ -655,25 +775,12 @@
         </div>
         
         <div class="action-area">
-            <div class="battle-hints" id="battle-hints" hidden>
-                <div class="hint-title" id="hint-title"></div>
-                <div class="hint-main" id="hint-main"></div>
-                <div class="hint-sub" id="hint-sub"></div>
-            </div>
             <div class="turn-order" id="turn-order">
                 <div class="order-row">
                     <div class="order-list" id="turn-order-list"></div>
                 </div>
             </div>
             <div class="prep-panel">
-                <div class="prep-header">
-                    <div class="prep-stage" id="stage-name"></div>
-                    <div class="phase-label" id="phase-label"></div>
-                </div>
-                <div class="prep-stats">
-                    <div id="enemy-count"></div>
-                    <div id="player-count"></div>
-                </div>
                 <div class="pool-section">
                     <div class="pool-grid" id="player-pool"></div>
                 </div>
