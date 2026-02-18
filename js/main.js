@@ -136,12 +136,17 @@ class Game {
         this.ui.onRestart(() => this.returnToCampAfterDefeat());
         this.ui.onGoHome(() => this.resetGame());
 
-        this.ui.onCampDraw(() => this.campDraw5());
+        this.ui.onCampRecruitOpen(() => this.openCampRecruit());
+        this.ui.onCampRecruitClose(() => this.closeCampRecruit());
+        this.ui.onCampRecruitDraw(() => this.campDraw5());
+        this.ui.onCampSelectDraw((charId) => this.selectCampDraw(charId));
+        this.ui.onCampWeaponModalOpen(() => this.openCampWeaponModal());
+        this.ui.onCampWeaponModalClose(() => this.closeCampWeaponModal());
+        this.ui.onCampWeaponSlotClick((charId, rect) => this.openWeaponPopover(charId, rect));
+        this.ui.onCampWeaponPopoverSelect((charId, weaponId) => this.handleWeaponEquipFromPopover(charId, weaponId));
+        this.ui.onCampWeaponPopoverUnequip((charId) => this.handleWeaponUnequipFromPopover(charId));
         this.ui.onCampNext(() => this.campNextStage());
         this.ui.onCampHome(() => this.resetGame());
-        this.ui.onCampSelectDraw((charId) => this.selectCampDraw(charId));
-        this.ui.onCampWeaponEquip((charId, weaponId) => this.equipWeaponToCharacter(charId, weaponId));
-        this.ui.onCampWeaponUnequip((charId) => this.unequipWeaponFromCharacter(charId));
     }
 
     updateMainScreen() {
@@ -431,20 +436,21 @@ class Game {
             : `通过 ${stage.name} | 奖励 💰+${rewards.gold} 🎫+${rewards.gachaTickets} | 当前资源 💰${this.gold} 🎫${this.gachaTickets}`);
         this.ui.updateCampHeader('🏕️ 营地', subtitle);
         const hintText = this.campDrawUsed
-            ? '本次营地已抽卡，可直接挑战下一关'
-            : '可选：消耗1张抽卡券抽5张，并选择1张加入备选池';
-        this.ui.updateCampHint(hintText);
+            ? '本次营地已招募，可直接挑战下一关'
+            : '消耗1张抽卡券抽5张，并选择1张加入备选池';
         const availableCount = this.playerPool.filter(c => !c.isDead).length;
         this.ui.updateCampAvailableCount(availableCount);
         this.ensureWeaponsForPlayerPool();
-        this.ui.renderCampTeam(this.playerPool, false, this.campWeaponPool);
+        this.ui.renderCampTeam(this.playerPool, false);
         this.ui.renderCampWeaponPool(this.campWeaponPool);
-        this.ui.renderCampDrawPool([], null);
+        this.ui.renderCampRecruitPool([], null);
+        this.ui.updateCampRecruitHint(hintText);
+        this.ui.setCampRecruitDrawEnabled(!this.campDrawUsed && this.gachaTickets > 0);
+        this.ui.hideCampWeaponPopover();
         const nextText = this.campRetryMode
             ? '🔄 重新挑战'
             : (this.stageSystem.isLastStage() ? '🏠 通关返回首页' : '➡️ 挑战下一关');
         this.ui.setCampButtons({
-            canDraw: !this.campDrawUsed && this.gachaTickets > 0,
             nextText
         });
         this.ui.showScreen('camp');
@@ -487,12 +493,12 @@ class Game {
         this.campSelectedDrawId = null;
 
         this.ui.updateMainScreen(this.gold, this.gachaTickets, this.stageSystem.getCurrentStage(), this.currentTeam, this.hasDrawn);
-        this.ui.updateCampHint('请选择1张卡加入备选池');
-        this.ui.renderCampDrawPool(this.campDrawPool, null);
-        this.ui.renderCampTeam(this.playerPool, false, this.campWeaponPool);
+        this.ui.updateCampRecruitHint('请选择1张卡加入备选池');
+        this.ui.renderCampRecruitPool(this.campDrawPool, null);
+        this.ui.renderCampTeam(this.playerPool, false);
         this.ui.renderCampWeaponPool(this.campWeaponPool);
+        this.ui.setCampRecruitDrawEnabled(false);
         this.ui.setCampButtons({
-            canDraw: false,
             nextText: this.stageSystem.isLastStage() ? '🏠 通关返回首页' : '➡️ 挑战下一关'
         });
     }
@@ -508,10 +514,11 @@ class Game {
         this.campDrawPool = [];
         this.gachaSystem.clearDrawPool();
 
-        this.ui.renderCampTeam(this.playerPool, false, this.campWeaponPool);
+        this.ui.renderCampTeam(this.playerPool, false);
         this.ui.renderCampWeaponPool(this.campWeaponPool);
-        this.ui.renderCampDrawPool([], null);
-        this.ui.updateCampHint(`已保留 ${picked.background}，已加入备选池`);
+        this.ui.renderCampRecruitPool([], null);
+        this.ui.updateCampRecruitHint(`已保留 ${picked.background}，已加入备选池`);
+        this.ui.showCampRecruitModal(false);
         const availableCount = this.playerPool.filter(c => !c.isDead).length;
         this.ui.updateCampAvailableCount(availableCount);
     }
@@ -641,7 +648,7 @@ class Game {
             this.campWeaponPool.push(character.equippedWeapon);
         }
         character.setEquippedWeapon(weapon);
-        this.ui.renderCampTeam(this.playerPool, false, this.campWeaponPool);
+        this.ui.renderCampTeam(this.playerPool, false);
         this.ui.renderCampWeaponPool(this.campWeaponPool);
     }
 
@@ -650,8 +657,55 @@ class Game {
         if (!character || !character.equippedWeapon) return;
         this.campWeaponPool.push(character.equippedWeapon);
         character.setEquippedWeapon(null);
-        this.ui.renderCampTeam(this.playerPool, false, this.campWeaponPool);
+        this.ui.renderCampTeam(this.playerPool, false);
         this.ui.renderCampWeaponPool(this.campWeaponPool);
+    }
+
+    openCampRecruit() {
+        this.ui.showCampRecruitModal(true);
+        const hintText = this.campDrawUsed
+            ? '本次营地已招募，可直接挑战下一关'
+            : '消耗1张抽卡券抽5张，并选择1张加入备选池';
+        this.ui.updateCampRecruitHint(hintText);
+        this.ui.setCampRecruitDrawEnabled(!this.campDrawUsed && this.gachaTickets > 0);
+        if (this.campDrawPool.length > 0) {
+            this.ui.renderCampRecruitPool(this.campDrawPool, this.campSelectedDrawId);
+        } else {
+            this.ui.renderCampRecruitPool([], null);
+        }
+    }
+
+    closeCampRecruit() {
+        this.ui.showCampRecruitModal(false);
+    }
+
+    openCampWeaponModal() {
+        this.ui.renderCampWeaponPool(this.campWeaponPool);
+        this.ui.showCampWeaponModal(true);
+    }
+
+    closeCampWeaponModal() {
+        this.ui.showCampWeaponModal(false);
+    }
+
+    openWeaponPopover(characterId, rect) {
+        const character = this.playerPool.find(c => c.id === characterId);
+        if (!character) return;
+        this.ui.showCampWeaponPopover({
+            character,
+            weaponPool: this.campWeaponPool,
+            anchorRect: rect
+        });
+    }
+
+    handleWeaponEquipFromPopover(characterId, weaponId) {
+        this.equipWeaponToCharacter(characterId, weaponId);
+        this.ui.hideCampWeaponPopover();
+    }
+
+    handleWeaponUnequipFromPopover(characterId) {
+        this.unequipWeaponFromCharacter(characterId);
+        this.ui.hideCampWeaponPopover();
     }
 }
 

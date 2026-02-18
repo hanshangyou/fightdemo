@@ -215,13 +215,20 @@ export function createPreparePhase({ state, mapApi, elements, helpers, uiHandler
 
     function renderPrepUI() {
         if (!state.stage) return;
+        if (state.phase !== 'battle') {
+            helpers.setBattleLogVisible(false);
+        }
         const enemyTotal = state.stage.enemies.length;
         const enemyPlaced = Array.from(state.units.values()).filter(u => u.team === 'enemy').length;
         const playerPlaced = Array.from(state.units.values()).filter(u => u.team === 'ally').length;
         stageNameEl.textContent = state.stage.name || '准备阶段';
         phaseLabelEl.textContent = state.phase === 'battle' ? '战斗阶段' : '准备阶段';
-        enemyCountEl.textContent = `敌方: ${enemyPlaced}/${enemyTotal}`;
-        playerCountEl.textContent = `我方: ${playerPlaced}/${state.maxTeamSize}`;
+        if (enemyCountEl) {
+            enemyCountEl.textContent = `敌方: ${enemyPlaced}/${enemyTotal}`;
+        }
+        if (playerCountEl) {
+            playerCountEl.textContent = `我方: ${playerPlaced}/${state.maxTeamSize}`;
+        }
         playerPoolEl.innerHTML = '';
         if (state.phase !== 'battle') {
             state.playerPool.forEach(template => {

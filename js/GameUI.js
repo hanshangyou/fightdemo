@@ -5,6 +5,19 @@ export class GameUI {
 
     constructor() {
         this.cacheElements();
+        this.bindGlobalHandlers();
+    }
+
+    bindGlobalHandlers() {
+        document.addEventListener('click', (e) => {
+            const popover = this.elements?.camp?.weaponPopover;
+            if (!popover || !popover.classList.contains('active')) return;
+            const inPopover = e.target.closest('#camp-weapon-popover');
+            const inSlot = e.target.closest('.camp-weapon-slot');
+            if (!inPopover && !inSlot) {
+                popover.classList.remove('active');
+            }
+        });
     }
 
     cacheElements() {
@@ -52,12 +65,23 @@ export class GameUI {
             camp: {
                 title: document.getElementById('camp-title'),
                 subtitle: document.getElementById('camp-subtitle'),
-                hint: document.getElementById('camp-hint'),
                 availableCount: document.getElementById('camp-available-count'),
                 team: document.getElementById('camp-team'),
-                draw: document.getElementById('camp-draw'),
+                recruitModal: document.getElementById('camp-recruit-modal'),
+                recruitDraw: document.getElementById('camp-recruit-draw'),
+                recruitHint: document.getElementById('camp-recruit-hint'),
+                recruitDrawBtn: document.getElementById('btn-camp-recruit-draw'),
+                recruitCloseBtn: document.getElementById('btn-camp-recruit-close'),
+                weaponModal: document.getElementById('camp-weapon-modal'),
                 weaponPool: document.getElementById('camp-weapon-pool'),
-                btnDraw: document.getElementById('btn-camp-draw'),
+                weaponCloseBtn: document.getElementById('btn-camp-weapon-close'),
+                weaponPopover: document.getElementById('camp-weapon-popover'),
+                weaponPopoverTitle: document.getElementById('camp-weapon-popover-title'),
+                weaponPopoverCurrent: document.getElementById('camp-weapon-popover-current'),
+                weaponPopoverList: document.getElementById('camp-weapon-popover-list'),
+                weaponPopoverUnequip: document.getElementById('camp-weapon-popover-unequip'),
+                btnRecruit: document.getElementById('btn-camp-recruit'),
+                btnWeapons: document.getElementById('btn-camp-weapons'),
                 btnNext: document.getElementById('btn-camp-next'),
                 btnHome: document.getElementById('btn-camp-home')
             },
@@ -206,7 +230,7 @@ export class GameUI {
     }
 
     createCharacterCard(character, options = {}) {
-        const { showWeapon = false, weaponPool = [] } = options;
+        const { showWeapon = false } = options;
         const card = document.createElement('div');
         card.className = 'character-card';
         if (character.isDead) {
@@ -229,26 +253,26 @@ export class GameUI {
         card.dataset.rarityLabel = rarityData.name;
         const weapon = character.equippedWeapon;
         const weaponLabel = weapon ? `${weapon.icon || '🗡️'} ${weapon.name}` : '未装备';
-        const weaponOptions = (weaponPool || []).map(w => `<option value="${w.id}">${w.icon || '🗡️'} ${w.name}</option>`).join('');
+        const weaponDamage = weapon ? `${weapon.name} ${weapon.damageMin}-${weapon.damageMax}` : '点击装备';
         card.innerHTML = `
             <div class="character-rarity" style="color: ${rarityData.color}">${rarityData.name}</div>
-            <div class="character-icon">${character.icon || '👤'}</div>
-            <div class="character-name">${character.background}</div>
-            <div class="character-stats">
-                <span>❤️${character.maxHp}</span>
-                <span>⚔️${character.attack}</span>
-                <span>🛡️${character.defense}</span>
-                <span>💨${character.speed}</span>
+            <div class="character-main">
+                <div class="character-meta">
+                    <div class="character-icon">${character.icon || '👤'}</div>
+                    <div class="character-name">${character.background}</div>
+                </div>
+                <div class="character-stats">
+                    <span>❤️${character.maxHp}</span>
+                    <span>⚔️${character.attack}</span>
+                    <span>🛡️${character.defense}</span>
+                    <span>💨${character.speed}</span>
+                </div>
             </div>
             ${showWeapon ? `
                 <div class="character-weapon">
-                    <div class="character-weapon-current">当前：${weaponLabel}</div>
-                    <div class="character-weapon-actions">
-                        <select class="character-weapon-select camp-weapon-select" data-character-id="${character.id}">
-                            <option value="">选择武器</option>
-                            ${weaponOptions}
-                        </select>
-                        <button class="btn btn-secondary character-weapon-btn camp-weapon-unequip" data-action="unequip" data-character-id="${character.id}" ${weapon ? '' : 'disabled'}>卸下</button>
+                    <div class="camp-weapon-slot ${weapon ? '' : 'empty'}" data-character-id="${character.id}">
+                        <div class="camp-weapon-slot-icon">${weapon?.icon || '➕'}</div>
+                        <div class="camp-weapon-slot-dmg">${weaponDamage}</div>
                     </div>
                 </div>
             ` : ''}
@@ -257,21 +281,21 @@ export class GameUI {
         return card;
     }
 
-    renderCampTeam(team, selectable = false, weaponPool = []) {
+    renderCampTeam(team, selectable = false) {
         const container = this.elements.camp.team;
         if (!container) return;
         container.innerHTML = '';
         container.classList.toggle('select-mode', selectable);
 
         team.forEach(char => {
-            const card = this.createCharacterCard(char, { showWeapon: true, weaponPool });
+            const card = this.createCharacterCard(char, { showWeapon: true });
             card.dataset.characterId = char.id;
             container.appendChild(card);
         });
     }
 
-    renderCampDrawPool(characters, selectedId = null) {
-        const container = this.elements.camp.draw;
+    renderCampRecruitPool(characters, selectedId = null) {
+        const container = this.elements.camp.recruitDraw;
         if (!container) return;
         container.innerHTML = '';
 
@@ -310,20 +334,87 @@ export class GameUI {
         });
     }
 
+
+    showCampRecruitModal(show) {
+        if (!this.elements.camp.recruitModal) return;
+        this.elements.camp.recruitModal.classList.toggle('active', show);
+    }
+
+    showCampWeaponModal(show) {
+        if (!this.elements.camp.weaponModal) return;
+        this.elements.camp.weaponModal.classList.toggle('active', show);
+    }
+
+    updateCampRecruitHint(text) {
+        if (this.elements.camp.recruitHint) this.elements.camp.recruitHint.textContent = text;
+    }
+
+    setCampRecruitDrawEnabled(canDraw) {
+        if (this.elements.camp.recruitDrawBtn) {
+            this.elements.camp.recruitDrawBtn.disabled = !canDraw;
+            this.elements.camp.recruitDrawBtn.style.opacity = canDraw ? '1' : '0.5';
+        }
+    }
+
+    showCampWeaponPopover({ character, weaponPool, anchorRect }) {
+        const popover = this.elements.camp.weaponPopover;
+        if (!popover || !character) return;
+        popover.dataset.characterId = character.id;
+        const currentWeapon = character.equippedWeapon;
+        if (this.elements.camp.weaponPopoverTitle) {
+            this.elements.camp.weaponPopoverTitle.textContent = `${character.icon || '👤'} ${character.background}`;
+        }
+        if (this.elements.camp.weaponPopoverCurrent) {
+            this.elements.camp.weaponPopoverCurrent.textContent = currentWeapon
+                ? `当前：${currentWeapon.icon || '🗡️'} ${currentWeapon.name} ${currentWeapon.damageMin}-${currentWeapon.damageMax}`
+                : '当前：未装备';
+        }
+        if (this.elements.camp.weaponPopoverList) {
+            const list = this.elements.camp.weaponPopoverList;
+            list.innerHTML = '';
+            if (!weaponPool || weaponPool.length === 0) {
+                list.innerHTML = '<div class="empty-hint">营地武器池为空</div>';
+            } else {
+                weaponPool.forEach(weapon => {
+                    const item = document.createElement('button');
+                    item.className = 'camp-weapon-popover-item';
+                    item.type = 'button';
+                    item.dataset.weaponId = weapon.id;
+                    item.textContent = `${weapon.icon || '🗡️'} ${weapon.name} ${weapon.damageMin}-${weapon.damageMax}`;
+                    list.appendChild(item);
+                });
+            }
+        }
+        if (this.elements.camp.weaponPopoverUnequip) {
+            this.elements.camp.weaponPopoverUnequip.disabled = !currentWeapon;
+        }
+        popover.classList.add('active');
+        const padding = 8;
+        const popRect = popover.getBoundingClientRect();
+        let left = anchorRect.left + anchorRect.width + padding;
+        let top = anchorRect.top;
+        if (left + popRect.width > window.innerWidth) {
+            left = anchorRect.left - popRect.width - padding;
+        }
+        if (top + popRect.height > window.innerHeight) {
+            top = window.innerHeight - popRect.height - padding;
+        }
+        popover.style.left = `${Math.max(padding, left)}px`;
+        popover.style.top = `${Math.max(padding, top)}px`;
+    }
+
+    hideCampWeaponPopover() {
+        if (this.elements.camp.weaponPopover) {
+            this.elements.camp.weaponPopover.classList.remove('active');
+        }
+    }
+
     updateCampHeader(title, subtitle) {
         if (this.elements.camp.title) this.elements.camp.title.textContent = title;
         if (this.elements.camp.subtitle) this.elements.camp.subtitle.textContent = subtitle;
     }
 
-    updateCampHint(text) {
-        if (this.elements.camp.hint) this.elements.camp.hint.textContent = text;
-    }
-
     setCampButtons({ canDraw, nextText }) {
-        if (this.elements.camp.btnDraw) {
-            this.elements.camp.btnDraw.disabled = !canDraw;
-            this.elements.camp.btnDraw.style.opacity = canDraw ? '1' : '0.5';
-        }
         if (this.elements.camp.btnNext && nextText) {
             this.elements.camp.btnNext.textContent = nextText;
         }
@@ -558,8 +649,66 @@ export class GameUI {
         this.elements.main.btnStageEditor?.addEventListener('click', callback);
     }
 
-    onCampDraw(callback) {
-        this.elements.camp.btnDraw?.addEventListener('click', callback);
+    onCampRecruitOpen(callback) {
+        this.elements.camp.btnRecruit?.addEventListener('click', callback);
+    }
+
+    onCampRecruitClose(callback) {
+        this.elements.camp.recruitCloseBtn?.addEventListener('click', callback);
+        this.elements.camp.recruitModal?.addEventListener('click', (e) => {
+            if (e.target === this.elements.camp.recruitModal) callback();
+        });
+    }
+
+    onCampRecruitDraw(callback) {
+        this.elements.camp.recruitDrawBtn?.addEventListener('click', callback);
+    }
+
+    onCampSelectDraw(callback) {
+        this.elements.camp.recruitDraw?.addEventListener('click', (e) => {
+            const card = e.target.closest('.character-card');
+            if (card) callback(card.dataset.characterId);
+        });
+    }
+
+    onCampWeaponModalOpen(callback) {
+        this.elements.camp.btnWeapons?.addEventListener('click', callback);
+    }
+
+    onCampWeaponModalClose(callback) {
+        this.elements.camp.weaponCloseBtn?.addEventListener('click', callback);
+        this.elements.camp.weaponModal?.addEventListener('click', (e) => {
+            if (e.target === this.elements.camp.weaponModal) callback();
+        });
+    }
+
+    onCampWeaponSlotClick(callback) {
+        this.elements.camp.team?.addEventListener('click', (e) => {
+            const slot = e.target.closest('.camp-weapon-slot');
+            if (!slot) return;
+            callback(slot.dataset.characterId, slot.getBoundingClientRect());
+        });
+    }
+
+    onCampWeaponPopoverSelect(callback) {
+        this.elements.camp.weaponPopoverList?.addEventListener('click', (e) => {
+            const item = e.target.closest('.camp-weapon-popover-item');
+            if (!item) return;
+            const weaponId = item.dataset.weaponId;
+            const characterId = this.elements.camp.weaponPopover?.dataset.characterId;
+            if (weaponId && characterId) {
+                callback(characterId, weaponId);
+            }
+        });
+    }
+
+    onCampWeaponPopoverUnequip(callback) {
+        this.elements.camp.weaponPopoverUnequip?.addEventListener('click', () => {
+            const characterId = this.elements.camp.weaponPopover?.dataset.characterId;
+            if (characterId) {
+                callback(characterId);
+            }
+        });
     }
 
     onCampNext(callback) {
@@ -568,37 +717,6 @@ export class GameUI {
 
     onCampHome(callback) {
         this.elements.camp.btnHome?.addEventListener('click', callback);
-    }
-
-    onCampSelectDraw(callback) {
-        this.elements.camp.draw?.addEventListener('click', (e) => {
-            const card = e.target.closest('.character-card');
-            if (card) callback(card.dataset.characterId);
-        });
-    }
-
-    onCampWeaponEquip(callback) {
-        this.elements.camp.team?.addEventListener('change', (e) => {
-            const select = e.target.closest('.camp-weapon-select');
-            if (!select) return;
-            const characterId = select.dataset.characterId;
-            const weaponId = select.value;
-            if (characterId && weaponId) {
-                callback(characterId, weaponId);
-                select.value = '';
-            }
-        });
-    }
-
-    onCampWeaponUnequip(callback) {
-        this.elements.camp.team?.addEventListener('click', (e) => {
-            const button = e.target.closest('[data-action="unequip"]');
-            if (!button) return;
-            const characterId = button.dataset.characterId;
-            if (characterId) {
-                callback(characterId);
-            }
-        });
     }
 
     onCampSelectTeam(callback) {

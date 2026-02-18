@@ -515,11 +515,11 @@
         }
 
         #screen-battle .battle-topbar {
-            padding: 10px 12px;
+            padding: 6px 10px;
             background: var(--panel-bg);
             border-bottom: 1px solid var(--panel-border);
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
             gap: 12px;
             flex-shrink: 0;
@@ -529,9 +529,10 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 6px;
+            gap: 2px;
             font-size: 0.78rem;
             color: var(--text-dim);
+            flex: 0 0 auto;
         }
 
         #screen-battle .battle-stage-row {
@@ -943,9 +944,12 @@
             border: 1px solid rgba(170, 195, 255, 0.14);
             color: rgba(232, 240, 255, 0.85);
             font-size: 0.72rem;
-            width: 320px;
+            width: auto;
+            min-width: 220px;
             max-width: 100%;
-            height: 120px;
+            height: 100px;
+            min-height: 72px;
+            flex: 1;
         }
 
         #screen-battle .battle-log-list {
@@ -959,6 +963,13 @@
 
         #screen-battle .battle-log-item {
             color: rgba(214, 226, 255, 0.82);
+        }
+
+        #screen-battle .battle-player-count {
+            margin-left: 6px;
+            font-size: 0.7rem;
+            color: rgba(232, 240, 255, 0.7);
+            white-space: nowrap;
         }
 
         #screen-battle .turn-order {
@@ -2224,22 +2235,26 @@
             text-align: center;
         }
 
+        .camp-resource {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #bdc3c7;
+        }
+
         .camp-team-grid {
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 6px;
-            scroll-snap-type: x mandatory;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 4px;
         }
 
         .camp-team-grid .character-card {
             position: relative;
-            cursor: pointer;
-            min-width: 150px;
-            width: 150px;
+            min-width: 0;
+            cursor: default;
             padding: 8px;
-            scroll-snap-align: start;
         }
 
         .camp-team-grid .character-card::after {
@@ -2284,6 +2299,28 @@
             margin-bottom: 4px;
         }
 
+        .camp-team-grid .character-main {
+            display: flex;
+            justify-content: space-between;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .camp-team-grid .character-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 54px;
+            flex-shrink: 0;
+        }
+
+        .camp-team-grid .character-stats {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4px;
+            font-size: 0.8rem;
+            flex: 1;
+        }
+
         .camp-team-grid .character-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -2315,32 +2352,34 @@
             text-align: center;
         }
 
-        .camp-team-grid .character-weapon-actions {
+        .camp-team-grid .camp-weapon-slot {
             display: flex;
-            gap: 4px;
             align-items: center;
-            justify-content: center;
-        }
-
-        .camp-team-grid .character-weapon-select {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            border-radius: 6px;
-            padding: 4px 6px;
-            font-size: 0.65rem;
-        }
-
-        .camp-team-grid .character-weapon-btn {
-            padding: 6px 8px;
+            justify-content: space-between;
+            gap: 6px;
+            padding: 6px;
             border-radius: 8px;
-            font-size: 0.65rem;
+            background: rgba(46, 204, 113, 0.12);
+            border: 1px solid rgba(46, 204, 113, 0.35);
+            cursor: pointer;
         }
 
-        .camp-weapon-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .camp-team-grid .camp-weapon-slot.empty {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .camp-team-grid .camp-weapon-slot-icon {
+            font-size: 0.9rem;
+        }
+
+        .camp-team-grid .camp-weapon-slot-dmg {
+            font-size: 0.65rem;
+            color: #ecf0f1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
         }
 
         .camp-weapon-pool-title {
@@ -2354,8 +2393,8 @@
             gap: 6px;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            max-height: 96px;
-            padding-bottom: 4px;
+            max-height: 110px;
+            padding-bottom: 6px;
         }
 
         .camp-weapon-card {
@@ -2396,45 +2435,122 @@
             border-radius: 3px;
         }
 
-        .camp-draw-area {
-            flex: 1;
+        .camp-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .camp-actions-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 10px;
+        }
+
+        .camp-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 1200;
+        }
+
+        .camp-modal.active {
+            display: flex;
+        }
+
+        .camp-modal-content {
+            width: min(420px, 95vw);
+            background: rgba(18, 22, 36, 0.98);
+            border-radius: 14px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            min-height: 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .camp-draw-grid {
-            flex: 1;
+        .camp-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: bold;
+        }
+
+        .camp-modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .camp-recruit-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 8px;
+            max-height: 360px;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 2px;
-            align-content: start;
         }
 
-        .camp-draw-grid .character-card {
+        .camp-recruit-grid .character-card {
             cursor: pointer;
         }
 
-        .camp-draw-grid .character-card.selected {
+        .camp-recruit-grid .character-card.selected {
             border-color: #2ecc71;
             box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.35);
         }
 
-        .camp-hint {
-            font-size: 0.85rem;
-            color: #bdc3c7;
-            text-align: center;
+        .camp-weapon-popover {
+            position: fixed;
+            background: rgba(18, 22, 36, 0.98);
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            z-index: 1300;
+            width: 210px;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .camp-buttons {
-            flex-shrink: 0;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+        .camp-weapon-popover.active {
+            display: flex;
+        }
+
+        .camp-weapon-popover-title {
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .camp-weapon-popover-current {
+            font-size: 0.7rem;
+            color: #bdc3c7;
+        }
+
+        .camp-weapon-popover-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        .camp-weapon-popover-item {
+            width: 100%;
+            text-align: left;
+            padding: 6px 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid transparent;
+            color: #fff;
+            font-size: 0.7rem;
+        }
+
+        .camp-weapon-popover-item:hover {
+            border-color: rgba(255, 255, 255, 0.35);
         }
     </style>
 </head>
@@ -2494,14 +2610,8 @@
         <div id="screen-battle" class="screen">
             <div class="battle-topbar">
                 <div class="battle-stage-info">
-                    <div class="battle-stage-row">
-                        <div class="prep-stage" id="battle-prep-stage-name"></div>
-                        <div class="phase-label" id="battle-phase-label"></div>
-                    </div>
-                    <div class="prep-stats">
-                        <div id="battle-enemy-count"></div>
-                        <div id="battle-player-count"></div>
-                    </div>
+                    <div class="prep-stage" id="battle-prep-stage-name"></div>
+                    <div class="phase-label" id="battle-phase-label"></div>
                 </div>
                 <div class="battle-log" id="battle-log" hidden>
                     <div class="battle-log-list" id="battle-log-list"></div>
@@ -2562,7 +2672,7 @@
                         <div class="pool-grid" id="battle-player-pool"></div>
                     </div>
                     <div class="action-buttons">
-                        <button class="btn btn-primary" id="battle-start-battle-btn">开始战斗</button>
+                        <button class="btn btn-primary" id="battle-start-battle-btn">开始战斗<span class="battle-player-count" id="battle-player-count"></span></button>
                         <button class="btn btn-secondary" id="battle-reset-placement-btn">重置布阵</button>
                     </div>
                 </div>
@@ -2577,30 +2687,58 @@
                 </div>
 
                 <div class="camp-panel">
-                    <div class="camp-panel-title">当前备选池（可用 <span id="camp-available-count">0</span> 人）</div>
+                    <div class="camp-panel-title">当前营地角色（<span id="camp-available-count">0</span>）</div>
                     <div class="camp-team-grid" id="camp-team"></div>
                 </div>
 
-                <div class="camp-panel camp-weapon-panel">
-                    <div class="camp-panel-title">营地武器池</div>
-                    <div class="camp-weapon-pool" id="camp-weapon-pool"></div>
+                <div class="camp-actions-grid">
+                    <button class="btn btn-warning" id="btn-camp-recruit">🎯 招募</button>
+                    <button class="btn btn-success" id="btn-camp-weapons">🧰 武器</button>
+                    <button class="btn btn-secondary" id="btn-camp-armor" disabled>🛡️ 盔甲</button>
                 </div>
 
-                <div class="camp-panel camp-draw-area">
-                    <div class="camp-panel-title">营地抽卡（5连抽，选1保留）</div>
-                    <div class="camp-hint" id="camp-hint">可选：消耗1张抽卡券抽5张，并选择1张替换队伍成员</div>
-                    <div class="camp-draw-grid" id="camp-draw"></div>
-                </div>
-
-                <div class="camp-buttons">
-                    <button class="btn btn-warning" id="btn-camp-draw">🎰 抽卡(5连/1券)</button>
-                    <button class="btn btn-success" id="btn-camp-next">➡️ 挑战下一关</button>
+                <div class="camp-actions-row">
+                    <button class="btn btn-secondary" id="btn-camp-save" disabled>💾 保存</button>
+                    <button class="btn btn-success" id="btn-camp-next">➡️ 下一关</button>
                 </div>
 
                 <div class="button-row">
                     <button class="btn btn-secondary" id="btn-camp-home">🏠 返回首页</button>
                 </div>
             </div>
+        </div>
+
+        <div class="camp-modal" id="camp-recruit-modal">
+            <div class="camp-modal-content">
+                <div class="camp-modal-header">
+                    <div>🎯 营地招募</div>
+                    <button class="btn btn-secondary" id="btn-camp-recruit-close">关闭</button>
+                </div>
+                <div class="camp-modal-body">
+                    <div id="camp-recruit-hint">消耗1张抽卡券抽5张，并选择1张加入备选池</div>
+                    <button class="btn btn-warning" id="btn-camp-recruit-draw">🎰 招募抽卡</button>
+                    <div class="camp-recruit-grid" id="camp-recruit-draw"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="camp-modal" id="camp-weapon-modal">
+            <div class="camp-modal-content">
+                <div class="camp-modal-header">
+                    <div>🧰 营地武器池</div>
+                    <button class="btn btn-secondary" id="btn-camp-weapon-close">关闭</button>
+                </div>
+                <div class="camp-modal-body">
+                    <div class="camp-weapon-pool" id="camp-weapon-pool"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="camp-weapon-popover" id="camp-weapon-popover">
+            <div class="camp-weapon-popover-title" id="camp-weapon-popover-title"></div>
+            <div class="camp-weapon-popover-current" id="camp-weapon-popover-current"></div>
+            <div class="camp-weapon-popover-list" id="camp-weapon-popover-list"></div>
+            <button class="btn btn-secondary" id="camp-weapon-popover-unequip">卸下武器</button>
         </div>
         
         <div id="screen-result" class="screen">

@@ -38,11 +38,11 @@
         
         /* 顶部状态信息区域 */
         .battle-topbar {
-            padding: 10px 12px;
+            padding: 6px 10px;
             background: var(--panel-bg);
             border-bottom: 1px solid var(--panel-border);
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
             gap: 12px;
             flex-shrink: 0;
@@ -52,9 +52,10 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 6px;
+            gap: 2px;
             font-size: 0.78rem;
             color: var(--text-dim);
+            flex: 0 0 auto;
         }
 
         .battle-stage-row {
@@ -493,9 +494,12 @@
             border: 1px solid rgba(170, 195, 255, 0.14);
             color: rgba(232, 240, 255, 0.85);
             font-size: 0.72rem;
-            width: 320px;
+            width: auto;
+            min-width: 220px;
             max-width: 100%;
-            height: 120px;
+            height: 100px;
+            min-height: 72px;
+            flex: 1;
         }
 
         .battle-log-list {
@@ -509,6 +513,13 @@
 
         .battle-log-item {
             color: rgba(214, 226, 255, 0.82);
+        }
+
+        .battle-player-count {
+            margin-left: 6px;
+            font-size: 0.7rem;
+            color: rgba(232, 240, 255, 0.7);
+            white-space: nowrap;
         }
 
         .turn-order {
@@ -891,14 +902,8 @@
     <div id="game-container">
         <div class="battle-topbar">
             <div class="battle-stage-info">
-                <div class="battle-stage-row">
-                    <div class="prep-stage" id="stage-name"></div>
-                    <div class="phase-label" id="phase-label"></div>
-                </div>
-                <div class="prep-stats">
-                    <div id="enemy-count"></div>
-                    <div id="player-count"></div>
-                </div>
+                <div class="prep-stage" id="stage-name"></div>
+                <div class="phase-label" id="phase-label"></div>
             </div>
             <div class="battle-log" id="battle-log" hidden>
                 <div class="battle-log-list" id="battle-log-list"></div>
@@ -958,7 +963,7 @@
                     <div class="pool-grid" id="player-pool"></div>
                 </div>
                 <div class="action-buttons">
-                    <button class="btn btn-primary" id="start-battle-btn">开始战斗</button>
+                    <button class="btn btn-primary" id="start-battle-btn">开始战斗<span class="battle-player-count" id="player-count"></span></button>
                     <button class="btn btn-secondary" id="reset-placement-btn">重置布阵</button>
                 </div>
             </div>

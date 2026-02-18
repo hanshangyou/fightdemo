@@ -55,14 +55,24 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
 
     mapApi.setUnitProvider((col, row) => state.units.get(mapApi.key(col, row)));
 
-    function setBattleLogVisible(visible) {
+    function updateBattleLogVisibility(visible) {
         if (!battleLogEl) return;
-        battleLogEl.hidden = !visible;
+        if (visible === false) {
+            battleLogEl.hidden = true;
+            return;
+        }
+        const hasContent = battleLogListEl && battleLogListEl.children.length > 0;
+        battleLogEl.hidden = !hasContent;
+    }
+
+    function setBattleLogVisible(visible) {
+        updateBattleLogVisibility(visible);
     }
 
     function clearBattleLog() {
         if (!battleLogListEl) return;
         battleLogListEl.innerHTML = '';
+        updateBattleLogVisibility();
     }
 
     function appendBattleLog(message) {
@@ -75,6 +85,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
             battleLogListEl.removeChild(battleLogListEl.firstChild);
         }
         battleLogListEl.scrollTop = battleLogListEl.scrollHeight;
+        updateBattleLogVisibility(true);
     }
 
     function updateHoverHint() {
