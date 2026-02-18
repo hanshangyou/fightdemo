@@ -625,6 +625,7 @@ class Game {
 
     ensureWeaponForCharacter(character) {
         if (character.equippedWeapon) return;
+        if (character.preventAutoEquip) return;
         const weaponTemplate = getWeaponTemplateById(character.defaultWeaponId) ?? this.getFallbackWeaponTemplate(character);
         const weaponInstance = createWeaponInstance(weaponTemplate);
         if (weaponInstance) {
@@ -648,6 +649,7 @@ class Game {
             this.campWeaponPool.push(character.equippedWeapon);
         }
         character.setEquippedWeapon(weapon);
+        character.preventAutoEquip = false;
         this.ui.renderCampTeam(this.playerPool, false);
         this.ui.renderCampWeaponPool(this.campWeaponPool);
     }
@@ -657,6 +659,7 @@ class Game {
         if (!character || !character.equippedWeapon) return;
         this.campWeaponPool.push(character.equippedWeapon);
         character.setEquippedWeapon(null);
+        character.preventAutoEquip = true;
         this.ui.renderCampTeam(this.playerPool, false);
         this.ui.renderCampWeaponPool(this.campWeaponPool);
     }

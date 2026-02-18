@@ -1,9 +1,8 @@
-import { getNeighbors, hexDistance } from './hex-coordinates.js';
+import { getNeighbors, hexDistance, offsetToAxial, axialToOffset } from './hex-coordinates.js';
 
 export function createBattlePhase({ state, mapApi, elements, helpers, uiHandlers }) {
     const AP_PER_TURN = 7;
     const AP_MOVE_COST = 2;
-    const AP_ATTACK_COST = 3;
     const {
         battleStageNameEl,
         battleRoundEl,
@@ -213,6 +212,10 @@ export function createBattlePhase({ state, mapApi, elements, helpers, uiHandlers
         const neighbors = getNeighbors(coord.col, coord.row);
         const moves = new Set();
         const attacks = new Set();
+        const unit = state.units.get(unitKey);
+        const weapon = unit?.equippedWeapon || unit?.source?.equippedWeapon || null;
+        const range = Number.isFinite(weapon?.range) ? weapon.range : 1;
+        const attackCoords = getAttackCoords(coord, range);
         neighbors.forEach(n => {
             const cell = mapApi.getCellAt(n.col, n.row);
             if (!cell) return;
@@ -221,15 +224,103 @@ export function createBattlePhase({ state, mapApi, elements, helpers, uiHandlers
                 moves.add(mapApi.key(n.col, n.row));
                 return;
             }
-            if (unit.team !== state.units.get(unitKey)?.team) {
-                attacks.add(mapApi.key(n.col, n.row));
+        });
+        attackCoords.forEach(pos => {
+            const cell = mapApi.getCellAt(pos.col, pos.row);
+            if (!cell) return;
+            const target = helpers.getUnitAt(pos.col, pos.row);
+            if (target && target.team !== unit?.team) {
+                attacks.add(mapApi.key(pos.col, pos.row));
             }
         });
         return { moves, attacks };
     }
 
+    function getAttackCoords(coord, range) {
+        if (range <= 1) {
+            return getNeighbors(coord.col, coord.row);
+        }
+        if (range === 2) {
+            return getRangeTwoLineCoords(coord);
+        }
+        if (range >= 3) {
+            return getRangeThreeCoords(coord);
+        }
+        return [];
+    }
+
+    function getRangeTwoLineCoords(coord) {
+        const axial = offsetToAxial(coord.col, coord.row);
+        const dirs = [
+            { q: 1, r: 0 },
+            { q: 1, r: -1 },
+            { q: 0, r: -1 },
+            { q: -1, r: 0 },
+            { q: -1, r: 1 },
+            { q: 0, r: 1 }
+        ];
+        const results = [];
+        dirs.forEach(d => {
+            const step1 = axialToOffset(axial.q + d.q, axial.r + d.r);
+            const step2 = axialToOffset(axial.q + d.q * 2, axial.r + d.r * 2);
+            results.push(step1, step2);
+        });
+        return results;
+    }
+
+    function getRangeTwoRingCoords(coord) {
+        const ring = new Map();
+        const frontier = [coord];
+        const visited = new Set([mapApi.key(coord.col, coord.row)]);
+        for (let i = 0; i < 2; i += 1) {
+            const next = [];
+            frontier.forEach(pos => {
+                getNeighbors(pos.col, pos.row).forEach(n => {
+                    const k = mapApi.key(n.col, n.row);
+                    if (visited.has(k)) return;
+                    visited.add(k);
+                    next.push(n);
+                });
+            });
+            frontier.length = 0;
+            next.forEach(n => frontier.push(n));
+        }
+        visited.forEach(k => {
+            const pos = mapApi.parseKey(k);
+            if (hexDistance(coord, pos) === 2) {
+                ring.set(k, pos);
+            }
+        });
+        return Array.from(ring.values());
+    }
+
+    function getRangeThreeCoords(coord) {
+        const ring = getRangeTwoRingCoords(coord);
+        const axial = offsetToAxial(coord.col, coord.row);
+        const dirs = [
+            { q: 1, r: 0 },
+            { q: 1, r: -1 },
+            { q: 0, r: -1 },
+            { q: -1, r: 0 },
+            { q: -1, r: 1 },
+            { q: 0, r: 1 }
+        ];
+        const line = [];
+        dirs.forEach(d => {
+            const step3 = axialToOffset(axial.q + d.q * 3, axial.r + d.r * 3);
+            line.push(step3);
+        });
+        return [...ring, ...line];
+    }
+
     function getAp(unit) {
         return Number.isFinite(unit?.ap) ? unit.ap : 0;
+    }
+
+    function getAttackCost(unit) {
+        const weapon = unit?.equippedWeapon || unit?.source?.equippedWeapon || null;
+        const cost = Number.isFinite(weapon?.apCost) ? weapon.apCost : 3;
+        return Math.max(0, cost);
     }
 
     function setUnitAp(unit) {
@@ -241,7 +332,7 @@ export function createBattlePhase({ state, mapApi, elements, helpers, uiHandlers
         const unit = state.units.get(unitKey);
         const ap = getAp(unit);
         if (ap < AP_MOVE_COST) options.moves.clear();
-        if (ap < AP_ATTACK_COST) options.attacks.clear();
+        if (ap < getAttackCost(unit)) options.attacks.clear();
         return options;
     }
 
@@ -302,7 +393,9 @@ export function createBattlePhase({ state, mapApi, elements, helpers, uiHandlers
 
     function handlePlayerAttack(targetKey) {
         if (!state.activeUnitKey) return false;
-        const success = tryAttack(state.activeUnitKey, targetKey, AP_ATTACK_COST);
+        const unit = state.units.get(state.activeUnitKey);
+        const cost = getAttackCost(unit);
+        const success = tryAttack(state.activeUnitKey, targetKey, cost);
         if (!success) return false;
         continuePlayerTurn();
         return true;
@@ -368,14 +461,15 @@ export function createBattlePhase({ state, mapApi, elements, helpers, uiHandlers
         if (!unit) return;
         while (true) {
             const ap = getAp(unit);
-            if (ap < Math.min(AP_MOVE_COST, AP_ATTACK_COST)) break;
+            const attackCost = getAttackCost(unit);
+            if (ap < Math.min(AP_MOVE_COST, attackCost)) break;
             const target = selectEnemyTarget(unitKey);
             if (!target) break;
             const targetCoord = mapApi.parseKey(target[0]);
             const options = getActionOptionsWithAp(unitKey);
             if (options.attacks.size) {
                 const targetKey = Array.from(options.attacks)[0];
-                const attacked = tryAttack(unitKey, targetKey, AP_ATTACK_COST);
+                const attacked = tryAttack(unitKey, targetKey, attackCost);
                 if (!attacked) break;
                 continue;
             }

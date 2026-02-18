@@ -1,4 +1,5 @@
 import { getStages } from './StageEditor.js';
+import { getWeaponTemplateById } from './WeaponSystem.js';
 
 export class GameUI {
     elements = {};
@@ -230,7 +231,7 @@ export class GameUI {
     }
 
     createCharacterCard(character, options = {}) {
-        const { showWeapon = false } = options;
+        const { showWeapon = false, showWeaponInfo = true } = options;
         const card = document.createElement('div');
         card.className = 'character-card';
         if (character.isDead) {
@@ -251,9 +252,11 @@ export class GameUI {
         card.style.borderColor = rarityData.color;
         card.dataset.rarity = rarity;
         card.dataset.rarityLabel = rarityData.name;
-        const weapon = character.equippedWeapon;
-        const weaponLabel = weapon ? `${weapon.icon || '🗡️'} ${weapon.name}` : '未装备';
-        const weaponDamage = weapon ? `${weapon.name} ${weapon.damageMin}-${weapon.damageMax}` : '点击装备';
+        const equippedWeapon = character.equippedWeapon;
+        const defaultWeapon = equippedWeapon ? null : getWeaponTemplateById(character.defaultWeaponId);
+        const weaponForInfo = equippedWeapon || defaultWeapon;
+        const weaponLabel = weaponForInfo ? `${weaponForInfo.icon || '🗡️'} ${weaponForInfo.name}` : '未装备';
+        const weaponDamage = weaponForInfo ? `${weaponForInfo.damageMin}-${weaponForInfo.damageMax}` : '-';
         card.innerHTML = `
             <div class="character-rarity" style="color: ${rarityData.color}">${rarityData.name}</div>
             <div class="character-main">
@@ -268,11 +271,20 @@ export class GameUI {
                     <span>💨${character.speed}</span>
                 </div>
             </div>
+            ${showWeaponInfo ? `
+                <div class="character-weapon-info">
+                    <div class="weapon-line">
+                        <span class="weapon-icon">${weaponForInfo?.icon || '🗡️'}</span>
+                        <span class="weapon-name">${weaponLabel}</span>
+                    </div>
+                    <div class="weapon-dmg">伤害 ${weaponDamage}</div>
+                </div>
+            ` : ''}
             ${showWeapon ? `
                 <div class="character-weapon">
-                    <div class="camp-weapon-slot ${weapon ? '' : 'empty'}" data-character-id="${character.id}">
-                        <div class="camp-weapon-slot-icon">${weapon?.icon || '➕'}</div>
-                        <div class="camp-weapon-slot-dmg">${weaponDamage}</div>
+                    <div class="camp-weapon-slot ${equippedWeapon ? '' : 'empty'}" data-character-id="${character.id}">
+                        <div class="camp-weapon-slot-icon">${equippedWeapon?.icon || '➕'}</div>
+                        <div class="camp-weapon-slot-dmg">${equippedWeapon ? `${equippedWeapon.name} ${equippedWeapon.damageMin}-${equippedWeapon.damageMax}` : '点击装备'}</div>
                     </div>
                 </div>
             ` : ''}
@@ -288,7 +300,7 @@ export class GameUI {
         container.classList.toggle('select-mode', selectable);
 
         team.forEach(char => {
-            const card = this.createCharacterCard(char, { showWeapon: true });
+            const card = this.createCharacterCard(char, { showWeapon: true, showWeaponInfo: false });
             card.dataset.characterId = char.id;
             container.appendChild(card);
         });

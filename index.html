@@ -288,6 +288,35 @@
             padding: 2px 5px;
             border-radius: 3px;
         }
+
+        .character-weapon-info {
+            margin-top: 6px;
+            padding: 4px 6px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.25);
+            font-size: 0.62rem;
+            color: rgba(232, 240, 255, 0.82);
+            display: grid;
+            gap: 2px;
+        }
+
+        .character-weapon-info .weapon-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .character-weapon-info .weapon-name {
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .character-weapon-info .weapon-dmg {
+            color: rgba(210, 225, 255, 0.7);
+        }
         
         .team-count {
             font-size: 0.9rem;
