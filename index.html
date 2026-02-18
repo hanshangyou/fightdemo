@@ -2236,9 +2236,9 @@
         .camp-team-grid .character-card {
             position: relative;
             cursor: pointer;
-            min-width: 82px;
-            width: 82px;
-            padding: 6px 5px 7px;
+            min-width: 150px;
+            width: 150px;
+            padding: 8px;
             scroll-snap-align: start;
         }
 
@@ -2297,6 +2297,89 @@
 
         .camp-team-grid.select-mode .character-card {
             border-color: #2ecc71;
+        }
+
+        .camp-team-grid .character-weapon {
+            margin-top: 6px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .camp-team-grid .character-weapon-current {
+            font-size: 0.7rem;
+            color: #bdc3c7;
+            text-align: center;
+        }
+
+        .camp-team-grid .character-weapon-actions {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .camp-team-grid .character-weapon-select {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 6px;
+            padding: 4px 6px;
+            font-size: 0.65rem;
+        }
+
+        .camp-team-grid .character-weapon-btn {
+            padding: 6px 8px;
+            border-radius: 8px;
+            font-size: 0.65rem;
+        }
+
+        .camp-weapon-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .camp-weapon-pool-title {
+            font-size: 0.8rem;
+            text-align: center;
+            color: #bdc3c7;
+        }
+
+        .camp-weapon-pool {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            max-height: 96px;
+            padding-bottom: 4px;
+        }
+
+        .camp-weapon-card {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            padding: 6px;
+            text-align: center;
+            font-size: 0.7rem;
+            min-width: 110px;
+        }
+
+        .camp-weapon-card-icon {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .camp-weapon-card-name {
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .camp-weapon-card-meta {
+            color: #bdc3c7;
+            font-size: 0.65rem;
         }
 
         .camp-team-grid::-webkit-scrollbar {
@@ -2496,6 +2579,11 @@
                 <div class="camp-panel">
                     <div class="camp-panel-title">当前备选池（可用 <span id="camp-available-count">0</span> 人）</div>
                     <div class="camp-team-grid" id="camp-team"></div>
+                </div>
+
+                <div class="camp-panel camp-weapon-panel">
+                    <div class="camp-panel-title">营地武器池</div>
+                    <div class="camp-weapon-pool" id="camp-weapon-pool"></div>
                 </div>
 
                 <div class="camp-panel camp-draw-area">

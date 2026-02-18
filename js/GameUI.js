@@ -56,6 +56,7 @@ export class GameUI {
                 availableCount: document.getElementById('camp-available-count'),
                 team: document.getElementById('camp-team'),
                 draw: document.getElementById('camp-draw'),
+                weaponPool: document.getElementById('camp-weapon-pool'),
                 btnDraw: document.getElementById('btn-camp-draw'),
                 btnNext: document.getElementById('btn-camp-next'),
                 btnHome: document.getElementById('btn-camp-home')
@@ -204,7 +205,8 @@ export class GameUI {
         }
     }
 
-    createCharacterCard(character) {
+    createCharacterCard(character, options = {}) {
+        const { showWeapon = false, weaponPool = [] } = options;
         const card = document.createElement('div');
         card.className = 'character-card';
         if (character.isDead) {
@@ -225,6 +227,9 @@ export class GameUI {
         card.style.borderColor = rarityData.color;
         card.dataset.rarity = rarity;
         card.dataset.rarityLabel = rarityData.name;
+        const weapon = character.equippedWeapon;
+        const weaponLabel = weapon ? `${weapon.icon || '🗡️'} ${weapon.name}` : '未装备';
+        const weaponOptions = (weaponPool || []).map(w => `<option value="${w.id}">${w.icon || '🗡️'} ${w.name}</option>`).join('');
         card.innerHTML = `
             <div class="character-rarity" style="color: ${rarityData.color}">${rarityData.name}</div>
             <div class="character-icon">${character.icon || '👤'}</div>
@@ -235,19 +240,31 @@ export class GameUI {
                 <span>🛡️${character.defense}</span>
                 <span>💨${character.speed}</span>
             </div>
+            ${showWeapon ? `
+                <div class="character-weapon">
+                    <div class="character-weapon-current">当前：${weaponLabel}</div>
+                    <div class="character-weapon-actions">
+                        <select class="character-weapon-select camp-weapon-select" data-character-id="${character.id}">
+                            <option value="">选择武器</option>
+                            ${weaponOptions}
+                        </select>
+                        <button class="btn btn-secondary character-weapon-btn camp-weapon-unequip" data-action="unequip" data-character-id="${character.id}" ${weapon ? '' : 'disabled'}>卸下</button>
+                    </div>
+                </div>
+            ` : ''}
         `;
         
         return card;
     }
 
-    renderCampTeam(team, selectable = false) {
+    renderCampTeam(team, selectable = false, weaponPool = []) {
         const container = this.elements.camp.team;
         if (!container) return;
         container.innerHTML = '';
         container.classList.toggle('select-mode', selectable);
 
         team.forEach(char => {
-            const card = this.createCharacterCard(char);
+            const card = this.createCharacterCard(char, { showWeapon: true, weaponPool });
             card.dataset.characterId = char.id;
             container.appendChild(card);
         });
@@ -270,6 +287,26 @@ export class GameUI {
                 card.classList.add('selected');
             }
             container.appendChild(card);
+        });
+    }
+
+    renderCampWeaponPool(weaponPool) {
+        const poolEl = this.elements.camp.weaponPool;
+        if (!poolEl) return;
+        poolEl.innerHTML = '';
+        if (!weaponPool || weaponPool.length === 0) {
+            poolEl.innerHTML = '<div class="empty-hint">营地武器池为空</div>';
+            return;
+        }
+        weaponPool.forEach(weapon => {
+            const card = document.createElement('div');
+            card.className = 'camp-weapon-card';
+            card.innerHTML = `
+                <div class="camp-weapon-card-icon">${weapon.icon || '🗡️'}</div>
+                <div class="camp-weapon-card-name">${weapon.name}</div>
+                <div class="camp-weapon-card-meta">${weapon.rarity || ''}</div>
+            `;
+            poolEl.appendChild(card);
         });
     }
 
@@ -537,6 +574,30 @@ export class GameUI {
         this.elements.camp.draw?.addEventListener('click', (e) => {
             const card = e.target.closest('.character-card');
             if (card) callback(card.dataset.characterId);
+        });
+    }
+
+    onCampWeaponEquip(callback) {
+        this.elements.camp.team?.addEventListener('change', (e) => {
+            const select = e.target.closest('.camp-weapon-select');
+            if (!select) return;
+            const characterId = select.dataset.characterId;
+            const weaponId = select.value;
+            if (characterId && weaponId) {
+                callback(characterId, weaponId);
+                select.value = '';
+            }
+        });
+    }
+
+    onCampWeaponUnequip(callback) {
+        this.elements.camp.team?.addEventListener('click', (e) => {
+            const button = e.target.closest('[data-action="unequip"]');
+            if (!button) return;
+            const characterId = button.dataset.characterId;
+            if (characterId) {
+                callback(characterId);
+            }
         });
     }
 

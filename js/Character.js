@@ -11,6 +11,7 @@ export class Character {
     _defense;
     _speed;
     _defaultWeaponId;
+    _equippedWeapon;
     _actionGauge = 0;
 
     constructor(config) {
@@ -26,6 +27,7 @@ export class Character {
         this._defense = config.defense;
         this._speed = config.speed;
         this._defaultWeaponId = config.defaultWeaponId ?? config.defaultWeapon?.id ?? null;
+        this._equippedWeapon = config.equippedWeapon ?? null;
     }
 
     get icon() {
@@ -62,6 +64,14 @@ export class Character {
 
     get defaultWeaponId() {
         return this._defaultWeaponId;
+    }
+
+    get equippedWeapon() {
+        return this._equippedWeapon;
+    }
+
+    setEquippedWeapon(weapon) {
+        this._equippedWeapon = weapon ?? null;
     }
 
     get actionGauge() {

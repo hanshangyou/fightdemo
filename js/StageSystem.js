@@ -1,5 +1,6 @@
 import { Character } from './Character.js';
 import { getCharacterPool } from './GachaSystem.js';
+import { createWeaponInstance, getWeaponPool, getWeaponTemplateById } from './WeaponSystem.js';
 import { getStages } from './StageEditor.js';
 
 export class StageSystem {
@@ -37,12 +38,16 @@ export class StageSystem {
         if (!stage) return [];
         
         const allCharacters = getCharacterPool();
+        const weaponPool = getWeaponPool();
+        const fallbackWeaponFor = (rarity) => {
+            if (!weaponPool.length) return null;
+            return weaponPool.find(w => w.rarity === rarity) ?? weaponPool[0];
+        };
         
         return stage.enemies.map((enemyId, index) => {
             const template = allCharacters.find(c => c.id === enemyId);
             if (!template) return null;
-            
-            return new Character({
+            const enemy = new Character({
                 id: `enemy_${stage.id}_${index}_${Date.now()}`,
                 background: template.background,
                 maxHp: template.baseStats.maxHp,
@@ -55,6 +60,12 @@ export class StageSystem {
                 templateId: template.id,
                 defaultWeaponId: template.defaultWeaponId ?? null
             });
+            const weaponTemplate = getWeaponTemplateById(enemy.defaultWeaponId) ?? fallbackWeaponFor(enemy.rarity);
+            const weaponInstance = createWeaponInstance(weaponTemplate);
+            if (weaponInstance) {
+                enemy.setEquippedWeapon(weaponInstance);
+            }
+            return enemy;
         }).filter(c => c !== null);
     }
 

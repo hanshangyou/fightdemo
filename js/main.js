@@ -3,6 +3,7 @@ import { StageSystem } from './StageSystem.js';
 import { GameUI } from './GameUI.js';
 import { PoolEditor } from './PoolEditor.js';
 import { WeaponEditor } from './WeaponEditor.js';
+import { createWeaponInstance, getWeaponPool, getWeaponTemplateById } from './WeaponSystem.js';
 import { StageEditor, getStages } from './StageEditor.js';
 import { EmbeddedMapEditor } from './hex-map-editor-embedded.js';
 import { initHexBattlefield } from './hex-battlefield.js';
@@ -33,6 +34,7 @@ class Game {
     lastResultSummary = null;
     campRetryMode = false;
     battleDeadIds = new Set();
+    campWeaponPool = [];
 
     constructor() {
         this.ui = new GameUI();
@@ -138,6 +140,8 @@ class Game {
         this.ui.onCampNext(() => this.campNextStage());
         this.ui.onCampHome(() => this.resetGame());
         this.ui.onCampSelectDraw((charId) => this.selectCampDraw(charId));
+        this.ui.onCampWeaponEquip((charId, weaponId) => this.equipWeaponToCharacter(charId, weaponId));
+        this.ui.onCampWeaponUnequip((charId) => this.unequipWeaponFromCharacter(charId));
     }
 
     updateMainScreen() {
@@ -280,9 +284,7 @@ class Game {
         }
         if (!this.selectingFromPool) {
             this.currentTeam.forEach(c => {
-                if (!this.playerPool.find(p => p.id === c.id)) {
-                    this.playerPool.push(c);
-                }
+                this.addCharacterToPlayerPool(c);
             });
         }
         this.gachaSystem.clearDrawPool();
@@ -434,7 +436,9 @@ class Game {
         this.ui.updateCampHint(hintText);
         const availableCount = this.playerPool.filter(c => !c.isDead).length;
         this.ui.updateCampAvailableCount(availableCount);
-        this.ui.renderCampTeam(this.playerPool, false);
+        this.ensureWeaponsForPlayerPool();
+        this.ui.renderCampTeam(this.playerPool, false, this.campWeaponPool);
+        this.ui.renderCampWeaponPool(this.campWeaponPool);
         this.ui.renderCampDrawPool([], null);
         const nextText = this.campRetryMode
             ? '🔄 重新挑战'
@@ -485,7 +489,8 @@ class Game {
         this.ui.updateMainScreen(this.gold, this.gachaTickets, this.stageSystem.getCurrentStage(), this.currentTeam, this.hasDrawn);
         this.ui.updateCampHint('请选择1张卡加入备选池');
         this.ui.renderCampDrawPool(this.campDrawPool, null);
-        this.ui.renderCampTeam(this.playerPool, false);
+        this.ui.renderCampTeam(this.playerPool, false, this.campWeaponPool);
+        this.ui.renderCampWeaponPool(this.campWeaponPool);
         this.ui.setCampButtons({
             canDraw: false,
             nextText: this.stageSystem.isLastStage() ? '🏠 通关返回首页' : '➡️ 挑战下一关'
@@ -499,11 +504,12 @@ class Game {
         const picked = this.campDrawPool.find(c => c.id === charId);
         if (!picked) return;
         this.campSelectedDrawId = charId;
-        this.playerPool.push(picked);
+        this.addCharacterToPlayerPool(picked);
         this.campDrawPool = [];
         this.gachaSystem.clearDrawPool();
 
-        this.ui.renderCampTeam(this.playerPool, false);
+        this.ui.renderCampTeam(this.playerPool, false, this.campWeaponPool);
+        this.ui.renderCampWeaponPool(this.campWeaponPool);
         this.ui.renderCampDrawPool([], null);
         this.ui.updateCampHint(`已保留 ${picked.background}，已加入备选池`);
         const availableCount = this.playerPool.filter(c => !c.isDead).length;
@@ -590,10 +596,62 @@ class Game {
         this.lastCampRewards = null;
         this.lastResultSummary = null;
         this.campRetryMode = false;
+        this.campWeaponPool = [];
         this.gachaSystem.clearDrawPool();
         this.stageSystem.reset();
         this.updateMainScreen();
         this.showMainScreen();
+    }
+
+    addCharacterToPlayerPool(character) {
+        if (!this.playerPool.find(p => p.id === character.id)) {
+            this.ensureWeaponForCharacter(character);
+            this.playerPool.push(character);
+            return;
+        }
+        this.ensureWeaponForCharacter(character);
+    }
+
+    ensureWeaponsForPlayerPool() {
+        this.playerPool.forEach(char => this.ensureWeaponForCharacter(char));
+    }
+
+    ensureWeaponForCharacter(character) {
+        if (character.equippedWeapon) return;
+        const weaponTemplate = getWeaponTemplateById(character.defaultWeaponId) ?? this.getFallbackWeaponTemplate(character);
+        const weaponInstance = createWeaponInstance(weaponTemplate);
+        if (weaponInstance) {
+            character.setEquippedWeapon(weaponInstance);
+        }
+    }
+
+    getFallbackWeaponTemplate(character) {
+        const pool = getWeaponPool();
+        if (!pool.length) return null;
+        return pool.find(w => w.rarity === character.rarity) ?? pool[0];
+    }
+
+    equipWeaponToCharacter(characterId, weaponInstanceId) {
+        const character = this.playerPool.find(c => c.id === characterId);
+        if (!character) return;
+        const weaponIndex = this.campWeaponPool.findIndex(w => w.id === weaponInstanceId);
+        if (weaponIndex === -1) return;
+        const weapon = this.campWeaponPool.splice(weaponIndex, 1)[0];
+        if (character.equippedWeapon) {
+            this.campWeaponPool.push(character.equippedWeapon);
+        }
+        character.setEquippedWeapon(weapon);
+        this.ui.renderCampTeam(this.playerPool, false, this.campWeaponPool);
+        this.ui.renderCampWeaponPool(this.campWeaponPool);
+    }
+
+    unequipWeaponFromCharacter(characterId) {
+        const character = this.playerPool.find(c => c.id === characterId);
+        if (!character || !character.equippedWeapon) return;
+        this.campWeaponPool.push(character.equippedWeapon);
+        character.setEquippedWeapon(null);
+        this.ui.renderCampTeam(this.playerPool, false, this.campWeaponPool);
+        this.ui.renderCampWeaponPool(this.campWeaponPool);
     }
 }
 

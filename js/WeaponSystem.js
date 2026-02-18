@@ -28,3 +28,25 @@ export function resetWeaponPool() {
     localStorage.removeItem(STORAGE_KEY);
     return [...DEFAULT_WEAPON_POOL];
 }
+
+export function getWeaponTemplateById(id) {
+    if (!id) return null;
+    const pool = getWeaponPool();
+    return pool.find(w => w.id === id) ?? null;
+}
+
+export function createWeaponInstance(template) {
+    if (!template) return null;
+    return {
+        id: `${template.id}_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+        templateId: template.id,
+        name: template.name,
+        type: template.type,
+        rarity: template.rarity,
+        icon: template.icon,
+        range: template.range,
+        apCost: template.apCost,
+        damageMin: template.damageMin,
+        damageMax: template.damageMax
+    };
+}
