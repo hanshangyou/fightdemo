@@ -199,6 +199,8 @@ export function createPreparePhase({ state, mapApi, elements, helpers, uiHandler
         mapApi.setActiveUnitKey(null);
         mapApi.setHighlights(null, null);
         mapApi.render();
+        helpers.setMapVisible?.(true);
+        helpers.setMapPhase?.('prepare');
         renderPrepUI();
         helpers.clearBattleLog();
         uiHandlers.renderBattleActionPanels();

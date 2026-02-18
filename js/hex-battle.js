@@ -88,6 +88,25 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         updateBattleLogVisibility(true);
     }
 
+    function setMapVisible(visible) {
+        if (!hexMap?.parentElement) return;
+        if (visible === false) {
+            hexMap.parentElement.style.display = 'none';
+            return;
+        }
+        hexMap.parentElement.style.display = 'flex';
+    }
+
+    function setMapPhase(phase) {
+        if (!hexMap) return;
+        hexMap.classList.remove('phase-prepare', 'phase-battle');
+        if (phase === 'battle') {
+            hexMap.classList.add('phase-battle');
+            return;
+        }
+        hexMap.classList.add('phase-prepare');
+    }
+
     function updateHoverHint() {
     }
 
@@ -199,6 +218,8 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         helpers: {
             setBattleLogVisible,
             clearBattleLog,
+            setMapVisible,
+            setMapPhase,
             setUnit,
             isOccupied,
             clearAllyUnits
@@ -224,7 +245,9 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
             updateHoverHint,
             moveUnit,
             getUnitAt,
-            clearBattleLog
+            clearBattleLog,
+            setMapVisible,
+            setMapPhase
         },
         uiHandlers
     });
@@ -244,6 +267,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
 
     initStage();
     prepareApi.resetPlacement();
+    setMapPhase('prepare');
 
     mapApi.setPlayHandlers({
         onPointerDown: (e, cellEl) => {

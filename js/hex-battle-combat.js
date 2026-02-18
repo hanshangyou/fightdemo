@@ -112,12 +112,17 @@ export function createBattlePhase({ state, mapApi, elements, helpers, uiHandlers
                 const defense = activeUnit.stats?.defense ?? '-';
                 const speed = activeUnit.stats?.speed ?? '-';
                 const ap = Number.isFinite(activeUnit.ap) ? activeUnit.ap : 0;
+                const weapon = activeUnit.equippedWeapon || activeUnit.source?.equippedWeapon || null;
+                const weaponIcon = weapon?.icon || '🗡️';
+                const weaponName = weapon?.name || '未装备';
+                const weaponDamage = weapon ? `${weapon.damageMin}-${weapon.damageMax}` : '';
                 const card = document.createElement('div');
                 card.className = `battle-active-card ${activeUnit.team}`;
                 card.innerHTML = `
                     <div class="battle-active-header">
                         <div class="order-icon">${activeUnit.icon || '❔'}</div>
-                        <div>${activeUnit.background || '未知角色'}</div>
+                        <div class="battle-active-name">${activeUnit.background || '未知角色'}</div>
+                        <span class="battle-active-ap">✨${ap}</span>
                     </div>
                     <div class="order-hp">
                         <div class="order-hp-bar">
@@ -129,7 +134,11 @@ export function createBattlePhase({ state, mapApi, elements, helpers, uiHandlers
                         <span>⚔️${attack}</span>
                         <span>🛡️${defense}</span>
                         <span>💨${speed}</span>
-                        <span>✨${ap}</span>
+                    </div>
+                    <div class="battle-weapon">
+                        <div class="battle-weapon-icon">${weaponIcon}</div>
+                        <div class="battle-weapon-name">${weaponName}</div>
+                        <div class="battle-weapon-dmg">${weaponDamage}</div>
                     </div>
                 `;
                 battleActiveUnitEl.appendChild(card);
@@ -476,6 +485,8 @@ export function createBattlePhase({ state, mapApi, elements, helpers, uiHandlers
         state.damageStats = new Map();
         state.lastLogTurnKey = null;
         state.lastLogRound = 0;
+        helpers.setMapVisible?.(true);
+        helpers.setMapPhase?.('battle');
         helpers.clearBattleLog();
         helpers.setBattleLogVisible(true);
         helpers.appendBattleLog('战斗开始');
