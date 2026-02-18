@@ -47,7 +47,7 @@
 
 ## 数据持久化（localStorage）
 - 角色池：fightdemo_character_pool。[GachaSystem.js](file:///c:/Users/27184/Documents/trae_projects/fightdemo/js/GachaSystem.js#L35-L63)
-- 关卡配置：fightdemo_stages（含 maxTeamSize、mapId、enemySpawns）。[StageEditor.js](file:///c:/Users/27184/Documents/trae_projects/fightdemo/js/StageEditor.js#L3-L41)
+- 关卡配置：fightdemo_stages（含 maxTeamSize、mapId、enemySpawns）。默认配置见 [default-stages.js](file:///c:/Users/27184/Documents/trae_projects/fightdemo/js/default-stages.js)，读取入口在 [StageEditor.js](file:///c:/Users/27184/Documents/trae_projects/fightdemo/js/StageEditor.js#L1-L40)
 - 地图存档：
   - 当前地图快照：fightdemo.hex-map.v1
   - 全局默认地图：fightdemo.hex-map.default.v1

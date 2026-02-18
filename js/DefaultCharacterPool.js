@@ -1,0 +1,23 @@
+export const DEFAULT_CHARACTER_POOL = [
+    { id: 'warrior', background: '战士', rarity: 'COMMON', defaultWeaponId: 'sword_iron', baseStats: { maxHp: 100, attack: 20, defense: 10, speed: 12 }, icon: '⚔️' },
+    { id: 'knight', background: '骑士', rarity: 'RARE', defaultWeaponId: 'sword_knight', baseStats: { maxHp: 130, attack: 22, defense: 15, speed: 10 }, icon: '🛡️' },
+    { id: 'mage', background: '法师', rarity: 'COMMON', defaultWeaponId: 'sword_frost', baseStats: { maxHp: 70, attack: 30, defense: 5, speed: 15 }, icon: '🔮' },
+    { id: 'archmage', background: '大法师', rarity: 'EPIC', defaultWeaponId: 'sword_sun', baseStats: { maxHp: 80, attack: 40, defense: 6, speed: 18 }, icon: '🌟' },
+    { id: 'priest', background: '牧师', rarity: 'COMMON', defaultWeaponId: 'spear_bronze', baseStats: { maxHp: 85, attack: 15, defense: 8, speed: 14 }, icon: '✝️' },
+    { id: 'assassin', background: '刺客', rarity: 'RARE', defaultWeaponId: 'sword_shadow', baseStats: { maxHp: 65, attack: 35, defense: 4, speed: 25 }, icon: '🗡️' },
+    { id: 'archer', background: '弓箭手', rarity: 'COMMON', defaultWeaponId: 'bow_oak', baseStats: { maxHp: 75, attack: 25, defense: 6, speed: 20 }, icon: '🏹' },
+    { id: 'paladin', background: '圣骑士', rarity: 'EPIC', defaultWeaponId: 'sword_dragon', baseStats: { maxHp: 140, attack: 28, defense: 15, speed: 8 }, icon: '⚜️' },
+    { id: 'berserker', background: '狂战士', rarity: 'RARE', defaultWeaponId: 'sword_dragon', baseStats: { maxHp: 110, attack: 38, defense: 10, speed: 16 }, icon: '🪓' },
+    { id: 'ninja', background: '忍者', rarity: 'EPIC', defaultWeaponId: 'sword_shadow', baseStats: { maxHp: 60, attack: 42, defense: 8, speed: 30 }, icon: '🥷' },
+    { id: 'dragon_knight', background: '龙骑士', rarity: 'LEGENDARY', defaultWeaponId: 'sword_moon', baseStats: { maxHp: 160, attack: 45, defense: 20, speed: 12 }, icon: '🐉' },
+    { id: 'phoenix', background: '凤凰使者', rarity: 'LEGENDARY', defaultWeaponId: 'bow_twilight', baseStats: { maxHp: 90, attack: 50, defense: 10, speed: 22 }, icon: '🔥' },
+    { id: 'goblin', background: '哥布林', rarity: 'ENEMY', defaultWeaponId: 'sword_ember', baseStats: { maxHp: 50, attack: 12, defense: 3, speed: 15 }, icon: '👺' },
+    { id: 'goblin_boss', background: '哥布林头目', rarity: 'ENEMY', defaultWeaponId: 'sword_ember', baseStats: { maxHp: 70, attack: 18, defense: 5, speed: 12 }, icon: '👹' },
+    { id: 'wolf', background: '野狼', rarity: 'ENEMY', defaultWeaponId: 'spear_meteor', baseStats: { maxHp: 70, attack: 20, defense: 5, speed: 20 }, icon: '🐺' },
+    { id: 'skeleton', background: '骷髅兵', rarity: 'ENEMY', defaultWeaponId: 'sword_ember', baseStats: { maxHp: 60, attack: 22, defense: 8, speed: 14 }, icon: '💀' },
+    { id: 'ghost', background: '幽灵', rarity: 'ENEMY', defaultWeaponId: 'bow_ranger', baseStats: { maxHp: 60, attack: 35, defense: 5, speed: 25 }, icon: '👻' },
+    { id: 'vampire', background: '吸血鬼', rarity: 'ENEMY', defaultWeaponId: 'sword_ember', baseStats: { maxHp: 100, attack: 35, defense: 12, speed: 18 }, icon: '🧛' },
+    { id: 'demon', background: '恶魔', rarity: 'ENEMY', defaultWeaponId: 'spear_meteor', baseStats: { maxHp: 120, attack: 40, defense: 15, speed: 14 }, icon: '👿' },
+    { id: 'dragon', background: '暗黑龙', rarity: 'ENEMY', defaultWeaponId: 'bow_ranger', baseStats: { maxHp: 200, attack: 55, defense: 20, speed: 10 }, icon: '🐲' },
+    { id: 'demon_king', background: '魔王', rarity: 'ENEMY', defaultWeaponId: 'spear_meteor', baseStats: { maxHp: 300, attack: 65, defense: 20, speed: 16 }, icon: '👑' }
+];

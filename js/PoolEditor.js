@@ -1,8 +1,11 @@
-import { RARITY, getCharacterPool, saveCharacterPool, resetCharacterPool, DEFAULT_CHARACTER_POOL } from './GachaSystem.js';
+import { RARITY, getCharacterPool, saveCharacterPool, resetCharacterPool } from './GachaSystem.js';
+import { DEFAULT_CHARACTER_POOL } from './DefaultCharacterPool.js';
+import { getWeaponPool } from './WeaponSystem.js';
 
 export class PoolEditor {
     container = null;
     pool = [];
+    weaponPool = [];
     editingId = null;
     onSaveCallback = null;
     onCloseCallback = null;
@@ -10,11 +13,16 @@ export class PoolEditor {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
         this.pool = getCharacterPool();
+        this.weaponPool = getWeaponPool();
         this.editingId = null;
     }
 
     render() {
         if (!this.container) return;
+        this.weaponPool = getWeaponPool();
+        const weaponOptions = this.weaponPool.length
+            ? this.weaponPool.map(weapon => `<option value="${weapon.id}">${weapon.icon || '⚔️'} ${weapon.name}</option>`).join('')
+            : '<option value="">无可用武器</option>';
         
         this.container.innerHTML = `
             <div class="editor-header">
@@ -38,8 +46,8 @@ export class PoolEditor {
                 <div class="modal-content">
                     <h4 id="modal-title">编辑角色</h4>
                     <div class="form-group">
-                        <label>角色名称</label>
-                        <input type="text" id="edit-name" placeholder="显示名称">
+                        <label>角色背景</label>
+                        <input type="text" id="edit-background" placeholder="背景描述">
                     </div>
                     <div class="form-group">
                         <label>图标</label>
@@ -53,6 +61,12 @@ export class PoolEditor {
                             <option value="EPIC">史诗</option>
                             <option value="LEGENDARY">传说</option>
                             <option value="ENEMY">敌对（不可抽取）</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>默认武器</label>
+                        <select id="edit-weapon">
+                            ${weaponOptions}
                         </select>
                     </div>
                     <div class="form-row">
@@ -96,11 +110,12 @@ export class PoolEditor {
         
         listContainer.innerHTML = this.pool.map(char => {
             const rarity = RARITY[char.rarity] || RARITY.COMMON;
+            const weapon = this.weaponPool.find(w => w.id === char.defaultWeaponId);
             return `
                 <div class="pool-item" data-id="${char.id}" style="border-color: ${rarity.color}">
                     <div class="pool-item-icon">${char.icon || '👤'}</div>
                     <div class="pool-item-info">
-                        <div class="pool-item-name">${char.name}</div>
+                        <div class="pool-item-name">${char.background}</div>
                         <div class="pool-item-rarity" style="color:${rarity.color}">${rarity.name}</div>
                     </div>
                     <div class="pool-item-stats">
@@ -108,6 +123,7 @@ export class PoolEditor {
                         <span>⚔️${char.baseStats.attack}</span>
                         <span>🛡️${char.baseStats.defense}</span>
                         <span>💨${char.baseStats.speed}</span>
+                        <span>${weapon ? `${weapon.icon || '⚔️'}${weapon.name}` : '⚔️未设置'}</span>
                     </div>
                     <div class="pool-item-actions">
                         <button class="btn-small btn-edit" data-id="${char.id}">✏️</button>
@@ -145,9 +161,10 @@ export class PoolEditor {
     showAddModal() {
         this.editingId = null;
         document.getElementById('modal-title').textContent = '添加角色';
-        document.getElementById('edit-name').value = '';
+        document.getElementById('edit-background').value = '';
         document.getElementById('edit-icon').value = '👤';
         document.getElementById('edit-rarity').value = 'COMMON';
+        document.getElementById('edit-weapon').value = this.getFallbackWeaponId();
         document.getElementById('edit-hp').value = 100;
         document.getElementById('edit-attack').value = 20;
         document.getElementById('edit-defense').value = 5;
@@ -161,9 +178,10 @@ export class PoolEditor {
         
         this.editingId = id;
         document.getElementById('modal-title').textContent = '编辑角色';
-        document.getElementById('edit-name').value = char.name;
+        document.getElementById('edit-background').value = char.background;
         document.getElementById('edit-icon').value = char.icon || '👤';
         document.getElementById('edit-rarity').value = char.rarity;
+        document.getElementById('edit-weapon').value = this.getWeaponIdOrFallback(char.defaultWeaponId);
         document.getElementById('edit-hp').value = char.baseStats.maxHp;
         document.getElementById('edit-attack').value = char.baseStats.attack;
         document.getElementById('edit-defense').value = char.baseStats.defense;
@@ -177,24 +195,26 @@ export class PoolEditor {
     }
 
     saveCharacter() {
-        const name = document.getElementById('edit-name').value.trim();
+        const background = document.getElementById('edit-background').value.trim();
         const icon = document.getElementById('edit-icon').value.trim() || '👤';
         const rarity = document.getElementById('edit-rarity').value;
+        const defaultWeaponId = document.getElementById('edit-weapon').value || this.getFallbackWeaponId();
         const hp = parseInt(document.getElementById('edit-hp').value) || 100;
         const attack = parseInt(document.getElementById('edit-attack').value) || 20;
         const defense = parseInt(document.getElementById('edit-defense').value) || 5;
         const speed = parseInt(document.getElementById('edit-speed').value) || 15;
         
-        if (!name) {
-            alert('请填写角色名称！');
+        if (!background) {
+            alert('请填写角色背景！');
             return;
         }
         
         const charData = {
             id: this.editingId || this.generateId(),
-            name,
+            background,
             icon,
             rarity,
+            defaultWeaponId,
             baseStats: {
                 maxHp: Math.max(1, Math.min(999, hp)),
                 attack: Math.max(1, Math.min(999, attack)),
@@ -262,8 +282,20 @@ export class PoolEditor {
         if (this.container) {
             this.container.style.display = 'flex';
         }
+        this.weaponPool = getWeaponPool();
         this.pool = getCharacterPool();
         this.render();
+    }
+
+    getFallbackWeaponId() {
+        return this.weaponPool[0]?.id ?? '';
+    }
+
+    getWeaponIdOrFallback(weaponId) {
+        if (weaponId && this.weaponPool.some(w => w.id === weaponId)) {
+            return weaponId;
+        }
+        return this.getFallbackWeaponId();
     }
 
     onSave(callback) {

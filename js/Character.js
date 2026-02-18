@@ -1,6 +1,6 @@
 export class Character {
     id;
-    name;
+    background;
     team;
     _icon;
     _rarity;
@@ -10,11 +10,12 @@ export class Character {
     _attack;
     _defense;
     _speed;
+    _defaultWeaponId;
     _actionGauge = 0;
 
     constructor(config) {
         this.id = config.id;
-        this.name = config.name;
+        this.background = config.background;
         this.team = config.team;
         this._icon = config.icon ?? '👤';
         this._rarity = config.rarity ?? 'COMMON';
@@ -24,6 +25,7 @@ export class Character {
         this._attack = config.attack;
         this._defense = config.defense;
         this._speed = config.speed;
+        this._defaultWeaponId = config.defaultWeaponId ?? config.defaultWeapon?.id ?? null;
     }
 
     get icon() {
@@ -56,6 +58,10 @@ export class Character {
 
     get speed() {
         return this._speed;
+    }
+
+    get defaultWeaponId() {
+        return this._defaultWeaponId;
     }
 
     get actionGauge() {

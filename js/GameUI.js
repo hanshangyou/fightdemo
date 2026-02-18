@@ -30,6 +30,7 @@ export class GameUI {
                 btnGacha: document.getElementById('btn-gacha'),
                 btnBattle: document.getElementById('btn-battle'),
                 btnEditor: document.getElementById('btn-editor'),
+                btnWeaponEditor: document.getElementById('btn-weapon-editor'),
                 btnStageEditor: document.getElementById('btn-stage-editor')
             },
             gacha: {
@@ -106,7 +107,7 @@ export class GameUI {
         const teamInfo = document.getElementById('main-team-info');
         if (teamInfo) {
             if (team.length > 0) {
-                teamInfo.innerHTML = `<span style="color:#2ecc71">当前队伍: ${team.map(c => c.name).join(', ')}</span>`;
+                teamInfo.innerHTML = `<span style="color:#2ecc71">当前队伍: ${team.map(c => c.background).join(', ')}</span>`;
             } else {
                 teamInfo.innerHTML = '<span style="color:#e74c3c">未组建队伍</span>';
             }
@@ -227,7 +228,7 @@ export class GameUI {
         card.innerHTML = `
             <div class="character-rarity" style="color: ${rarityData.color}">${rarityData.name}</div>
             <div class="character-icon">${character.icon || '👤'}</div>
-            <div class="character-name">${character.name}</div>
+            <div class="character-name">${character.background}</div>
             <div class="character-stats">
                 <span>❤️${character.maxHp}</span>
                 <span>⚔️${character.attack}</span>
@@ -310,7 +311,7 @@ export class GameUI {
             
             card.innerHTML = `
                 <div class="battle-char-icon">${char.icon || '👤'}</div>
-                <div class="battle-char-name">${char.name}</div>
+                <div class="battle-char-name">${char.background}</div>
                 <div class="battle-char-stats">
                     <span>⚔️${char.attack}</span>
                     <span>🛡️${char.defense}</span>
@@ -427,7 +428,7 @@ export class GameUI {
                 <div class="stats-detail">
                     ${damageStats.map(stat => `
                         <div class="stat-item">
-                            <span class="stat-name">${stat.character.icon || '👤'} ${stat.character.name}</span>
+                            <span class="stat-name">${stat.character.icon || '👤'} ${stat.character.background}</span>
                             <span class="stat-value">伤害: ${stat.totalDamage} | 攻击: ${stat.attacks}次${stat.kills > 0 ? ` | 击杀: ${stat.kills}` : ''}</span>
                         </div>
                     `).join('')}
@@ -510,6 +511,10 @@ export class GameUI {
 
     onGoEditor(callback) {
         this.elements.main.btnEditor?.addEventListener('click', callback);
+    }
+
+    onGoWeaponEditor(callback) {
+        this.elements.main.btnWeaponEditor?.addEventListener('click', callback);
     }
 
     onGoStageEditor(callback) {

@@ -102,7 +102,7 @@ export class EmbeddedMapEditor {
             }
             const names = this.stageEnemies.map(id => {
                 const c = this.characterMap.get(id);
-                return c ? `${c.icon || '👤'}${c.name}` : id;
+                return c ? `${c.icon || '👤'}${c.background}` : id;
             });
             enemiesEl.textContent = `敌方: ${names.join(' ')}`;
         }
@@ -153,7 +153,7 @@ export class EmbeddedMapEditor {
             if (!template) return;
             this.enemyUnits.set(this.mapApi.key(spawn.col, spawn.row), {
                 id: template.id,
-                name: template.name,
+                background: template.background,
                 icon: template.icon,
                 team: 'enemy',
             });

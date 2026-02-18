@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const names = stage.enemies.map(id => {
                 const c = characterMap.get(id);
-                return c ? `${c.icon || '👤'}${c.name}` : id;
+                return c ? `${c.icon || '👤'}${c.background}` : id;
             });
             mapStageEnemiesEl.textContent = `敌方: ${names.join(' ')}`;
         }
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!template) return;
             enemyUnits.set(mapApi.key(spawn.col, spawn.row), {
                 id: template.id,
-                name: template.name,
+                background: template.background,
                 icon: template.icon,
                 team: 'enemy',
             });

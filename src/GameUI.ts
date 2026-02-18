@@ -23,7 +23,7 @@ export class GameUI {
         card.id = `character-${character.id}`;
         
         card.innerHTML = `
-            <div class="character-name">${character.name}</div>
+            <div class="character-name">${character.background}</div>
             <div class="character-stats">
                 ATK: ${character.attack} | DEF: ${character.defense} | SPD: ${character.speed}
             </div>
@@ -165,7 +165,7 @@ export class GameUI {
                     this.updateCharacter(event.data.defender);
                     this.showDamagePopup(event.data.defender, event.data.damage);
                     this.addLogEntry(
-                        `${event.data.attacker.name} 攻击 ${event.data.defender.name}，造成 ${event.data.damage} 点伤害！`,
+                        `${event.data.attacker.background} 攻击 ${event.data.defender.background}，造成 ${event.data.damage} 点伤害！`,
                         'attack'
                     );
                 }
@@ -174,7 +174,7 @@ export class GameUI {
             case 'death':
                 if (event.data.defender) {
                     this.updateCharacter(event.data.defender);
-                    this.addLogEntry(`💀 ${event.data.defender.name} 被击败！`, 'defend');
+                    this.addLogEntry(`💀 ${event.data.defender.background} 被击败！`, 'defend');
                 }
                 break;
                 

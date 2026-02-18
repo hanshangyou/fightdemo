@@ -8,7 +8,7 @@ export interface CharacterStats {
 
 export interface CharacterConfig {
     id: string;
-    name: string;
+    background: string;
     maxHp: number;
     attack: number;
     defense: number;
@@ -18,7 +18,7 @@ export interface CharacterConfig {
 
 export class Character {
     readonly id: string;
-    readonly name: string;
+    readonly background: string;
     readonly team: 'A' | 'B';
     private _maxHp: number;
     private _hp: number;
@@ -29,7 +29,7 @@ export class Character {
 
     constructor(config: CharacterConfig) {
         this.id = config.id;
-        this.name = config.name;
+        this.background = config.background;
         this.team = config.team;
         this._maxHp = config.maxHp;
         this._hp = config.maxHp;

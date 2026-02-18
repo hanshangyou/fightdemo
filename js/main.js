@@ -2,6 +2,7 @@ import { GachaSystem } from './GachaSystem.js';
 import { StageSystem } from './StageSystem.js';
 import { GameUI } from './GameUI.js';
 import { PoolEditor } from './PoolEditor.js';
+import { WeaponEditor } from './WeaponEditor.js';
 import { StageEditor, getStages } from './StageEditor.js';
 import { EmbeddedMapEditor } from './hex-map-editor-embedded.js';
 import { initHexBattlefield } from './hex-battlefield.js';
@@ -12,6 +13,7 @@ class Game {
     stageSystem;
     battleSystem = null;
     poolEditor = null;
+    weaponEditor = null;
     stageEditor = null;
     mapEditor = null;
     hexBattlefield = null;
@@ -37,6 +39,7 @@ class Game {
         this.gachaSystem = new GachaSystem();
         this.stageSystem = new StageSystem();
         this.poolEditor = new PoolEditor('editor-container');
+        this.weaponEditor = new WeaponEditor('editor-container');
         this.stageEditor = new StageEditor('stage-editor-container');
         this.hexBattlefield = initHexBattlefield({
             ids: {
@@ -70,6 +73,10 @@ class Game {
         });
         
         this.poolEditor.onClose(() => {
+            this.showMainScreen();
+        });
+
+        this.weaponEditor.onClose(() => {
             this.showMainScreen();
         });
         
@@ -112,6 +119,7 @@ class Game {
             }
         });
         this.ui.onGoEditor(() => this.showEditorScreen());
+        this.ui.onGoWeaponEditor(() => this.showWeaponEditorScreen());
         this.ui.onGoStageEditor(() => this.showStageEditorScreen());
         
         this.ui.onGachaPull(() => this.pullGacha());
@@ -148,6 +156,15 @@ class Game {
             return;
         }
         this.poolEditor.show();
+        this.ui.showScreen('editor');
+    }
+
+    showWeaponEditorScreen() {
+        if (this.hasDrawn) {
+            alert('已开始挑战，无法编辑武器池！请返回首页重新开始后再编辑。');
+            return;
+        }
+        this.weaponEditor.show();
         this.ui.showScreen('editor');
     }
     
@@ -329,7 +346,7 @@ class Game {
                     this.ui.updateBattleCharacter(event.data.defender);
                     this.ui.showDamagePopup(event.data.defender, event.data.damage);
                     this.ui.addBattleLog(
-                        `${event.data.attacker.name} → ${event.data.defender.name} -${event.data.damage}`,
+                        `${event.data.attacker.background} → ${event.data.defender.background} -${event.data.damage}`,
                         event.data.defender.team === 'A' ? 'defend' : 'attack'
                     );
                 }
@@ -346,7 +363,7 @@ class Game {
                         }
                     }
                     this.ui.updateBattleCharacter(event.data.defender);
-                    this.ui.addBattleLog(`💀 ${event.data.defender.name} 被击败！`, 'turn');
+                    this.ui.addBattleLog(`💀 ${event.data.defender.background} 被击败！`, 'turn');
                 }
                 break;
                 
@@ -488,7 +505,7 @@ class Game {
 
         this.ui.renderCampTeam(this.playerPool, false);
         this.ui.renderCampDrawPool([], null);
-        this.ui.updateCampHint(`已保留 ${picked.name}，已加入备选池`);
+        this.ui.updateCampHint(`已保留 ${picked.background}，已加入备选池`);
         const availableCount = this.playerPool.filter(c => !c.isDead).length;
         this.ui.updateCampAvailableCount(availableCount);
     }

@@ -1,0 +1,543 @@
+import { getNeighbors, hexDistance } from './hex-coordinates.js';
+
+export function createBattlePhase({ state, mapApi, elements, helpers, uiHandlers }) {
+    const AP_PER_TURN = 7;
+    const AP_MOVE_COST = 2;
+    const AP_ATTACK_COST = 3;
+    const {
+        battleStageNameEl,
+        battleRoundEl,
+        battleStatusEl,
+        turnOrderListEl,
+        battleActionLayoutEl,
+        battleActiveUnitEl,
+        battleTargetListEl,
+        battleSkipTurnBtn
+    } = elements;
+
+    function updateBattleHint() {
+        if (state.phase !== 'battle') return;
+        helpers.setBattleLogVisible(true);
+        const currentKey = state.turnOrder[state.turnIndex];
+        if (!currentKey || !state.units.has(currentKey)) return;
+        if (state.lastLogTurnKey === currentKey && state.lastLogRound === state.round) return;
+        state.lastLogTurnKey = currentKey;
+        state.lastLogRound = state.round;
+        const unit = state.units.get(currentKey);
+        const background = unit?.background || (unit?.team === 'enemy' ? '敌方' : '我方');
+        helpers.appendBattleLog(`回合 ${state.round}：${background} 行动`);
+    }
+
+    function updateBattleUI() {
+        if (!state.stage) return;
+        if (battleStageNameEl) {
+            battleStageNameEl.textContent = state.stage.name || '战斗阶段';
+        }
+        if (battleRoundEl) {
+            battleRoundEl.textContent = `回合 ${state.round}/${state.roundLimit}`;
+        }
+        const allyAlive = Array.from(state.units.values()).filter(u => u.team === 'ally').length;
+        const enemyAlive = Array.from(state.units.values()).filter(u => u.team === 'enemy').length;
+        if (battleStatusEl) {
+            battleStatusEl.textContent = `我方: ${allyAlive}  敌方: ${enemyAlive}`;
+        }
+    }
+
+    function renderTurnOrder() {
+        turnOrderListEl.innerHTML = '';
+        const remaining = state.turnOrder.slice(state.turnIndex);
+        const createOrderCard = (unit, isActive, isNextRound) => {
+            const card = document.createElement('div');
+            card.className = `order-card ${unit.team}`;
+            if (isActive) card.classList.add('active');
+            if (isNextRound) card.classList.add('next-round');
+            const maxHp = Number.isFinite(unit.stats?.maxHp) ? unit.stats.maxHp : (unit.stats?.hp ?? 0);
+            const hp = Number.isFinite(unit.stats?.hp) ? unit.stats.hp : maxHp;
+            const hpPercent = maxHp > 0 ? Math.max(0, Math.min(100, (hp / maxHp) * 100)) : 0;
+            const attack = unit.stats?.attack ?? '-';
+            const defense = unit.stats?.defense ?? '-';
+            card.innerHTML = `
+                <div class="order-icon">${unit.icon || '❔'}</div>
+                <div class="order-hp">
+                    <div class="order-hp-bar">
+                        <div class="order-hp-fill" style="width: ${hpPercent}%"></div>
+                    </div>
+                    <div class="order-hp-text">${hp}/${maxHp || '-'}</div>
+                </div>
+                <div class="order-stats">
+                    <span>⚔️${attack}</span>
+                    <span>🛡️${defense}</span>
+                </div>
+            `;
+            return card;
+        };
+        remaining.forEach(k => {
+            const unit = state.units.get(k);
+            if (!unit) return;
+            turnOrderListEl.appendChild(createOrderCard(unit, k === state.activeUnitKey, false));
+        });
+        if (state.turnOrder.length) {
+            if (remaining.length) {
+                const divider = document.createElement('div');
+                divider.className = 'order-divider';
+                divider.innerHTML = '<span>⏳</span>';
+                turnOrderListEl.appendChild(divider);
+            }
+            state.turnOrder.forEach(k => {
+                const unit = state.units.get(k);
+                if (!unit) return;
+                turnOrderListEl.appendChild(createOrderCard(unit, false, true));
+            });
+        }
+    }
+
+    function renderBattleActionPanels() {
+        if (battleActionLayoutEl) {
+            battleActionLayoutEl.style.display = state.phase === 'battle' ? 'grid' : 'none';
+        }
+        if (!battleActiveUnitEl && !battleTargetListEl) return;
+        const activeUnit = state.activeUnitKey ? state.units.get(state.activeUnitKey) : null;
+        if (battleActiveUnitEl) {
+            battleActiveUnitEl.innerHTML = '';
+            if (!activeUnit) {
+                const empty = document.createElement('div');
+                empty.className = 'battle-empty';
+                empty.textContent = '暂无行动单位';
+                battleActiveUnitEl.appendChild(empty);
+            } else {
+                const maxHp = Number.isFinite(activeUnit.stats?.maxHp) ? activeUnit.stats.maxHp : (activeUnit.stats?.hp ?? 0);
+                const hp = Number.isFinite(activeUnit.stats?.hp) ? activeUnit.stats.hp : maxHp;
+                const hpPercent = maxHp > 0 ? Math.max(0, Math.min(100, (hp / maxHp) * 100)) : 0;
+                const attack = activeUnit.stats?.attack ?? '-';
+                const defense = activeUnit.stats?.defense ?? '-';
+                const speed = activeUnit.stats?.speed ?? '-';
+                const ap = Number.isFinite(activeUnit.ap) ? activeUnit.ap : 0;
+                const card = document.createElement('div');
+                card.className = `battle-active-card ${activeUnit.team}`;
+                card.innerHTML = `
+                    <div class="battle-active-header">
+                        <div class="order-icon">${activeUnit.icon || '❔'}</div>
+                        <div>${activeUnit.background || '未知角色'}</div>
+                    </div>
+                    <div class="order-hp">
+                        <div class="order-hp-bar">
+                            <div class="order-hp-fill" style="width: ${hpPercent}%"></div>
+                        </div>
+                        <div class="order-hp-text">${hp}/${maxHp || '-'}</div>
+                    </div>
+                    <div class="order-stats">
+                        <span>⚔️${attack}</span>
+                        <span>🛡️${defense}</span>
+                        <span>💨${speed}</span>
+                        <span>✨${ap}</span>
+                    </div>
+                `;
+                battleActiveUnitEl.appendChild(card);
+            }
+        }
+        if (battleTargetListEl) {
+            battleTargetListEl.innerHTML = '';
+            const canAct = state.phase === 'battle' && state.awaitingAction && activeUnit && activeUnit.team === 'ally';
+            if (battleSkipTurnBtn) battleSkipTurnBtn.disabled = !canAct;
+            if (!canAct) {
+                const empty = document.createElement('div');
+                empty.className = 'battle-empty';
+                empty.textContent = '等待行动';
+                battleTargetListEl.appendChild(empty);
+                return;
+            }
+            const targets = Array.from(state.validAttacks ?? []).map(k => ({ key: k, unit: state.units.get(k) })).filter(t => t.unit);
+            if (!targets.length) {
+                const empty = document.createElement('div');
+                empty.className = 'battle-empty';
+                empty.textContent = '范围内无目标';
+                battleTargetListEl.appendChild(empty);
+                return;
+            }
+            targets.forEach(({ key, unit }) => {
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = `order-card battle-target-card ${unit.team}`;
+                const maxHp = Number.isFinite(unit.stats?.maxHp) ? unit.stats.maxHp : (unit.stats?.hp ?? 0);
+                const hp = Number.isFinite(unit.stats?.hp) ? unit.stats.hp : maxHp;
+                const hpPercent = maxHp > 0 ? Math.max(0, Math.min(100, (hp / maxHp) * 100)) : 0;
+                const attack = unit.stats?.attack ?? '-';
+                const defense = unit.stats?.defense ?? '-';
+                card.innerHTML = `
+                    <div class="order-icon">${unit.icon || '❔'}</div>
+                    <div class="order-hp">
+                        <div class="order-hp-bar">
+                            <div class="order-hp-fill" style="width: ${hpPercent}%"></div>
+                        </div>
+                        <div class="order-hp-text">${hp}/${maxHp || '-'}</div>
+                    </div>
+                    <div class="order-stats">
+                        <span>⚔️${attack}</span>
+                        <span>🛡️${defense}</span>
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    if (!canAct) return;
+                    handlePlayerAttack(key);
+                });
+                battleTargetListEl.appendChild(card);
+            });
+        }
+    }
+
+    function finalizePlayerAction() {
+        state.awaitingAction = false;
+        state.validMoves = null;
+        state.validAttacks = null;
+        mapApi.setHighlights(null, null);
+        mapApi.render();
+        renderTurnOrder();
+        updateBattleUI();
+        helpers.updateHoverHint(null);
+        renderBattleActionPanels();
+        state.turnCount += 1;
+        nextTurn();
+    }
+
+    function computeActionOptions(unitKey) {
+        const coord = mapApi.parseKey(unitKey);
+        const neighbors = getNeighbors(coord.col, coord.row);
+        const moves = new Set();
+        const attacks = new Set();
+        neighbors.forEach(n => {
+            const cell = mapApi.getCellAt(n.col, n.row);
+            if (!cell) return;
+            const unit = helpers.getUnitAt(n.col, n.row);
+            if (!unit) {
+                moves.add(mapApi.key(n.col, n.row));
+                return;
+            }
+            if (unit.team !== state.units.get(unitKey)?.team) {
+                attacks.add(mapApi.key(n.col, n.row));
+            }
+        });
+        return { moves, attacks };
+    }
+
+    function getAp(unit) {
+        return Number.isFinite(unit?.ap) ? unit.ap : 0;
+    }
+
+    function setUnitAp(unit) {
+        unit.ap = AP_PER_TURN;
+    }
+
+    function getActionOptionsWithAp(unitKey) {
+        const options = computeActionOptions(unitKey);
+        const unit = state.units.get(unitKey);
+        const ap = getAp(unit);
+        if (ap < AP_MOVE_COST) options.moves.clear();
+        if (ap < AP_ATTACK_COST) options.attacks.clear();
+        return options;
+    }
+
+    function hasAdjacentEnemy(unitKey) {
+        const coord = mapApi.parseKey(unitKey);
+        const unit = state.units.get(unitKey);
+        if (!unit) return false;
+        const neighbors = getNeighbors(coord.col, coord.row);
+        return neighbors.some(n => {
+            const other = helpers.getUnitAt(n.col, n.row);
+            return other && other.team !== unit.team;
+        });
+    }
+
+    function getMoveCost(unitKey) {
+        return hasAdjacentEnemy(unitKey) ? AP_MOVE_COST * 2 : AP_MOVE_COST;
+    }
+
+    function tryMove(unitKey, toCoord) {
+        const unit = state.units.get(unitKey);
+        if (!unit) return false;
+        const cost = getMoveCost(unitKey);
+        if (getAp(unit) < cost) return false;
+        const moved = helpers.moveUnit(unitKey, toCoord, cost);
+        if (!moved) return false;
+        unit.ap = Math.max(0, getAp(unit) - cost);
+        return true;
+    }
+
+    function tryAttack(fromKey, toKey, cost) {
+        const attacker = state.units.get(fromKey);
+        if (!attacker || getAp(attacker) < cost) return false;
+        applyAttack(fromKey, toKey, cost);
+        attacker.ap = Math.max(0, getAp(attacker) - cost);
+        return true;
+    }
+
+    function continuePlayerTurn() {
+        const unitKey = state.activeUnitKey;
+        const unit = unitKey ? state.units.get(unitKey) : null;
+        if (!unit || unit.team !== 'ally') return;
+        const options = getActionOptionsWithAp(unitKey);
+        state.validMoves = options.moves;
+        state.validAttacks = options.attacks;
+        const canAct = options.moves.size || options.attacks.size;
+        if (!canAct) {
+            finalizePlayerAction();
+            return;
+        }
+        state.awaitingAction = true;
+        mapApi.setHighlights(state.validMoves, state.validAttacks);
+        mapApi.render();
+        renderTurnOrder();
+        updateBattleUI();
+        helpers.updateHoverHint(null);
+        renderBattleActionPanels();
+    }
+
+    function handlePlayerAttack(targetKey) {
+        if (!state.activeUnitKey) return false;
+        const success = tryAttack(state.activeUnitKey, targetKey, AP_ATTACK_COST);
+        if (!success) return false;
+        continuePlayerTurn();
+        return true;
+    }
+
+    function handlePlayerMove(toCoord) {
+        if (!state.activeUnitKey) return false;
+        const success = tryMove(state.activeUnitKey, toCoord);
+        if (!success) return false;
+        continuePlayerTurn();
+        return true;
+    }
+
+    function nextTurn() {
+        state.turnIndex += 1;
+        if (state.turnIndex >= state.turnOrder.length) {
+            state.round += 1;
+            buildTurnOrder();
+        }
+        stepTurn();
+    }
+
+    function buildTurnOrder() {
+        const alive = Array.from(state.units.entries()).map(([k, u]) => ({
+            key: k,
+            speed: u.stats?.speed || 1,
+        }));
+        alive.sort((a, b) => b.speed - a.speed);
+        state.turnOrder = alive.map(a => a.key);
+        state.turnIndex = 0;
+    }
+
+    function getWinner() {
+        const allyAlive = Array.from(state.units.values()).some(u => u.team === 'ally');
+        const enemyAlive = Array.from(state.units.values()).some(u => u.team === 'enemy');
+        if (!allyAlive && !enemyAlive) return 'B';
+        if (!allyAlive) return 'B';
+        if (!enemyAlive) return 'A';
+        if (state.round > state.roundLimit) return 'B';
+        return null;
+    }
+
+    function selectEnemyTarget(fromKey) {
+        const from = mapApi.parseKey(fromKey);
+        const enemies = Array.from(state.units.entries()).filter(([, u]) => u.team === 'ally');
+        if (!enemies.length) return null;
+        enemies.sort((a, b) => {
+            const da = hexDistance(from, mapApi.parseKey(a[0]));
+            const db = hexDistance(from, mapApi.parseKey(b[0]));
+            return da - db;
+        });
+        return enemies[0];
+    }
+
+    function enemyAct(unitKey) {
+        const unit = state.units.get(unitKey);
+        if (!unit) return;
+        while (true) {
+            const ap = getAp(unit);
+            if (ap < Math.min(AP_MOVE_COST, AP_ATTACK_COST)) break;
+            const target = selectEnemyTarget(unitKey);
+            if (!target) break;
+            const targetCoord = mapApi.parseKey(target[0]);
+            const options = getActionOptionsWithAp(unitKey);
+            if (options.attacks.size) {
+                const targetKey = Array.from(options.attacks)[0];
+                const attacked = tryAttack(unitKey, targetKey, AP_ATTACK_COST);
+                if (!attacked) break;
+                continue;
+            }
+            const neighbors = Array.from(options.moves).map(mapApi.parseKey);
+            let best = null;
+            let bestDist = Infinity;
+            neighbors.forEach(n => {
+                const d = hexDistance(n, targetCoord);
+                if (d < bestDist) {
+                    bestDist = d;
+                    best = n;
+                }
+            });
+            if (best) {
+                const moved = tryMove(unitKey, best);
+                if (!moved) break;
+                unitKey = mapApi.key(best.col, best.row);
+                continue;
+            }
+            break;
+        }
+    }
+
+    function applyAttack(fromKey, toKey, apCost = 0) {
+        const attacker = state.units.get(fromKey);
+        const target = state.units.get(toKey);
+        if (!attacker || !target) return;
+        const atk = attacker.stats?.attack || 1;
+        const def = target.stats?.defense || 0;
+        const dmg = Math.max(1, atk - def);
+        target.stats.hp = Math.max(0, target.stats.hp - dmg);
+        if (state.phase === 'battle') {
+            const attackerName = attacker.background || (attacker.team === 'enemy' ? '敌方' : '我方');
+            const targetName = target.background || (target.team === 'enemy' ? '敌方' : '我方');
+            const maxHp = target.stats?.maxHp ?? target.stats?.hp ?? 0;
+            helpers.appendBattleLog(`${attackerName} 攻击 ${targetName}，造成 ${dmg} 伤害（HP ${target.stats.hp}/${maxHp}，消耗AP ${apCost}）`);
+        }
+        if (attacker.team === 'ally') {
+            const sourceId = attacker.sourceId ?? attacker.id;
+            const stats = state.damageStats.get(sourceId);
+            if (stats) {
+                stats.totalDamage += dmg;
+                stats.attacks += 1;
+                state.totalDamage += dmg;
+            }
+        }
+        if (target.stats.hp <= 0) {
+            state.units.delete(toKey);
+            if (state.phase === 'battle') {
+                const targetName = target.background || (target.team === 'enemy' ? '敌方' : '我方');
+                helpers.appendBattleLog(`${targetName} 被击败`);
+            }
+            if (attacker.team === 'ally') {
+                const sourceId = attacker.sourceId ?? attacker.id;
+                const stats = state.damageStats.get(sourceId);
+                if (stats) stats.kills += 1;
+            }
+        }
+    }
+
+    function stepTurn() {
+        const winner = getWinner();
+        if (winner) {
+            finalizeBattle(winner);
+            return;
+        }
+        const currentKey = state.turnOrder[state.turnIndex];
+        if (!currentKey || !state.units.has(currentKey)) {
+            nextTurn();
+            return;
+        }
+        state.activeUnitKey = currentKey;
+        mapApi.setActiveUnitKey(currentKey);
+        const unit = state.units.get(currentKey);
+        setUnitAp(unit);
+        if (unit.team === 'ally') {
+            const options = getActionOptionsWithAp(currentKey);
+            const canAct = options.moves.size || options.attacks.size;
+            if (!canAct) {
+                finalizePlayerAction();
+                return;
+            }
+            state.awaitingAction = true;
+            state.validMoves = options.moves;
+            state.validAttacks = options.attacks;
+            mapApi.setHighlights(state.validMoves, state.validAttacks);
+            mapApi.render();
+            renderTurnOrder();
+            updateBattleUI();
+            updateBattleHint();
+            helpers.updateHoverHint(null);
+            renderBattleActionPanels();
+            return;
+        }
+        state.awaitingAction = false;
+        updateBattleHint();
+        enemyAct(currentKey);
+        mapApi.setHighlights(null, null);
+        mapApi.render();
+        renderTurnOrder();
+        updateBattleUI();
+        renderBattleActionPanels();
+        state.turnCount += 1;
+        nextTurn();
+    }
+
+    function startBattlePhase() {
+        state.phase = 'battle';
+        state.selectedUnitId = null;
+        state.round = 1;
+        state.turnCount = 0;
+        state.totalDamage = 0;
+        state.damageStats = new Map();
+        state.lastLogTurnKey = null;
+        state.lastLogRound = 0;
+        helpers.clearBattleLog();
+        helpers.setBattleLogVisible(true);
+        helpers.appendBattleLog('战斗开始');
+        Array.from(state.units.values()).forEach(u => {
+            u.ap = 0;
+            if (u.team === 'ally') {
+                const id = u.sourceId ?? u.id;
+                state.damageStats.set(id, { unit: u, totalDamage: 0, attacks: 0, kills: 0 });
+            }
+        });
+        buildTurnOrder();
+        state.turnIndex = 0;
+        uiHandlers.renderPrepUI();
+        updateBattleUI();
+        renderTurnOrder();
+        updateBattleHint();
+        stepTurn();
+    }
+
+    function finalizeBattle(winner) {
+        state.phase = 'finished';
+        state.awaitingAction = false;
+        state.validMoves = null;
+        state.validAttacks = null;
+        state.activeUnitKey = null;
+        mapApi.setActiveUnitKey(null);
+        mapApi.setHighlights(null, null);
+        mapApi.render();
+        updateBattleUI();
+        helpers.setBattleLogVisible(true);
+        if (winner === 'A') {
+            helpers.appendBattleLog('战斗结束：我方胜利');
+        } else if (winner === 'B') {
+            helpers.appendBattleLog('战斗结束：我方失败');
+        } else {
+            helpers.appendBattleLog('战斗结束');
+        }
+        renderBattleActionPanels();
+        const aliveAllyIds = new Set(Array.from(state.units.values()).filter(u => u.team === 'ally').map(u => u.sourceId ?? u.id));
+        const deadAllyIds = state.playerPool.map(t => t.sourceId ?? t.id).filter(id => !aliveAllyIds.has(id));
+        const damageStats = Array.from(state.damageStats.entries()).map(([id, stats]) => ({
+            character: stats.unit?.source || stats.unit,
+            totalDamage: stats.totalDamage,
+            attacks: stats.attacks,
+            kills: stats.kills
+        }));
+        if (typeof state.external?.onBattleEnd === 'function') {
+            state.external.onBattleEnd({
+                winner,
+                damageStats,
+                totalDamage: state.totalDamage,
+                turnCount: state.turnCount,
+                deadAllyIds
+            });
+        }
+    }
+
+    return {
+        startBattlePhase,
+        renderBattleActionPanels,
+        handlePlayerAttack,
+        handlePlayerMove,
+        finalizePlayerAction
+    };
+}

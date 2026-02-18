@@ -44,7 +44,7 @@ export class StageSystem {
             
             return new Character({
                 id: `enemy_${stage.id}_${index}_${Date.now()}`,
-                name: template.name,
+                background: template.background,
                 maxHp: template.baseStats.maxHp,
                 attack: template.baseStats.attack,
                 defense: template.baseStats.defense,
@@ -52,7 +52,8 @@ export class StageSystem {
                 team: 'B',
                 icon: template.icon,
                 rarity: template.rarity,
-                templateId: template.id
+                templateId: template.id,
+                defaultWeaponId: template.defaultWeaponId ?? null
             });
         }).filter(c => c !== null);
     }

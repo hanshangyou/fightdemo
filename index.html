@@ -112,6 +112,16 @@
             justify-content: center;
             min-height: 0;
         }
+
+        .editor-buttons-row {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .editor-buttons-row .btn {
+            flex: 1;
+        }
         
         .btn {
             padding: 14px 20px;
@@ -2367,8 +2377,11 @@
             <div class="menu-buttons">
                 <button class="btn btn-warning" id="btn-gacha">🎰 抽卡组队</button>
                 <button class="btn btn-success" id="btn-battle">⚔️ 开始战斗</button>
-                <button class="btn btn-editor" id="btn-editor">📝 卡池编辑</button>
-                <button class="btn btn-stage-editor" id="btn-stage-editor">🏰 关卡编辑</button>
+                <div class="editor-buttons-row">
+                    <button class="btn btn-editor" id="btn-editor">📝 卡池编辑</button>
+                    <button class="btn btn-editor" id="btn-weapon-editor">🛠️ 武器编辑</button>
+                    <button class="btn btn-stage-editor" id="btn-stage-editor">🏰 关卡编辑</button>
+                </div>
             </div>
         </div>
         
