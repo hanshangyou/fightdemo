@@ -239,16 +239,17 @@ export function initHexMapEditor(elements, options = {}) {
             if (c.kind === 'ally') cell.classList.add('ally');
             if (c.kind === 'enemy') cell.classList.add('enemy');
             if (state.selected === key(c.col, c.row)) cell.classList.add('selected');
-            if (state.highlightMoves?.has(key(c.col, c.row))) cell.classList.add('move-option');
-            if (state.highlightAttacks?.has(key(c.col, c.row))) cell.classList.add('attack-option');
 
             const fill = document.createElement('div');
             fill.className = 'hex-fill';
             cell.appendChild(fill);
 
             const unit = unitProvider ? unitProvider(c.col, c.row) : null;
+            if (state.highlightMoves?.has(key(c.col, c.row))) cell.classList.add('move-option');
+            if (state.highlightAttacks?.has(key(c.col, c.row))) cell.classList.add('attack-option');
             if (unit) {
                 cell.classList.add('has-unit');
+                if (state.activeUnitKey === key(c.col, c.row)) cell.classList.add('active-unit');
                 const icon = document.createElement('div');
                 icon.className = 'unit-icon';
                 icon.textContent = unit.icon || '❔';
