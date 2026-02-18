@@ -25,6 +25,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
         battleActiveUnitEl,
         battleTargetListEl,
         battleSkipTurnBtn,
+        battleToastEl,
     } = elements;
 
     const state = {
@@ -95,6 +96,19 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
             return;
         }
         hexMap.parentElement.style.display = 'flex';
+    }
+
+    let battleToastTimer = null;
+    function showBattleToast(message) {
+        if (!battleToastEl || !message) return;
+        battleToastEl.textContent = message;
+        battleToastEl.hidden = false;
+        battleToastEl.classList.add('show');
+        if (battleToastTimer) window.clearTimeout(battleToastTimer);
+        battleToastTimer = window.setTimeout(() => {
+            battleToastEl.classList.remove('show');
+            battleToastEl.hidden = true;
+        }, 1200);
     }
 
     function setMapPhase(phase) {
@@ -220,6 +234,7 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
             clearBattleLog,
             setMapVisible,
             setMapPhase,
+            showBattleToast,
             setUnit,
             isOccupied,
             clearAllyUnits
@@ -247,7 +262,8 @@ export function initHexBattle({ mapApi, elements, config = {} }) {
             getUnitAt,
             clearBattleLog,
             setMapVisible,
-            setMapPhase
+            setMapPhase,
+            showBattleToast
         },
         uiHandlers
     });

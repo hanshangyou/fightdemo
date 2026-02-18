@@ -310,6 +310,12 @@ export function createBattlePhase({ state, mapApi, elements, helpers, uiHandlers
 
     function handlePlayerMove(toCoord) {
         if (!state.activeUnitKey) return false;
+        const unit = state.units.get(state.activeUnitKey);
+        const cost = getMoveCost(state.activeUnitKey);
+        if (unit && getAp(unit) < cost) {
+            helpers.showBattleToast?.(`AP不足（需要AP ${cost}）`);
+            return false;
+        }
         const success = tryMove(state.activeUnitKey, toCoord);
         if (!success) return false;
         continuePlayerTurn();

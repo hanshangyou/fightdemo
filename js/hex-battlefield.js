@@ -32,6 +32,7 @@ export function initHexBattlefield(options = {}) {
         battleActiveUnitEl: getEl('battleActiveUnitEl', 'battle-active-unit'),
         battleTargetListEl: getEl('battleTargetListEl', 'battle-target-list'),
         battleSkipTurnBtn: getEl('battleSkipTurnBtn', 'battle-skip-turn-btn'),
+        battleToastEl: getEl('battleToastEl', 'battle-toast'),
     };
 
     const mapApi = initHexMapEditor(elements, options.mapOptions || {});

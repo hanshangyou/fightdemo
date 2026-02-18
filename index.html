@@ -514,6 +514,7 @@
             --accent-blue-b: #1e4aa6;
             --battlefield-height: 420px;
             overflow-y: auto;
+            position: relative;
         }
 
         #screen-battle .battle-topbar {
@@ -1011,6 +1012,30 @@
 
         #screen-battle .battle-log-item {
             color: rgba(214, 226, 255, 0.82);
+        }
+
+        #screen-battle .battle-toast {
+            position: absolute;
+            top: 56px;
+            left: 50%;
+            transform: translate(-50%, -8px);
+            background: rgba(68, 170, 92, 0.9);
+            border: 1px solid rgba(120, 220, 150, 0.5);
+            color: rgba(232, 240, 255, 0.92);
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+            z-index: 5;
+            white-space: nowrap;
+        }
+
+        #screen-battle .battle-toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
         }
 
         #screen-battle .battle-player-count {
@@ -2664,6 +2689,7 @@
                     <div class="battle-log-list" id="battle-log-list"></div>
                 </div>
             </div>
+            <div class="battle-toast" id="battle-toast" hidden></div>
             <div class="turn-order" id="battle-turn-order">
                 <div class="order-row">
                     <div class="order-list" id="battle-turn-order-list"></div>
