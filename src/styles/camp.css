@@ -1,0 +1,357 @@
+.camp-container {
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden;
+}
+
+.camp-header {
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.camp-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.camp-subtitle {
+    font-size: 0.9rem;
+    color: #bdc3c7;
+}
+
+.camp-panel {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    padding: 12px;
+    flex-shrink: 0;
+}
+
+.camp-panel-title {
+    font-size: 0.95rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.camp-resource {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #bdc3c7;
+}
+
+.camp-team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    max-height: 480px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.camp-team-grid .character-card {
+    position: relative;
+    min-width: 0;
+    cursor: default;
+    padding: 8px;
+}
+
+.camp-team-grid .character-card::after {
+    content: attr(data-rarity-label);
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 0.5rem;
+    padding: 2px 4px;
+    border-radius: 6px;
+    background: #95a5a6;
+    color: #fff;
+}
+
+.camp-team-grid .character-card[data-rarity="RARE"]::after {
+    background: #3498db;
+}
+
+.camp-team-grid .character-card[data-rarity="EPIC"]::after {
+    background: #9b59b6;
+}
+
+.camp-team-grid .character-card[data-rarity="LEGENDARY"]::after {
+    background: #f39c12;
+}
+
+.camp-team-grid .character-card[data-rarity="ENEMY"]::after {
+    background: #e74c3c;
+}
+
+.camp-team-grid .character-rarity {
+    display: none;
+}
+
+.camp-team-grid .character-icon {
+    font-size: 1.2rem;
+    margin: 4px 0 2px;
+}
+
+.camp-team-grid .character-name {
+    font-size: 0.7rem;
+    margin-bottom: 4px;
+}
+
+.camp-team-grid .character-main {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    align-items: center;
+}
+
+.camp-team-grid .character-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 54px;
+    flex-shrink: 0;
+}
+
+.camp-team-grid .character-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+    font-size: 0.8rem;
+    flex: 1;
+}
+
+.camp-team-grid .character-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    font-size: 0.55rem;
+}
+
+.camp-team-grid .character-stats span {
+    padding: 2px 3px;
+}
+
+.camp-team-grid.select-mode .character-card {
+    border-color: #2ecc71;
+}
+
+.camp-team-grid .character-weapon {
+    margin-top: 6px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.camp-team-grid .character-weapon-current {
+    font-size: 0.7rem;
+    color: #bdc3c7;
+    text-align: center;
+}
+
+.camp-team-grid .camp-weapon-slot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 8px;
+    background: rgba(46, 204, 113, 0.12);
+    border: 1px solid rgba(46, 204, 113, 0.35);
+    cursor: pointer;
+}
+
+.camp-team-grid .camp-weapon-slot.empty {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.camp-team-grid .camp-weapon-slot-icon {
+    font-size: 0.9rem;
+}
+
+.camp-team-grid .camp-weapon-slot-dmg {
+    font-size: 0.65rem;
+    color: #ecf0f1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+}
+
+.camp-weapon-pool-title {
+    font-size: 0.8rem;
+    text-align: center;
+    color: #bdc3c7;
+}
+
+.camp-weapon-pool {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: 110px;
+    padding-bottom: 6px;
+}
+
+.camp-weapon-card {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding: 6px;
+    text-align: center;
+    font-size: 0.7rem;
+    min-width: 110px;
+}
+
+.camp-weapon-card-icon {
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.camp-weapon-card-name {
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.camp-weapon-card-meta {
+    color: #bdc3c7;
+    font-size: 0.65rem;
+}
+
+.camp-team-grid::-webkit-scrollbar {
+    height: 6px;
+}
+
+.camp-team-grid::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.camp-team-grid::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+
+.camp-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.camp-actions-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 10px;
+}
+
+.camp-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 1200;
+}
+
+.camp-modal.active {
+    display: flex;
+}
+
+.camp-modal-content {
+    width: min(420px, 95vw);
+    background: rgba(18, 22, 36, 0.98);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.camp-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.camp-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.camp-recruit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.camp-recruit-grid .character-card {
+    cursor: pointer;
+}
+
+.camp-recruit-grid .character-card.selected {
+    border-color: #2ecc71;
+    box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.35);
+}
+
+.camp-weapon-popover {
+    position: fixed;
+    background: rgba(18, 22, 36, 0.98);
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    z-index: 1300;
+    width: 210px;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.camp-weapon-popover.active {
+    display: flex;
+}
+
+.camp-weapon-popover-title {
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.camp-weapon-popover-current {
+    font-size: 0.7rem;
+    color: #bdc3c7;
+}
+
+.camp-weapon-popover-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+.camp-weapon-popover-item {
+    width: 100%;
+    text-align: left;
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid transparent;
+    color: #fff;
+    font-size: 0.7rem;
+}
+
+.camp-weapon-popover-item:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+}

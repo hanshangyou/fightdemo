@@ -1,0 +1,16 @@
+﻿trait_id	trait_name	str_flat	dex_flat	con_flat
+strong_arms	健力	4	0	0
+tough	强健	2	0	2
+sturdy	强壮	0	0	4
+resilient	强韧	2	0	2
+deft	灵巧	0	4	0
+agile	矫健	2	2	0
+stubborn	一根筋	6	-4	0
+high_blood	高血压	6	0	-4
+bulky	大块头	0	-4	6
+big_eater	干饭怪	-4	0	6
+skinny	瘦皮猴	0	6	-4
+clever	机灵鬼	-4	6	0
+timid	胆怯	-3	0	0
+shortsighted	近视	0	-3	0
+sickly	生病	0	0	-3

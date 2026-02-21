@@ -1,0 +1,19 @@
+.draw-pool {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    align-content: start;
+}
+
+.draw-pool .character-card {
+    width: 100%;
+    padding: 12px 8px;
+}

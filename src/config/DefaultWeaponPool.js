@@ -1,0 +1,22 @@
+export const DEFAULT_WEAPON_POOL = [
+    { id: 'short_sabre', name: '短剑', type: 'SABRE', rarity: 'COMMON', icon: '🗡️', range: 1, apCost: 3, damageMin: 15, damageMax: 25 },
+    { id: 'military_sabre', name: '军用剑', type: 'SABRE', rarity: 'RARE', icon: '🗡️', range: 1, apCost: 3, damageMin: 20, damageMax: 30 },
+    { id: 'noble_sabre', name: '贵族剑', type: 'SABRE', rarity: 'EPIC', icon: '🗡️', range: 1, apCost: 3, damageMin: 30, damageMax: 45 },
+    { id: 'flame_sabre', name: '火焰剑', type: 'SABRE', rarity: 'LEGENDARY', icon: '🗡️', range: 1, apCost: 3, damageMin: 40, damageMax: 60 },
+    { id: 'shadow_sabre', name: '暗影剑', type: 'SABRE', rarity: 'ENEMY', icon: '🗡️', range: 1, apCost: 3, damageMin: 35, damageMax: 70 },
+    { id: 'long_sword', name: '重剑', type: 'SWORD', rarity: 'COMMON', icon: '⚔️', range: 1, apCost: 4, damageMin: 25, damageMax: 50 },
+    { id: 'mercenary_sword', name: '佣兵重剑', type: 'SWORD', rarity: 'RARE', icon: '⚔️', range: 1, apCost: 4, damageMin: 30, damageMax: 55 },
+    { id: 'knight_sword', name: '骑士重剑', type: 'SWORD', rarity: 'EPIC', icon: '⚔️', range: 1, apCost: 4, damageMin: 40, damageMax: 70 },
+    { id: 'hawk_sword', name: '鹰击重剑', type: 'SWORD', rarity: 'LEGENDARY', icon: '⚔️', range: 1, apCost: 4, damageMin: 45, damageMax: 85 },
+    { id: 'dragon_sword', name: '龙纹重剑', type: 'SWORD', rarity: 'ENEMY', icon: '⚔️', range: 1, apCost: 4, damageMin: 40, damageMax: 95 },
+    { id: 'iron_spear', name: '铁枪', type: 'SPEAR', rarity: 'COMMON', icon: '🔱', range: 2, apCost: 4, damageMin: 15, damageMax: 25 },
+    { id: 'guard_spear', name: '卫士枪', type: 'SPEAR', rarity: 'RARE', icon: '🔱', range: 2, apCost: 4, damageMin: 20, damageMax: 30 },
+    { id: 'roya_spear', name: '王庭之枪', type: 'SPEAR', rarity: 'EPIC', icon: '🔱', range: 2, apCost: 4, damageMin: 30, damageMax: 45 },
+    { id: 'meteor_bow', name: '追星枪', type: 'SPEAR', rarity: 'LEGENDARY', icon: '🔱', range: 2, apCost: 4, damageMin: 40, damageMax: 60 },
+    { id: 'frost_spear', name: '霜锋枪', type: 'SPEAR', rarity: 'ENEMY', icon: '🔱', range: 2, apCost: 4, damageMin: 35, damageMax: 70 },
+    { id: 'long_bow', name: '长弓', type: 'BOW', rarity: 'COMMON', icon: '🏹', range: 3, apCost: 4, damageMin: 10, damageMax: 25 },
+    { id: 'hunter_bow', name: '猎人弓', type: 'BOW', rarity: 'RARE', icon: '🏹', range: 3, apCost: 4, damageMin: 15, damageMax: 30 },
+    { id: 'ranger_bow', name: '游侠之弓', type: 'BOW', rarity: 'EPIC', icon: '🏹', range: 3, apCost: 4, damageMin: 25, damageMax: 45 },
+    { id: 'wind_bow', name: '风语弓', type: 'BOW', rarity: 'LEGENDARY', icon: '🏹', range: 3, apCost: 4, damageMin: 30, damageMax: 60 },
+    { id: 'twilight_bow', name: '暮光弓', type: 'BOW', rarity: 'ENEMY', icon: '🏹', range: 3, apCost: 4, damageMin: 25, damageMax: 70 }
+];
