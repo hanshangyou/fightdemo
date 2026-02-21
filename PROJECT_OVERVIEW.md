@@ -52,8 +52,8 @@
 ## 逻辑设定摘要
 - 队伍人数：最少 1 人，上限由关卡 maxTeamSize 决定。[main.js](file:///c:/Users/27184/Documents/trae_projects/fightdemo/src/main.js#L254-L274)
 - 抽卡：开局 10 连仅一次；营地 5 连每营地一次。[GachaSystem.js](file:///c:/Users/27184/Documents/trae_projects/fightdemo/src/systems/GachaSystem.js#L66-L155) + [main.js](file:///c:/Users/27184/Documents/trae_projects/fightdemo/src/main.js#L481-L520)
-- 战斗：六方向相邻移动/攻击；回合上限由关卡配置。[hex-battle.js](file:///c:/Users/27184/Documents/trae_projects/fightdemo/src/hexagonal/hex-battle.js#L123-L133)
-- 武器：武器提供射程、AP 消耗与伤害区间；角色可装备/卸下武器。[WeaponSystem.js](file:///c:/Users/27184/Documents/trae_projects/fightdemo/src/systems/WeaponSystem.js#L5-L52)
+- 战斗：AP 回合制；移动相邻六格，攻击范围由武器 range 决定并结合命中/格挡结算。[hex-battle-combat.js](file:///c:/Users/27184/Documents/trae_projects/fightdemo/src/hexagonal/hex-battle-combat.js#L210-L531)
+- 武器：武器提供射程、AP 消耗与伤害区间，参与命中/格挡/伤害计算；角色可装备/卸下武器。[WeaponSystem.js](file:///c:/Users/27184/Documents/trae_projects/fightdemo/src/systems/WeaponSystem.js#L5-L52)
 - 阵亡处理：胜利时阵亡角色留在备选池不可用，失败时恢复。[main.js](file:///c:/Users/27184/Documents/trae_projects/fightdemo/src/main.js#L361-L390)
 
 ## 数据持久化（localStorage）
